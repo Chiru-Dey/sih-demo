@@ -1,0 +1,33 @@
+<!-- Accessibility Panel -->
+<button class="accessibility-toggle" onclick="toggleAccessibilityPanel()">
+    <i class="fas fa-universal-access"></i>
+</button>
+
+<div class="accessibility-panel" id="accessibilityPanel">
+    <div class="panel-header">
+        <h4><i class="fas fa-universal-access"></i> Accessibility</h4>
+        <button class="panel-close" onclick="toggleAccessibilityPanel()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <div class="accessibility-controls">
+        <h5 style="color: var(--primary); font-size: 12px; margin-bottom: 5px;">Font Size</h5>
+        <div class="accessibility-row">
+            <button class="accessibility-btn" onclick="changeFontSize('small')">A-</button>
+            <button class="accessibility-btn active" onclick="changeFontSize('medium')">A</button>
+            <button class="accessibility-btn" onclick="changeFontSize('large')">A+</button>
+            <button class="accessibility-btn" onclick="changeFontSize('xlarge')">A++</button>
+        </div>
+
+        <h5 style="color: var(--primary); font-size: 12px; margin: 10px 0 5px;">Display</h5>
+        <button class="accessibility-btn" onclick="toggleHighContrast()">
+            <i class="fas fa-adjust"></i> High Contrast
+        </button>
+
+        <h5 style="color: var(--primary); font-size: 12px; margin: 10px 0 5px;">Audio</h5>
+        <button class="accessibility-btn" onclick="toggleTextToSpeech()">
+            <i class="fas fa-volume-up"></i> Text to Speech
+        </button>
+    </div>
+</div>

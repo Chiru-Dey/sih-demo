@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="{{ current_language or 'en' }}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Disastrous - Disaster Management App{% endblock %}</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#5978f3">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Disastrous">
+    <meta name="msapplication-TileColor" content="#11151c">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="{{ url_for('manifest') }}">
+
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='icons/icon-192.png') }}">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Internal CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+
+    <!-- Additional page-specific styles -->
+    {% block styles %}{% endblock %}
+</head>
+
+<body
+    class="{% if user_preferences.dark_mode %}dark-mode{% endif %} {% if user_preferences.high_contrast %}high-contrast{% endif %}"
+    style="font-size: {{ user_preferences.font_size }}px;"
+    data-language="{{ user_preferences.language }}"
+    data-font-size="{{ user_preferences.font_size }}"
+    data-high-contrast="{{ 'true' if user_preferences.high_contrast else 'false' }}"
+    data-dark-mode="{{ 'true' if user_preferences.dark_mode else 'false' }}">
+
+    <!-- Skip to Content Link -->
+    <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
+    <!-- PWA Install Banner -->
+    <div class="pwa-install-banner" id="pwaInstallBanner">
+        <i class="fas fa-download"></i>
+        <div class="pwa-install-text">
+            <strong>Install Disastrous</strong><br>
+            Get quick access to disaster alerts and emergency services!
+        </div>
+        <button class="pwa-install-btn" id="pwaInstallBtn">Install</button>
+        <button class="pwa-install-close" onclick="hidePWABanner()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Offline Indicator -->
+    <div class="offline-indicator" id="offlineIndicator">
+        <i class="fas fa-wifi"></i> You're offline - Limited functionality available
+    </div>
+
+    <!-- Translation Panel Component -->
+    {% include 'components/translation_panel.html' %}
+
+    <!-- Accessibility Panel Component -->
+    {% include 'components/accessibility_panel.html' %}
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <button class="hamburger">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo-section">
+                <div class="logo" data-no-translate></div>
+                <h1 class="app-name">Disastrous</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Emergency Alert Component -->
+    {% include 'components/emergency_alert.html' %}
+
+    <!-- Main Content Block -->
+    <main class="main-content" id="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Fixed Action Buttons -->
+    <div class="fixed-actions">
+        <button class="action-btn ai-assistant" onclick="openAIAssistant()">
+            <i class="fas fa-robot"></i>
+        </button>
+        <button class="action-btn emergency-call" data-no-translate onclick="makeEmergencyCall()">
+            <i class="fas fa-phone"></i>
+        </button>
+        <button class="action-btn quick-chat" onclick="startQuickChat()">
+            <i class="fas fa-comments"></i>
+        </button>
+    </div>
+
+    <!-- Chat Modals Component -->
+    {% include 'components/chat_modals.html' %}
+
+    <!-- Navigation Menu Component -->
+    {% include 'components/navigation_menu.html' %}
+
+    <!-- Google Maps -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ maps_key }}&callback=initMap"></script>
+
+    <!-- Backend Integration Script -->
+    <script type="module">
+        const aiAvailable = "{{ ai_available }}" === "true";
+        const mapsApiKey = "{{ maps_key }}";
+
+        if (aiAvailable) {
+            window.aiAvailable = true;
+            console.log("✅ A4F AI (Backend) initialized successfully");
+            showNotification("🤖 AI Assistant Ready (A4F)", "success");
+        } else {
+            window.aiAvailable = false;
+            console.log("⚠️ A4F API key not configured");
+            showNotification("🔑 AI requires A4F API key configuration", "info");
+        }
+
+        if (mapsApiKey && mapsApiKey !== "your-google-maps-api-key" && mapsApiKey !== "") {
+            console.log("✅ Google Maps API key available");
+            window.mapsAvailable = true;
+            showNotification("🗺️ Maps service active", "success");
+        } else {
+            console.log("⚠️ Google Maps API key not provided");
+            window.mapsAvailable = false;
+            showNotification("🗺️ Maps require API key", "warning");
+        }
+    </script>
+
+
+    <!-- Core JavaScript -->
+    <script src="{{ url_for('static', filename='js/base.js') }}?v={{ now }}"></script>
+    <script src="{{ url_for('static', filename='js/components/translation.js') }}?v={{ now }}"></script>
+    <script src="{{ url_for('static', filename='js/components/accessibility.js') }}?v={{ now }}"></script>
+    <script src="{{ url_for('static', filename='js/components/chatbot.js') }}?v={{ now }}"></script>
+    <script src="{{ url_for('static', filename='js/components/pwa.js') }}?v={{ now }}"></script>
+
+    <!-- Additional page-specific scripts -->
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

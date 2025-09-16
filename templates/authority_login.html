@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+
+{% block title %}Authority Login - Disastrous{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1><i class="fas fa-user-shield"></i> Authority Login</h1>
+        <p>Secure access for emergency management authorities</p>
+    </div>
+
+    <div class="login-container">
+        <!-- Login Form -->
+        <div class="login-form-section">
+            <div class="login-card">
+                <div class="login-header">
+                    <h2><i class="fas fa-shield-alt"></i> Authority Access</h2>
+                    <p>Login to access emergency management dashboard</p>
+                </div>
+
+                <form id="authority-login-form" class="login-form">
+                    <div class="form-group">
+                        <label for="authority-id">Authority ID</label>
+                        <div class="input-group">
+                            <i class="fas fa-id-badge"></i>
+                            <input type="text" id="authority-id" name="authority-id"
+                                placeholder="Enter your authority ID" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" name="password" placeholder="Enter your password"
+                                required>
+                            <button type="button" class="password-toggle" onclick="togglePassword()">
+                                <i class="fas fa-eye" id="password-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="otp">Two-Factor Authentication</label>
+                        <div class="input-group">
+                            <i class="fas fa-mobile-alt"></i>
+                            <input type="text" id="otp" name="otp" placeholder="Enter 6-digit OTP" maxlength="6">
+                            <button type="button" class="otp-send" onclick="sendOTP()">
+                                Send OTP
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="remember-me">
+                            <span class="checkmark"></span>
+                            Remember this device
+                        </label>
+                        <a href="#" class="forgot-password" onclick="forgotPassword()">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="btn-login">
+                        <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+                    </button>
+                </form>
+
+                <div class="login-footer">
+                    <p>Don't have access? <a href="#" onclick="requestAccess()">Request Authority Access</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Authority Types -->
+        <div class="authority-types">
+            <h2><i class="fas fa-users"></i> Authority Categories</h2>
+            <div class="authority-grid">
+                <div class="authority-card">
+                    <div class="authority-icon">
+                        <i class="fas fa-fire-extinguisher"></i>
+                    </div>
+                    <h3>Fire Department</h3>
+                    <p>Fire and rescue operations, emergency response coordination</p>
+                    <ul>
+                        <li>Incident command center</li>
+                        <li>Resource allocation</li>
+                        <li>Personnel management</li>
+                    </ul>
+                </div>
+
+                <div class="authority-card">
+                    <div class="authority-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Police Department</h3>
+                    <p>Law enforcement, traffic management, evacuation coordination</p>
+                    <ul>
+                        <li>Crowd control</li>
+                        <li>Traffic management</li>
+                        <li>Security operations</li>
+                    </ul>
+                </div>
+
+                <div class="authority-card">
+                    <div class="authority-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3>Medical Services</h3>
+                    <p>Emergency medical response, hospital coordination</p>
+                    <ul>
+                        <li>Ambulance dispatch</li>
+                        <li>Medical resource tracking</li>
+                        <li>Patient management</li>
+                    </ul>
+                </div>
+
+                <div class="authority-card">
+                    <div class="authority-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>Disaster Management</h3>
+                    <p>NDRF, SDRF, district administration coordination</p>
+                    <ul>
+                        <li>Central command</li>
+                        <li>Inter-agency coordination</li>
+                        <li>Resource deployment</li>
+                    </ul>
+                </div>
+
+                <div class="authority-card">
+                    <div class="authority-icon">
+                        <i class="fas fa-city"></i>
+                    </div>
+                    <h3>Municipal Corporation</h3>
+                    <p>Local administration, infrastructure management</p>
+                    <ul>
+                        <li>Infrastructure monitoring</li>
+                        <li>Public services</li>
+                        <li>Local coordination</li>
+                    </ul>
+                </div>
+
+                <div class="authority-card">
+                    <div class="authority-icon">
+                        <i class="fas fa-broadcast-tower"></i>
+                    </div>
+                    <h3>Communications</h3>
+                    <p>Emergency communications, public information</p>
+                    <ul>
+                        <li>Alert broadcasting</li>
+                        <li>Communication networks</li>
+                        <li>Public information</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Features -->
+        <div class="security-features">
+            <h2><i class="fas fa-lock"></i> Security Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fas fa-shield-virus"></i>
+                    <h3>Multi-Factor Authentication</h3>
+                    <p>Enhanced security with OTP verification and biometric options</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-user-secret"></i>
+                    <h3>Role-Based Access</h3>
+                    <p>Granular permissions based on authority level and department</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-history"></i>
+                    <h3>Audit Logging</h3>
+                    <p>Complete audit trail of all actions and data access</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-clock"></i>
+                    <h3>Session Management</h3>
+                    <p>Automatic session timeout and secure logout procedures</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Bypass -->
+        <div class="emergency-bypass">
+            <h2><i class="fas fa-exclamation-circle"></i> Emergency Access</h2>
+            <div class="bypass-info">
+                <p><strong>In case of extreme emergency when normal login is not possible:</strong></p>
+                <ol>
+                    <li>Call Emergency Operations Center: <strong>1078</strong></li>
+                    <li>Provide your Authority ID and reason for bypass</li>
+                    <li>Complete voice verification process</li>
+                    <li>Receive emergency access code</li>
+                </ol>
+                <button type="button" class="btn-emergency" onclick="emergencyBypass()">
+                    <i class="fas fa-phone"></i> Request Emergency Bypass
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let otpSent = false;
+    let otpTimer = null;
+
+    document.getElementById('authority-login-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        handleLogin();
+    });
+
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('password-eye');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.classList.remove('fa-eye');
+            eyeIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.classList.remove('fa-eye-slash');
+            eyeIcon.classList.add('fa-eye');
+        }
+    }
+
+    function sendOTP() {
+        const authorityId = document.getElementById('authority-id').value;
+        const otpButton = document.querySelector('.otp-send');
+
+        if (!authorityId) {
+            alert('Please enter your Authority ID first');
+            return;
+        }
+
+        if (otpSent) {
+            alert('OTP already sent. Please wait before requesting again.');
+            return;
+        }
+
+        // Simulate OTP sending
+        otpButton.disabled = true;
+        otpButton.textContent = 'Sending...';
+
+        setTimeout(() => {
+            otpSent = true;
+            otpButton.textContent = 'OTP Sent';
+            showNotification('OTP sent to your registered mobile number', 'success');
+
+            // Start countdown
+            let countdown = 60;
+            otpTimer = setInterval(() => {
+                otpButton.textContent = `Resend in ${countdown}s`;
+                countdown--;
+
+                if (countdown < 0) {
+                    clearInterval(otpTimer);
+                    otpButton.disabled = false;
+                    otpButton.textContent = 'Resend OTP';
+                    otpSent = false;
+                }
+            }, 1000);
+        }, 2000);
+    }
+
+    function handleLogin() {
+        const authorityId = document.getElementById('authority-id').value;
+        const password = document.getElementById('password').value;
+        const otp = document.getElementById('otp').value;
+
+        if (!authorityId || !password) {
+            alert('Please fill in all required fields');
+            return;
+        }
+
+        if (!otp) {
+            alert('Please enter the OTP sent to your registered mobile number');
+            return;
+        }
+
+        if (otp.length !== 6) {
+            alert('Please enter a valid 6-digit OTP');
+            return;
+        }
+
+        // Simulate login process
+        const loginButton = document.querySelector('.btn-login');
+        loginButton.disabled = true;
+        loginButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+
+        setTimeout(() => {
+            // Simulate successful login
+            if (authorityId === 'ADMIN001' && password === 'demo123' && otp === '123456') {
+                showNotification('Login successful! Redirecting to dashboard...', 'success');
+                setTimeout(() => {
+                    // In a real app, this would redirect to the authority dashboard
+                    alert('Welcome to Authority Dashboard!\n\nThis would redirect to the emergency management dashboard with:\n\n• Real-time incident monitoring\n• Resource allocation tools\n• Communication systems\n• Reporting interfaces\n• Inter-agency coordination');
+                }, 1500);
+            } else {
+                showNotification('Invalid credentials or OTP. Please try again.', 'error');
+                loginButton.disabled = false;
+                loginButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login to Dashboard';
+            }
+        }, 3000);
+    }
+
+    function forgotPassword() {
+        const authorityId = prompt('Enter your Authority ID to reset password:');
+        if (authorityId) {
+            alert(`Password reset instructions have been sent to the registered email for Authority ID: ${authorityId}`);
+        }
+    }
+
+    function requestAccess() {
+        alert('To request authority access:\n\n1. Contact your department administrator\n2. Submit Form-DA-001 with required documents\n3. Complete background verification\n4. Attend mandatory training session\n5. Receive credentials after approval\n\nFor urgent requests, contact Emergency Operations Center: 1078');
+    }
+
+    function emergencyBypass() {
+        if (confirm('Emergency bypass will be logged and monitored. Continue only in genuine emergencies. Proceed?')) {
+            alert('Emergency Bypass Process:\n\n1. Call 1078 immediately\n2. State: "Emergency Authority Access Required"\n3. Provide your Authority ID and current situation\n4. Complete voice verification\n5. Receive temporary access code\n\nThis call will be recorded for security purposes.');
+            window.location.href = 'tel:1078';
+        }
+    }
+
+    // Demo credentials helper
+    document.addEventListener('DOMContentLoaded', function () {
+        const helpText = document.createElement('div');
+        helpText.style.cssText = 'position: fixed; top: 10px; right: 10px; background: var(--primary); color: white; padding: 10px; border-radius: 5px; font-size: 12px; z-index: 1000;';
+        helpText.innerHTML = 'Demo: ID: ADMIN001<br>Pass: demo123<br>OTP: 123456';
+        document.body.appendChild(helpText);
+
+        setTimeout(() => {
+            helpText.style.opacity = '0.7';
+        }, 5000);
+    });
+</script>
+{% endblock %}

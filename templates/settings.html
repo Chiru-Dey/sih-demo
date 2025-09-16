@@ -1,0 +1,485 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - Disastrous{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1><i class="fas fa-cog"></i> Settings</h1>
+        <p>Customize your disaster management app experience</p>
+    </div>
+
+    <div class="settings-container">
+        <!-- Notification Settings -->
+        <div class="settings-section">
+            <h2><i class="fas fa-bell"></i> Notification Settings</h2>
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>Push Notifications</h3>
+                        <p>Receive instant alerts for emergencies in your area</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="push-notifications" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>SMS Alerts</h3>
+                        <p>Get emergency notifications via SMS</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="sms-alerts" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>Email Notifications</h3>
+                        <p>Receive detailed reports and updates via email</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="email-notifications">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>Sound Alerts</h3>
+                        <p>Play sound for critical emergency notifications</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="sound-alerts" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Preferences -->
+        <div class="settings-section">
+            <h2><i class="fas fa-exclamation-triangle"></i> Alert Preferences</h2>
+            <div class="settings-grid">
+                <div class="setting-item full-width">
+                    <div class="setting-info">
+                        <h3>Alert Radius</h3>
+                        <p>Set the distance for receiving location-based alerts</p>
+                    </div>
+                    <div class="range-input">
+                        <input type="range" id="alert-radius" min="10" max="500" value="100" oninput="updateRangeValue('alert-radius', 'radius-value', ' km')">
+                        <span class="range-value" id="radius-value">100 km</span>
+                    </div>
+                </div>
+
+                <div class="setting-item full-width">
+                    <div class="setting-info">
+                        <h3>Minimum Alert Severity</h3>
+                        <p>Choose the minimum severity level for alerts</p>
+                    </div>
+                    <select id="min-severity" class="setting-select">
+                        <option value="low">All Alerts (Low, Medium, High, Critical)</option>
+                        <option value="medium" selected>Medium & Above</option>
+                        <option value="high">High & Critical Only</option>
+                        <option value="critical">Critical Only</option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>Quiet Hours</h3>
+                        <p>Reduce non-critical alerts during specified hours</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="quiet-hours">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item quiet-hours-config" style="display: none;">
+                    <div class="setting-info">
+                        <h3>Quiet Hours Time</h3>
+                        <div class="time-inputs">
+                            <input type="time" id="quiet-start" value="22:00">
+                            <span>to</span>
+                            <input type="time" id="quiet-end" value="07:00">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location Settings -->
+        <div class="settings-section">
+            <h2><i class="fas fa-map-marker-alt"></i> Location Settings</h2>
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>Location Services</h3>
+                        <p>Allow app to access your location for relevant alerts</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="location-services" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>Background Location</h3>
+                        <p>Continue tracking location when app is closed</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="background-location">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item full-width">
+                    <div class="setting-info">
+                        <h3>Primary Location</h3>
+                        <p>Set your home or primary location for alerts</p>
+                    </div>
+                    <div class="location-input">
+                        <input type="text" id="primary-location" placeholder="Enter address or coordinates" class="setting-input">
+                        <button type="button" class="btn-secondary" onclick="getCurrentLocation()">
+                            <i class="fas fa-crosshairs"></i> Use Current
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- App Settings -->
+        <div class="settings-section">
+            <h2><i class="fas fa-mobile-alt"></i> App Settings</h2>
+            <div class="settings-grid">
+                <div class="setting-item full-width">
+                    <div class="setting-info">
+                        <h3>Language</h3>
+                        <p>Choose your preferred language</p>
+                    </div>
+                    <select id="app-language" class="setting-select">
+                        <option value="en">English</option>
+                        <option value="hi">हिंदी (Hindi)</option>
+                        <option value="bn">বাংলা (Bengali)</option>
+                        <option value="te">తెలుగు (Telugu)</option>
+                        <option value="ta">தமிழ் (Tamil)</option>
+                        <option value="mr">मराठी (Marathi)</option>
+                        <option value="gu">ગુજરાતી (Gujarati)</option>
+                        <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                        <option value="ml">മലയാളം (Malayalam)</option>
+                        <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+                        <option value="or">ଓଡ଼ିଆ (Odia)</option>
+                        <option value="as">অসমীয়া (Assamese)</option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>Dark Mode</h3>
+                        <p>Use dark theme for better visibility</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="dark-mode">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>High Contrast</h3>
+                        <p>Increase contrast for better accessibility</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="high-contrast">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>Offline Mode</h3>
+                        <p>Cache data for offline access</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="offline-mode" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Privacy Settings -->
+        <div class="settings-section">
+            <h2><i class="fas fa-shield-alt"></i> Privacy & Security</h2>
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>Data Collection</h3>
+                        <p>Allow app to collect usage data for improvements</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="data-collection">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>Crash Reports</h3>
+                        <p>Automatically send crash reports to help fix issues</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="crash-reports" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item full-width">
+                    <div class="setting-info">
+                        <h3>Emergency Contact</h3>
+                        <p>Contact to notify in case of emergency</p>
+                    </div>
+                    <input type="tel" id="emergency-contact" placeholder="+91 XXXXXXXXXX" class="setting-input">
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Management -->
+        <div class="settings-section">
+            <h2><i class="fas fa-database"></i> Data Management</h2>
+            <div class="settings-actions">
+                <div class="action-item">
+                    <div class="action-info">
+                        <h3>Export Data</h3>
+                        <p>Download your settings and preferences</p>
+                    </div>
+                    <button type="button" class="btn-secondary" onclick="exportData()">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+
+                <div class="action-item">
+                    <div class="action-info">
+                        <h3>Import Data</h3>
+                        <p>Restore settings from a backup file</p>
+                    </div>
+                    <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importData()">
+                    <button type="button" class="btn-secondary" onclick="document.getElementById('import-file').click()">
+                        <i class="fas fa-upload"></i> Import
+                    </button>
+                </div>
+
+                <div class="action-item">
+                    <div class="action-info">
+                        <h3>Clear Cache</h3>
+                        <p>Clear stored data to free up space</p>
+                    </div>
+                    <button type="button" class="btn-secondary" onclick="clearCache()">
+                        <i class="fas fa-trash-alt"></i> Clear
+                    </button>
+                </div>
+
+                <div class="action-item">
+                    <div class="action-info">
+                        <h3>Reset Settings</h3>
+                        <p>Reset all settings to default values</p>
+                    </div>
+                    <button type="button" class="btn-danger" onclick="resetSettings()">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save Button -->
+        <div class="settings-footer">
+            <button type="button" class="btn-primary" onclick="saveSettings()">
+                <i class="fas fa-save"></i> Save Settings
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Initialize settings
+document.addEventListener('DOMContentLoaded', function() {
+    loadSettings();
+    
+    // Handle quiet hours toggle
+    document.getElementById('quiet-hours').addEventListener('change', function() {
+        const configDiv = document.querySelector('.quiet-hours-config');
+        configDiv.style.display = this.checked ? 'block' : 'none';
+    });
+});
+
+function updateRangeValue(rangeId, valueId, unit) {
+    const range = document.getElementById(rangeId);
+    const valueSpan = document.getElementById(valueId);
+    valueSpan.textContent = range.value + unit;
+}
+
+function getCurrentLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            document.getElementById('primary-location').value = `${lat}, ${lng}`;
+        }, function(error) {
+            alert('Unable to get your location. Please enter manually.');
+        });
+    } else {
+        alert('Geolocation is not supported by this browser.');
+    }
+}
+
+function saveSettings() {
+    const settings = {
+        notifications: {
+            push: document.getElementById('push-notifications').checked,
+            sms: document.getElementById('sms-alerts').checked,
+            email: document.getElementById('email-notifications').checked,
+            sound: document.getElementById('sound-alerts').checked
+        },
+        alerts: {
+            radius: document.getElementById('alert-radius').value,
+            minSeverity: document.getElementById('min-severity').value,
+            quietHours: document.getElementById('quiet-hours').checked,
+            quietStart: document.getElementById('quiet-start').value,
+            quietEnd: document.getElementById('quiet-end').value
+        },
+        location: {
+            services: document.getElementById('location-services').checked,
+            background: document.getElementById('background-location').checked,
+            primary: document.getElementById('primary-location').value
+        },
+        app: {
+            language: document.getElementById('app-language').value,
+            darkMode: document.getElementById('dark-mode').checked,
+            highContrast: document.getElementById('high-contrast').checked,
+            offlineMode: document.getElementById('offline-mode').checked
+        },
+        privacy: {
+            dataCollection: document.getElementById('data-collection').checked,
+            crashReports: document.getElementById('crash-reports').checked,
+            emergencyContact: document.getElementById('emergency-contact').value
+        }
+    };
+    
+    localStorage.setItem('disastrous-settings', JSON.stringify(settings));
+    showNotification('Settings saved successfully!', 'success');
+}
+
+function loadSettings() {
+    const savedSettings = localStorage.getItem('disastrous-settings');
+    if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        
+        // Load notification settings
+        if (settings.notifications) {
+            document.getElementById('push-notifications').checked = settings.notifications.push;
+            document.getElementById('sms-alerts').checked = settings.notifications.sms;
+            document.getElementById('email-notifications').checked = settings.notifications.email;
+            document.getElementById('sound-alerts').checked = settings.notifications.sound;
+        }
+        
+        // Load alert settings
+        if (settings.alerts) {
+            document.getElementById('alert-radius').value = settings.alerts.radius || 100;
+            updateRangeValue('alert-radius', 'radius-value', ' km');
+            document.getElementById('min-severity').value = settings.alerts.minSeverity || 'medium';
+            document.getElementById('quiet-hours').checked = settings.alerts.quietHours;
+            document.getElementById('quiet-start').value = settings.alerts.quietStart || '22:00';
+            document.getElementById('quiet-end').value = settings.alerts.quietEnd || '07:00';
+        }
+        
+        // Load location settings
+        if (settings.location) {
+            document.getElementById('location-services').checked = settings.location.services;
+            document.getElementById('background-location').checked = settings.location.background;
+            document.getElementById('primary-location').value = settings.location.primary || '';
+        }
+        
+        // Load app settings
+        if (settings.app) {
+            document.getElementById('app-language').value = settings.app.language || 'en';
+            document.getElementById('dark-mode').checked = settings.app.darkMode;
+            document.getElementById('high-contrast').checked = settings.app.highContrast;
+            document.getElementById('offline-mode').checked = settings.app.offlineMode;
+        }
+        
+        // Load privacy settings
+        if (settings.privacy) {
+            document.getElementById('data-collection').checked = settings.privacy.dataCollection;
+            document.getElementById('crash-reports').checked = settings.privacy.crashReports;
+            document.getElementById('emergency-contact').value = settings.privacy.emergencyContact || '';
+        }
+        
+        // Show quiet hours config if enabled
+        if (settings.alerts && settings.alerts.quietHours) {
+            document.querySelector('.quiet-hours-config').style.display = 'block';
+        }
+    }
+}
+
+function exportData() {
+    const settings = localStorage.getItem('disastrous-settings');
+    if (settings) {
+        const blob = new Blob([settings], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'disastrous-settings.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        showNotification('Settings exported successfully!', 'success');
+    } else {
+        showNotification('No settings to export', 'warning');
+    }
+}
+
+function importData() {
+    const fileInput = document.getElementById('import-file');
+    const file = fileInput.files[0];
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const settings = JSON.parse(e.target.result);
+                localStorage.setItem('disastrous-settings', JSON.stringify(settings));
+                loadSettings();
+                showNotification('Settings imported successfully!', 'success');
+            } catch (error) {
+                showNotification('Invalid settings file', 'error');
+            }
+        };
+        reader.readAsText(file);
+    }
+}
+
+function clearCache() {
+    if (confirm('Clear all cached data? This will remove offline content.')) {
+        if ('caches' in window) {
+            caches.keys().then(function(names) {
+                names.forEach(function(name) {
+                    caches.delete(name);
+                });
+            });
+        }
+        showNotification('Cache cleared successfully!', 'success');
+    }
+}
+
+function resetSettings() {
+    if (confirm('Reset all settings to default? This action cannot be undone.')) {
+        localStorage.removeItem('disastrous-settings');
+        location.reload();
+    }
+}
+</script>
+{% endblock %}

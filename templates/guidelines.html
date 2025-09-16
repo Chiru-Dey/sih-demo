@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block title %}Safety Guidelines - Disastrous{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1><i class="fas fa-list"></i> Safety Guidelines</h1>
+        <p>Comprehensive disaster preparedness and safety protocols</p>
+    </div>
+
+    <div class="guidelines-navigation">
+        <div class="guidelines-tabs">
+            <button class="tab-btn active" onclick="showGuideline('earthquake')">
+                <i class="fas fa-mountain"></i> Earthquake
+            </button>
+            <button class="tab-btn" onclick="showGuideline('flood')">
+                <i class="fas fa-water"></i> Flood
+            </button>
+            <button class="tab-btn" onclick="showGuideline('fire')">
+                <i class="fas fa-fire"></i> Fire
+            </button>
+            <button class="tab-btn" onclick="showGuideline('cyclone')">
+                <i class="fas fa-wind"></i> Cyclone
+            </button>
+            <button class="tab-btn" onclick="showGuideline('general')">
+                <i class="fas fa-shield-alt"></i> General
+            </button>
+        </div>
+    </div>
+
+    <!-- Earthquake Guidelines -->
+    <div id="earthquake" class="guideline-content active">
+        <div class="guideline-header">
+            <h2><i class="fas fa-mountain"></i> Earthquake Safety Guidelines</h2>
+        </div>
+
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Before an Earthquake</h3>
+                <ul class="guideline-list">
+                    <li>Prepare an emergency kit with water, food, flashlight, and first aid supplies</li>
+                    <li>Secure heavy furniture and appliances to walls</li>
+                    <li>Identify safe spots in each room (under sturdy tables, away from glass)</li>
+                    <li>Practice "Drop, Cover, and Hold On" with family members</li>
+                    <li>Keep important documents in a waterproof container</li>
+                    <li>Learn how to turn off gas, water, and electricity</li>
+                </ul>
+            </div>
+
+            <div class="guideline-card">
+                <h3><i class="fas fa-running"></i> During an Earthquake</h3>
+                <ul class="guideline-list">
+                    <li><strong>Drop:</strong> Get down on hands and knees immediately</li>
+                    <li><strong>Cover:</strong> Take cover under a sturdy table or desk</li>
+                    <li><strong>Hold On:</strong> Hold onto your shelter and protect your head</li>
+                    <li>Stay away from windows, mirrors, and heavy objects</li>
+                    <li>If outdoors, move away from buildings, trees, and power lines</li>
+                    <li>If driving, pull over safely and stay in the vehicle</li>
+                </ul>
+            </div>
+
+            <div class="guideline-card">
+                <h3><i class="fas fa-first-aid"></i> After an Earthquake</h3>
+                <ul class="guideline-list">
+                    <li>Check yourself and others for injuries</li>
+                    <li>Check for hazards like gas leaks, electrical damage, or fires</li>
+                    <li>Use stairs, not elevators</li>
+                    <li>Stay away from damaged buildings</li>
+                    <li>Be prepared for aftershocks</li>
+                    <li>Listen to emergency broadcasts for updates</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flood Guidelines -->
+    <div id="flood" class="guideline-content">
+        <div class="guideline-header">
+            <h2><i class="fas fa-water"></i> Flood Safety Guidelines</h2>
+        </div>
+
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-cloud-rain"></i> Before a Flood</h3>
+                <ul class="guideline-list">
+                    <li>Know your evacuation routes and higher ground locations</li>
+                    <li>Keep emergency supplies ready including waterproof containers</li>
+                    <li>Install sump pumps and backup power sources</li>
+                    <li>Review insurance policies and document belongings</li>
+                    <li>Sign up for local emergency alerts</li>
+                    <li>Learn how to shut off utilities</li>
+                </ul>
+            </div>
+
+            <div class="guideline-card">
+                <h3><i class="fas fa-swimmer"></i> During a Flood</h3>
+                <ul class="guideline-list">
+                    <li>Move to higher ground immediately</li>
+                    <li>Avoid walking or driving through flood waters</li>
+                    <li>Stay away from electrical equipment if wet</li>
+                    <li>Listen to emergency broadcasts</li>
+                    <li>Do not enter flowing water - 6 inches can knock you down</li>
+                    <li>If trapped, signal for help from the highest point</li>
+                </ul>
+            </div>
+
+            <div class="guideline-card">
+                <h3><i class="fas fa-broom"></i> After a Flood</h3>
+                <ul class="guideline-list">
+                    <li>Wait for authorities to declare the area safe</li>
+                    <li>Avoid flood water - it may be contaminated</li>
+                    <li>Document damage for insurance claims</li>
+                    <li>Clean and disinfect everything that got wet</li>
+                    <li>Watch for electrical hazards</li>
+                    <li>Boil water until authorities confirm it's safe</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fire Guidelines -->
+    <div id="fire" class="guideline-content">
+        <div class="guideline-header">
+            <h2><i class="fas fa-fire"></i> Fire Safety Guidelines</h2>
+        </div>
+
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-fire-extinguisher"></i> Fire Prevention</h3>
+                <ul class="guideline-list">
+                    <li>Install smoke detectors and check batteries regularly</li>
+                    <li>Keep fire extinguishers in key locations</li>
+                    <li>Create and practice a fire escape plan</li>
+                    <li>Keep flammable materials away from heat sources</li>
+                    <li>Maintain electrical systems and appliances</li>
+                    <li>Never leave cooking unattended</li>
+                </ul>
+            </div>
+
+            <div class="guideline-card">
+                <h3><i class="fas fa-door-open"></i> During a Fire</h3>
+                <ul class="guideline-list">
+                    <li>Get out immediately and call emergency services</li>
+                    <li>Feel doors before opening - if hot, use another exit</li>
+                    <li>Crawl low under smoke</li>
+                    <li>Stop, drop, and roll if clothes catch fire</li>
+                    <li>Never use elevators during a fire</li>
+                    <li>Meet at your designated meeting point</li>
+                </ul>
+            </div>
+
+            <div class="guideline-card">
+                <h3><i class="fas fa-smoke"></i> Smoke Safety</h3>
+                <ul class="guideline-list">
+                    <li>Stay low to avoid smoke inhalation</li>
+                    <li>Cover nose and mouth with cloth</li>
+                    <li>Test doors for heat before opening</li>
+                    <li>If trapped, seal door cracks with cloth</li>
+                    <li>Signal for help from a window</li>
+                    <li>Wait for rescue if escape routes are blocked</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cyclone Guidelines -->
+    <div id="cyclone" class="guideline-content">
+        <div class="guideline-header">
+            <h2><i class="fas fa-wind"></i> Cyclone Safety Guidelines</h2>
+        </div>
+
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-cloud"></i> Before a Cyclone</h3>
+                <ul class="guideline-list">
+                    <li>Monitor weather reports and warnings</li>
+                    <li>Secure outdoor objects that could become projectiles</li>
+                    <li>Stock up on water, food, and emergency supplies</li>
+                    <li>Charge all electronic devices</li>
+                    <li>Know your evacuation zone and routes</li>
+                    <li>Protect windows with boards or tape</li>
+                </ul>
+            </div>
+
+            <div class="guideline-card">
+                <h3><i class="fas fa-home"></i> During a Cyclone</h3>
+                <ul class="guideline-list">
+                    <li>Stay indoors and away from windows</li>
+                    <li>Listen to emergency broadcasts</li>
+                    <li>Use flashlights, not candles</li>
+                    <li>Stay in the strongest part of the building</li>
+                    <li>Beware of the eye - winds will return</li>
+                    <li>Do not go outside until authorities say it's safe</li>
+                </ul>
+            </div>
+
+            <div class="guideline-card">
+                <h3><i class="fas fa-tools"></i> After a Cyclone</h3>
+                <ul class="guideline-list">
+                    <li>Check for injuries and give first aid</li>
+                    <li>Inspect your home for damage</li>
+                    <li>Avoid downed power lines</li>
+                    <li>Use generators outdoors only</li>
+                    <li>Photograph damage for insurance</li>
+                    <li>Help neighbors who may need assistance</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- General Guidelines -->
+    <div id="general" class="guideline-content">
+        <div class="guideline-header">
+            <h2><i class="fas fa-shield-alt"></i> General Emergency Preparedness</h2>
+        </div>
+
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-box"></i> Emergency Kit Essentials</h3>
+                <ul class="guideline-list">
+                    <li>Water (1 gallon per person per day for 3 days)</li>
+                    <li>Non-perishable food (3-day supply)</li>
+                    <li>Battery-powered radio and flashlight</li>
+                    <li>First aid kit and medications</li>
+                    <li>Whistle for signaling help</li>
+                    <li>Plastic sheeting and duct tape</li>
+                    <li>Cell phone chargers</li>
+                    <li>Cash and copies of important documents</li>
+                </ul>
+            </div>
+
+            <div class="guideline-card">
+                <h3><i class="fas fa-users"></i> Family Emergency Plan</h3>
+                <ul class="guideline-list">
+                    <li>Choose two meeting places (near home and outside neighborhood)</li>
+                    <li>Designate an out-of-state contact person</li>
+                    <li>Plan evacuation routes from home, work, and school</li>
+                    <li>Practice emergency drills regularly</li>
+                    <li>Keep emergency contacts list updated</li>
+                    <li>Ensure all family members know the plan</li>
+                </ul>
+            </div>
+
+            <div class="guideline-card">
+                <h3><i class="fas fa-mobile-alt"></i> Communication Plan</h3>
+                <ul class="guideline-list">
+                    <li>Program emergency numbers into phones</li>
+                    <li>Keep a battery-powered or hand-crank radio</li>
+                    <li>Know how to send text messages (often work when calls don't)</li>
+                    <li>Register for local emergency alerts</li>
+                    <li>Learn about emergency communication methods</li>
+                    <li>Have a backup communication plan</li>
+                </ul>
+            </div>
+
+            <div class="guideline-card">
+                <h3><i class="fas fa-heart"></i> First Aid Basics</h3>
+                <ul class="guideline-list">
+                    <li>Learn CPR and basic first aid</li>
+                    <li>Know how to treat shock</li>
+                    <li>Understand how to stop bleeding</li>
+                    <li>Learn to recognize signs of stroke and heart attack</li>
+                    <li>Keep first aid manual in your emergency kit</li>
+                    <li>Take a certified first aid course</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showGuideline(type) {
+        // Hide all guideline contents
+        const contents = document.querySelectorAll('.guideline-content');
+        contents.forEach(content => content.classList.remove('active'));
+
+        // Remove active class from all tabs
+        const tabs = document.querySelectorAll('.tab-btn');
+        tabs.forEach(tab => tab.classList.remove('active'));
+
+        // Show selected guideline
+        document.getElementById(type).classList.add('active');
+
+        // Add active class to clicked tab
+        event.target.classList.add('active');
+    }
+</script>
+{% endblock %}

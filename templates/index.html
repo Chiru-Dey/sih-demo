@@ -1,0 +1,2735 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disastrous - Disaster Management App</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#5978f3">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Disastrous">
+    <meta name="msapplication-TileColor" content="#11151c">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="{{ url_for('manifest') }}">
+
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='icons/icon-192.png') }}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --background: #11151c;
+            --foreground: #212736;
+            --accent: #5978f3;
+            --primary: #dbc69a;
+            --danger: #e25555;
+            --success: #43d9ad;
+            --white: #f4f4f9;
+            --shadow: rgba(0, 0, 0, 0.7);
+            --font-size: 16px;
+        }
+
+        /* High Contrast Mode */
+        body.high-contrast {
+            --background: #000000;
+            --foreground: #ffffff;
+            --accent: #ffff00;
+            --primary: #ffffff;
+            --danger: #ff0000;
+            --success: #00ff00;
+            --white: #ffffff;
+            --shadow: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Font Size Classes */
+        body.font-small {
+            --font-size: 14px;
+        }
+
+        body.font-medium {
+            --font-size: 16px;
+        }
+
+        body.font-large {
+            --font-size: 18px;
+        }
+
+        body.font-xlarge {
+            --font-size: 22px;
+        }
+
+        /* RTL Support */
+        body.rtl {
+            direction: rtl;
+        }
+
+        body.rtl .hamburger {
+            right: 0;
+            left: auto;
+        }
+
+        body.rtl .fixed-actions {
+            left: 20px;
+            right: auto;
+        }
+
+        body.rtl .hamburger-menu {
+            right: -300px;
+            left: auto;
+        }
+
+        body.rtl .hamburger-menu.active {
+            right: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: var(--background);
+            color: var(--white);
+            min-height: 100vh;
+            padding-top: 130px;
+            font-size: var(--font-size);
+            transition: all 0.3s ease;
+        }
+
+        /* Skip to Content Link */
+        .skip-to-content {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--accent);
+            color: var(--white);
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 2000;
+        }
+
+        .skip-to-content:focus {
+            top: 6px;
+        }
+
+        /* PWA Install Banner */
+        .pwa-install-banner {
+            position: fixed;
+            top: 130px;
+            left: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            color: var(--white);
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px var(--shadow);
+            z-index: 1010;
+            display: none;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .pwa-install-banner.show {
+            display: flex;
+        }
+
+        .pwa-install-text {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .pwa-install-btn {
+            background: var(--white);
+            color: var(--accent);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .pwa-install-close {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 2px;
+        }
+
+        /* Offline Indicator */
+        .offline-indicator {
+            position: fixed;
+            top: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--danger);
+            color: var(--white);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            z-index: 1020;
+            display: none;
+        }
+
+        .offline-indicator.show {
+            display: block;
+        }
+
+        /* Translation Panel */
+        .translation-panel {
+            position: fixed;
+            top: 20%;
+            right: -320px;
+            width: 290px;
+            background: var(--foreground);
+            border-radius: 15px 0 0 15px;
+            box-shadow: -5px 0 20px var(--shadow);
+            z-index: 1005;
+            transition: right 0.3s ease;
+            padding: 15px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .translation-panel.active {
+            right: 0;
+        }
+
+        .translation-toggle {
+            position: fixed;
+            top: 20%;
+            right: 0;
+            background: var(--success);
+            color: var(--white);
+            border: none;
+            padding: 12px 6px;
+            border-radius: 8px 0 0 8px;
+            cursor: pointer;
+            z-index: 1006;
+            font-size: 14px;
+            writing-mode: vertical-lr;
+            text-orientation: mixed;
+        }
+
+        .translation-toggle:hover {
+            background: var(--primary);
+            color: var(--background);
+        }
+
+        /* Translation Loading Styles */
+        .translation-loading {
+            display: none;
+            text-align: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(89, 120, 243, 0.1);
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+        }
+
+        .translation-loading.active {
+            display: block;
+        }
+
+        .loading-spinner {
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .loading-spinner i {
+            font-size: 20px;
+            margin-right: 8px;
+        }
+
+        .loading-progress {
+            width: 100%;
+            height: 4px;
+            background: rgba(89, 120, 243, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            width: 0%;
+            transition: width 0.3s ease;
+            animation: progressGlow 2s infinite;
+        }
+
+        @keyframes progressGlow {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .translation-usage {
+            margin-bottom: 10px;
+            padding: 8px;
+            background: rgba(67, 217, 173, 0.1);
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        /* Accessibility Panel */
+        .accessibility-panel {
+            position: fixed;
+            top: 60%;
+            right: -320px;
+            width: 290px;
+            background: var(--foreground);
+            border-radius: 15px 0 0 15px;
+            box-shadow: -5px 0 20px var(--shadow);
+            z-index: 1005;
+            transition: right 0.3s ease;
+            padding: 15px;
+        }
+
+        .accessibility-panel.active {
+            right: 0;
+        }
+
+        .accessibility-toggle {
+            position: fixed;
+            top: 60%;
+            right: 0;
+            background: var(--accent);
+            color: var(--white);
+            border: none;
+            padding: 12px 6px;
+            border-radius: 8px 0 0 8px;
+            cursor: pointer;
+            z-index: 1006;
+            font-size: 14px;
+            writing-mode: vertical-lr;
+            text-orientation: mixed;
+        }
+
+        .accessibility-toggle:hover {
+            background: var(--primary);
+            color: var(--background);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+
+        .panel-close {
+            background: none;
+            border: none;
+            color: var(--danger);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+        }
+
+        .panel-close:hover {
+            background: rgba(226, 85, 85, 0.1);
+        }
+
+        .language-selector {
+            width: 100%;
+            background: var(--background);
+            border: 1px solid var(--accent);
+            color: var(--white);
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        .language-selector option {
+            background: var(--background);
+            color: var(--white);
+        }
+
+        .apply-translation-btn {
+            width: 100%;
+            background: var(--success);
+            color: var(--white);
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .apply-translation-btn:hover {
+            background: var(--accent);
+            transform: scale(1.02);
+        }
+
+        .apply-translation-btn:disabled {
+            background: var(--shadow);
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .revert-btn {
+            width: 100%;
+            background: var(--primary);
+            color: var(--background);
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .revert-btn:hover {
+            background: var(--accent);
+            color: var(--white);
+            transform: scale(1.02);
+        }
+
+        .revert-btn:disabled {
+            background: var(--shadow);
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .accessibility-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .accessibility-row {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .accessibility-btn {
+            background: rgba(89, 120, 243, 0.2);
+            border: 1px solid var(--accent);
+            color: var(--white);
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 50px;
+        }
+
+        .accessibility-btn:hover,
+        .accessibility-btn.active {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        /* Header */
+        .header {
+            background: var(--foreground);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            box-shadow: 0 2px 20px var(--shadow);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1002;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hamburger {
+            position: absolute;
+            left: 0;
+            font-size: 24px;
+            color: var(--accent);
+            cursor: pointer;
+            z-index: 1003;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+            background: rgba(34, 40, 56, 0.3);
+            border: none;
+        }
+
+        .hamburger:hover,
+        .hamburger:focus {
+            background: var(--accent);
+            color: var(--primary);
+            outline: 2px solid var(--primary);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, var(--danger), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            color: var(--white);
+        }
+
+        .logo::before {
+            content: '🌪️';
+            font-size: 32px;
+        }
+
+        .app-name {
+            color: var(--primary);
+            font-size: calc(var(--font-size) + 12px);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Emergency Alert */
+        .emergency-alert {
+            background: linear-gradient(90deg, var(--danger), var(--accent));
+            color: var(--white);
+            padding: 12px 20px;
+            text-align: center;
+            position: fixed;
+            top: 90px;
+            left: 0;
+            right: 0;
+            font-weight: 500;
+            border-bottom: 2px solid var(--danger);
+            z-index: 1001;
+            font-size: var(--font-size);
+        }
+
+        .emergency-alert::before {
+            content: '⚠️';
+            margin-right: 10px;
+            font-size: calc(var(--font-size) + 2px);
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .map-section {
+            background: var(--foreground);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px var(--shadow);
+        }
+
+        .map-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--background);
+            border-radius: 15px;
+            border: 2px solid var(--accent);
+            overflow: hidden;
+            height: 500px;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            border-radius: 13px;
+        }
+
+        .collapsible-section {
+            background: var(--foreground);
+            border-radius: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 20px var(--shadow);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: var(--accent);
+            color: var(--background);
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-size: calc(var(--font-size) + 2px);
+        }
+
+        .section-header:hover,
+        .section-header:focus {
+            background: var(--primary);
+            outline: 2px solid var(--white);
+        }
+
+        .section-content {
+            padding: 20px;
+            display: none;
+            color: var(--primary);
+            font-size: var(--font-size);
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        .emergency-contact {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--background);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            color: var(--success);
+        }
+
+        .contact-number {
+            font-size: calc(var(--font-size) + 8px);
+            font-weight: bold;
+            color: var(--danger);
+            flex: 1;
+        }
+
+        .quick-chat-btn {
+            background: var(--success);
+            color: var(--background);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: var(--font-size);
+        }
+
+        .quick-chat-btn:hover,
+        .quick-chat-btn:focus {
+            background: var(--accent);
+            color: var(--white);
+            transform: scale(1.05);
+            outline: 2px solid var(--white);
+        }
+
+        .guidelines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .guideline-card {
+            background: var(--background);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid var(--success);
+            color: var(--primary);
+            font-size: var(--font-size);
+        }
+
+        .guideline-card.dont {
+            border-left-color: var(--danger);
+        }
+
+        .guideline-card h4 {
+            color: var(--accent);
+            margin-bottom: 10px;
+            font-size: calc(var(--font-size) + 2px);
+        }
+
+        /* Fixed Action Buttons */
+        .fixed-actions {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .action-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            color: var(--white);
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:focus {
+            outline: 3px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .ai-assistant {
+            background: linear-gradient(135deg, var(--accent), var(--success));
+        }
+
+        .emergency-call {
+            background: linear-gradient(135deg, var(--danger), var(--accent));
+        }
+
+        .quick-chat {
+            background: linear-gradient(135deg, var(--success), var(--accent));
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Chatbot Styles */
+        .chatbot-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(17, 21, 28, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chatbot-overlay.active {
+            display: flex;
+        }
+
+        .chatbot-popup {
+            width: 90%;
+            max-width: 450px;
+            height: 600px;
+            background: var(--foreground);
+            border-radius: 20px;
+            box-shadow: 0 15px 50px var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: popupSlideIn 0.3s ease-out;
+        }
+
+        @keyframes popupSlideIn {
+            from {
+                transform: translateY(50px) scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--white);
+        }
+
+        .chatbot-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: calc(var(--font-size) + 2px);
+            font-weight: bold;
+        }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .chatbot-close:hover,
+        .chatbot-close:focus {
+            background: rgba(255, 255, 255, 0.2);
+            outline: 2px solid var(--white);
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: var(--background);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: var(--font-size);
+            line-height: 1.4;
+            animation: messageSlideIn 0.3s ease-out;
+        }
+
+        @keyframes messageSlideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .message.bot {
+            background: var(--foreground);
+            color: var(--white);
+            align-self: flex-start;
+            border-bottom-left-radius: 6px;
+        }
+
+        .message.user {
+            background: var(--accent);
+            color: var(--white);
+            align-self: flex-end;
+            border-bottom-right-radius: 6px;
+        }
+
+        .message.system {
+            background: var(--success);
+            color: var(--background);
+            align-self: flex-start;
+            border-bottom-left-radius: 6px;
+        }
+
+        .message.typing {
+            background: rgba(89, 120, 243, 0.2);
+            color: var(--accent);
+        }
+
+        .chatbot-input-area {
+            padding: 20px;
+            background: var(--foreground);
+            border-top: 1px solid rgba(89, 120, 243, 0.2);
+        }
+
+        .chatbot-input-container {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            background: var(--background);
+            border: 2px solid transparent;
+            border-radius: 25px;
+            padding: 12px 18px;
+            color: var(--white);
+            font-size: var(--font-size);
+            resize: none;
+            outline: none;
+            transition: border-color 0.3s ease;
+            min-height: 44px;
+            max-height: 100px;
+        }
+
+        .chatbot-input:focus {
+            border-color: var(--accent);
+        }
+
+        .chatbot-send {
+            background: var(--accent);
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            color: var(--white);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-send:hover,
+        .chatbot-send:focus {
+            background: var(--primary);
+            transform: scale(1.05);
+            outline: 2px solid var(--white);
+        }
+
+        .voice-controls {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .voice-btn {
+            background: var(--accent);
+            border: none;
+            color: var(--white);
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .voice-btn:hover,
+        .voice-btn:focus {
+            background: var(--primary);
+            color: var(--background);
+            outline: 2px solid var(--accent);
+        }
+
+        .voice-btn.active {
+            background: var(--danger);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .hamburger-menu {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(21, 27, 41, 0.7);
+            backdrop-filter: blur(10px);
+            z-index: 1004;
+            transition: left 0.3s ease;
+            padding: 130px 0 20px;
+            box-shadow: 5px 0 20px var(--shadow);
+        }
+
+        .hamburger-menu.active {
+            left: 0;
+        }
+
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(34, 44, 56, 0.4);
+            z-index: 1003;
+            display: none;
+        }
+
+        .menu-overlay.active {
+            display: block;
+        }
+
+        .menu-item {
+            display: block;
+            padding: 15px 30px;
+            color: var(--white);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(89, 120, 243, 0.3);
+            transition: all 0.3s ease;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.05);
+            margin: 2px 10px;
+            border-radius: 8px;
+            font-size: var(--font-size);
+        }
+
+        .menu-item:hover,
+        .menu-item:focus {
+            background: rgba(89, 120, 243, 0.2);
+            padding-left: 40px;
+            color: var(--primary);
+            transform: translateX(5px);
+            outline: 2px solid var(--accent);
+        }
+
+        .menu-bottom {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+        }
+
+        .menu-bottom .menu-item {
+            border-bottom: none;
+            opacity: 0.9;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 160px;
+            }
+
+            .pwa-install-banner {
+                left: 10px;
+                right: 10px;
+                padding: 12px 15px;
+                top: 160px;
+            }
+
+            .translation-panel,
+            .accessibility-panel {
+                width: 240px;
+                right: -240px;
+            }
+
+            .fixed-actions {
+                bottom: 15px;
+                right: 15px;
+            }
+
+            .action-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+
+            .hamburger-menu {
+                width: 250px;
+                left: -250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding-top: 140px;
+            }
+
+            .pwa-install-banner {
+                left: 5px;
+                right: 5px;
+                padding: 10px 12px;
+                top: 140px;
+            }
+
+            .translation-panel,
+            .accessibility-panel {
+                width: 200px;
+                right: -200px;
+                padding: 10px;
+            }
+
+            .emergency-alert {
+                padding: 8px 10px;
+                font-size: calc(var(--font-size) - 2px);
+                top: 100px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+
+            .pwa-install-banner,
+            .accessibility-panel,
+            .translation-panel,
+            .accessibility-toggle,
+            .translation-toggle,
+            .fixed-actions,
+            .hamburger-menu,
+            .chatbot-overlay {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+                padding-top: 0 !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Skip to Content Link -->
+    <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
+    <!-- PWA Install Banner -->
+    <div class="pwa-install-banner" id="pwaInstallBanner">
+        <i class="fas fa-download"></i>
+        <div class="pwa-install-text">
+            <strong>Install Disastrous</strong><br>
+            Get quick access to disaster alerts and emergency services!
+        </div>
+        <button class="pwa-install-btn" id="pwaInstallBtn">Install</button>
+        <button class="pwa-install-close" onclick="hidePWABanner()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Offline Indicator -->
+    <div class="offline-indicator" id="offlineIndicator">
+        <i class="fas fa-wifi"></i> You're offline - Limited functionality available
+    </div>
+
+    <!-- Translation Panel -->
+    <button class="translation-toggle" onclick="toggleTranslationPanel()">
+        <i class="fas fa-language"></i>
+    </button>
+
+    <div class="translation-panel" id="translationPanel">
+        <div class="panel-header">
+            <h4><i class="fas fa-language"></i> Translation</h4>
+            <button class="panel-close" onclick="toggleTranslationPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Daily usage limit removed -->
+
+        <select class="language-selector" id="languageSelect">
+            <option value="en">English</option>
+            <option value="hi">हिन्दी (Hindi)</option>
+            <option value="as">অসমীয়া (Assamese)</option>
+            <option value="bn">বাংলা (Bengali)</option>
+            <option value="gu">ગુજરાતી (Gujarati)</option>
+            <option value="kn">ಕನ್ನಡ (Kannada)</option>
+            <option value="ks">کٲشُر (Kashmiri)</option>
+            <option value="gom">कोंकणी (Konkani)</option>
+            <option value="ml">മലയാളം (Malayalam)</option>
+            <option value="mni">মৈতৈলোন্ (Manipuri)</option>
+            <option value="mr">मराठी (Marathi)</option>
+            <option value="ne">नेपाली (Nepali)</option>
+            <option value="or">ଓଡ଼ିଆ (Odia)</option>
+            <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+            <option value="sa">संस्कृत (Sanskrit)</option>
+            <option value="sd">سنڌي (Sindhi)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
+            <option value="te">తెలుగు (Telugu)</option>
+            <option value="ur">اردو (Urdu)</option>
+            <option value="brx">बड़ो (Bodo)</option>
+            <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ (Santhali)</option>
+            <option value="mai">मैथिली (Maithili)</option>
+        </select>
+
+        <div class="translation-loading" id="translationLoading">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i>
+                <span>Translating with AI...</span>
+            </div>
+            <div class="loading-progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+
+        <button class="apply-translation-btn" onclick="applyGeminiTranslation()" id="translateBtn">
+            <i class="fas fa-robot"></i> Translate with AI
+        </button>
+
+        <button class="revert-btn" onclick="revertToOriginalTexts()" id="revertBtn">
+            <i class="fas fa-undo"></i> Revert to English
+        </button>
+
+    </div>
+
+    <!-- Accessibility Panel -->
+    <button class="accessibility-toggle" onclick="toggleAccessibilityPanel()">
+        <i class="fas fa-universal-access"></i>
+    </button>
+
+    <div class="accessibility-panel" id="accessibilityPanel">
+        <div class="panel-header">
+            <h4><i class="fas fa-universal-access"></i> Accessibility</h4>
+            <button class="panel-close" onclick="toggleAccessibilityPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="accessibility-controls">
+            <h5 style="color: var(--primary); font-size: 12px; margin-bottom: 5px;">Font Size</h5>
+            <div class="accessibility-row">
+                <button class="accessibility-btn" onclick="changeFontSize('small')">A-</button>
+                <button class="accessibility-btn active" onclick="changeFontSize('medium')">A</button>
+                <button class="accessibility-btn" onclick="changeFontSize('large')">A+</button>
+                <button class="accessibility-btn" onclick="changeFontSize('xlarge')">A++</button>
+            </div>
+
+            <h5 style="color: var(--primary); font-size: 12px; margin: 10px 0 5px;">Display</h5>
+            <button class="accessibility-btn" onclick="toggleHighContrast()">
+                <i class="fas fa-adjust"></i> High Contrast
+            </button>
+
+            <h5 style="color: var(--primary); font-size: 12px; margin: 10px 0 5px;">Audio</h5>
+            <button class="accessibility-btn" onclick="toggleTextToSpeech()">
+                <i class="fas fa-volume-up"></i> Text to Speech
+            </button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <button class="hamburger" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo-section">
+                <div class="logo" data-no-translate></div>
+                <h1 class="app-name">Disastrous</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Emergency Alert -->
+    <div class="emergency-alert" id="emergencyAlert">
+        <strong>CYCLONE ALERT:</strong> <span>Heavy rainfall expected in coastal areas of Odisha and West Bengal. Take
+            necessary precautions.</span>
+    </div>
+
+    <main class="main-content" id="main-content">
+        <!-- Map Section -->
+        <section class="map-section">
+            <h2 style="margin-bottom: 15px; color: var(--accent);">Live Disaster Monitoring</h2>
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+        </section>
+
+        <!-- Rescue Services Section -->
+        <section class="collapsible-section">
+            <button class="section-header" onclick="toggleSection(this)">
+                <h3><i class="fas fa-ambulance"></i> Emergency Rescue Services</h3>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="section-content">
+                <div class="emergency-contact">
+                    <div>
+                        <h4>National Emergency Number</h4>
+                        <div class="contact-number">📞 112</div>
+                    </div>
+                    <button class="quick-chat-btn" onclick="startQuickChat()">
+                        <i class="fas fa-comments"></i> Quick Chat
+                    </button>
+                </div>
+                <div class="emergency-contact">
+                    <div>
+                        <h4>Disaster Management Helpline</h4>
+                        <div class="contact-number">📞 1078</div>
+                    </div>
+                    <button class="quick-chat-btn" onclick="startQuickChat()">
+                        <i class="fas fa-comments"></i> Quick Chat
+                    </button>
+                </div>
+                <div class="emergency-contact">
+                    <div>
+                        <h4>Fire Services</h4>
+                        <div class="contact-number" data-no-translate>📞 101</div>
+                    </div>
+                    <button class="quick-chat-btn" onclick="startQuickChat()">
+                        <i class="fas fa-comments"></i> Quick Chat
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guidelines Section -->
+        <section class="collapsible-section">
+            <button class="section-header" onclick="toggleSection(this)">
+                <h3><i class="fas fa-list-check"></i> Safety Guidelines</h3>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="section-content">
+                <div class="guidelines-grid">
+                    <div class="guideline-card">
+                        <h4>✅ Do's</h4>
+                        <ul>
+                            <li>Stay informed through official channels</li>
+                            <li>Keep emergency supplies ready</li>
+                            <li>Follow evacuation orders immediately</li>
+                            <li>Help neighbors and elderly</li>
+                            <li>Keep important documents safe</li>
+                        </ul>
+                    </div>
+                    <div class="guideline-card dont">
+                        <h4>❌ Don'ts</h4>
+                        <ul>
+                            <li>Don't ignore warning messages</li>
+                            <li>Don't venture into flooded areas</li>
+                            <li>Don't spread unverified information</li>
+                            <li>Don't use elevators during earthquakes</li>
+                            <li>Don't touch electrical appliances with wet hands</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Action Buttons -->
+    <div class="fixed-actions">
+        <button class="action-btn ai-assistant" onclick="openAIAssistant()">
+            <i class="fas fa-robot"></i>
+        </button>
+        <button class="action-btn emergency-call" data-no-translate onclick="makeEmergencyCall()">
+            <i class="fas fa-phone"></i>
+        </button>
+        <button class="action-btn quick-chat" onclick="startQuickChat()">
+            <i class="fas fa-comments"></i>
+        </button>
+    </div>
+
+    <!-- AI Chatbot -->
+    <div class="chatbot-overlay" id="ai-chatbot">
+        <div class="chatbot-popup">
+            <div class="chatbot-header">
+                <div class="chatbot-title">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Disaster Assistant</span>
+                </div>
+                <button class="chatbot-close" onclick="closeChatbot('ai-chatbot')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chatbot-messages" id="ai-messages">
+                <div class="message bot">
+                    👋 Hello! I'm your AI Disaster Assistant. How can I help you today?
+                </div>
+            </div>
+            <div class="voice-controls">
+                <button class="voice-btn" onclick="startVoiceInput('ai')">
+                    <i class="fas fa-microphone"></i> Voice
+                </button>
+                <button class="voice-btn" onclick="readLastMessage('ai')">
+                    <i class="fas fa-volume-up"></i> Read
+                </button>
+            </div>
+            <div class="chatbot-input-area">
+                <div class="chatbot-input-container">
+                    <textarea class="chatbot-input" id="ai-input"
+                        placeholder="Ask me anything about disaster preparedness..." rows="1"></textarea>
+                    <button class="chatbot-send" onclick="sendMessage('ai')" id="ai-send">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Chat -->
+    <div class="chatbot-overlay" id="quick-chatbot">
+        <div class="chatbot-popup">
+            <div class="chatbot-header">
+                <div class="chatbot-title">
+                    <i class="fas fa-headset"></i>
+                    <span>Emergency Support</span>
+                </div>
+                <button class="chatbot-close" onclick="closeChatbot('quick-chatbot')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chatbot-messages" id="quick-messages">
+                <div class="message system">
+                    🚨 Emergency Support Connected. How can we assist you?
+                </div>
+            </div>
+            <div class="voice-controls">
+                <button class="voice-btn" onclick="startVoiceInput('quick')">
+                    <i class="fas fa-microphone"></i> Voice
+                </button>
+                <button class="voice-btn" onclick="readLastMessage('quick')">
+                    <i class="fas fa-volume-up"></i> Read
+                </button>
+            </div>
+            <div class="chatbot-input-area">
+                <div class="chatbot-input-container">
+                    <textarea class="chatbot-input" id="quick-input" placeholder="Describe your emergency situation..."
+                        rows="1"></textarea>
+                    <button class="chatbot-send" onclick="sendMessage('quick')" id="quick-send">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hamburger Menu -->
+    <div class="menu-overlay" onclick="toggleMenu()"></div>
+    <nav class="hamburger-menu">
+        <a href="#" class="menu-item"><i class="fas fa-home"></i> Home</a>
+        <a href="#" class="menu-item"><i class="fas fa-cloud-sun"></i> Forecasts</a>
+        <a href="#" class="menu-item"><i class="fas fa-exclamation-triangle"></i> Alerts</a>
+        <a href="#" class="menu-item"><i class="fas fa-ambulance"></i> Rescue</a>
+        <a href="#" class="menu-item"><i class="fas fa-list"></i> Guidelines</a>
+
+        <div class="menu-bottom">
+            <a href="#" class="menu-item"><i class="fas fa-cog"></i> Settings</a>
+            <a href="#" class="menu-item"><i class="fas fa-user-shield"></i> Authority Login</a>
+        </div>
+    </nav>
+
+    <!-- Google Maps -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ maps_key }}&callback=initMap"></script>
+
+    <!-- Backend Integration Script -->
+    <!-- Updated Backend Integration Script for A4F -->
+    <script type="module">
+        const aiAvailable = "{{ ai_available }}" === "true";
+        const mapsApiKey = "{{ maps_key }}";
+
+        if (aiAvailable) {
+            window.aiAvailable = true;
+            console.log("✅ A4F AI (Backend) initialized successfully");
+            showNotification("🤖 AI Assistant Ready (A4F)", "success");
+        } else {
+            window.aiAvailable = false;
+            console.log("⚠️ A4F API key not configured");
+            showNotification("🔑 AI requires A4F API key configuration", "info");
+        }
+
+        if (mapsApiKey && mapsApiKey !== "your-google-maps-api-key" && mapsApiKey !== "") {
+            console.log("✅ Google Maps API key available");
+            window.mapsAvailable = true;
+            showNotification("🗺️ Maps service active", "success");
+        } else {
+            console.log("⚠️ Google Maps API key not provided");
+            window.mapsAvailable = false;
+            showNotification("🗺️ Maps require API key", "warning");
+        }
+    </script>
+
+    <script>
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
+
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 12px 16px;
+                border-radius: 8px;
+                color: white;
+                font-size: 14px;
+                z-index: 9999;
+                max-width: 300px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                animation: slideIn 0.3s ease;
+            `;
+
+            const colors = {
+                success: '#43d9ad',
+                warning: '#f7931e',
+                error: '#e25555',
+                info: '#5978f3'
+            };
+            notification.style.background = colors[type] || colors.info;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Global variables
+        let currentLanguage = 'en';
+        let selectedLanguage = 'en';
+        let originalTexts = new Map(); // Store original texts for reversion
+        let speechSynthesis = window.speechSynthesis;
+        let speechRecognition = null;
+        let isTextToSpeechEnabled = false;
+        let isTranslationPanelOpen = false;
+        let isAccessibilityPanelOpen = false;
+        let deferredPrompt;
+        let isOnline = navigator.onLine;
+
+        window.geminiAvailable = false;
+        window.mapsAvailable = false;
+
+        // No translation usage tracking - unlimited translations
+
+        // Language mapping
+        const languageNames = {
+            'en': 'English', 'hi': 'Hindi', 'as': 'Assamese', 'bn': 'Bengali',
+            'gu': 'Gujarati', 'kn': 'Kannada', 'ks': 'Kashmiri', 'gom': 'Konkani',
+            'ml': 'Malayalam', 'mni': 'Manipuri', 'mr': 'Marathi', 'ne': 'Nepali',
+            'or': 'Odia', 'pa': 'Punjabi', 'sa': 'Sanskrit', 'sd': 'Sindhi',
+            'ta': 'Tamil', 'te': 'Telugu', 'ur': 'Urdu', 'brx': 'Bodo',
+            'sat': 'Santhali', 'mai': 'Maithili'
+        };
+        
+        // ✅ NEW: Phonetic transliterations for app title "Disastrous"
+        const appTitleTransliterations = {
+            'hi': 'डिज़ास्ट्रस',    // Hindi
+            'bn': 'ডিজাস্ট্রাস',    // Bengali
+            'ta': 'டிசாஸ்ட்ரஸ்',    // Tamil
+            'te': 'డిసాస్ట్రస్',    // Telugu
+            'gu': 'ડિઝાસ્ટ્રસ',    // Gujarati
+            'kn': 'ಡಿಸಾಸ್ಟ್ರಸ್',   // Kannada
+            'ml': 'ഡിസാസ്ട്രസ്',   // Malayalam
+            'mr': 'डिझास्ट्रस',    // Marathi
+            'pa': 'ਡਿਸਾਸਟਰਸ',     // Punjabi
+            'or': 'ଡିସାଷ୍ଟ୍ରସ',    // Odia
+            'ur': 'ڈزاسٹرس',       // Urdu
+            'as': 'ডিজাষ্ট্ৰাছ'     // Assamese
+        };
+
+        // Translation Panel Functions
+        function toggleTranslationPanel() {
+            const panel = document.getElementById('translationPanel');
+            isTranslationPanelOpen = !isTranslationPanelOpen;
+            panel.classList.toggle('active', isTranslationPanelOpen);
+        }
+
+        function toggleAccessibilityPanel() {
+            const panel = document.getElementById('accessibilityPanel');
+            isAccessibilityPanelOpen = !isAccessibilityPanelOpen;
+            panel.classList.toggle('active', isAccessibilityPanelOpen);
+        }
+
+        function showTranslationLoading() {
+            const loading = document.querySelector('.translation-loading');
+            if (loading) {
+                loading.classList.add('active');
+                updateTranslationProgress(10);
+            }
+        }
+
+        function hideTranslationLoading() {
+            const loading = document.querySelector('.translation-loading');
+            if (loading) {
+                loading.classList.remove('active');
+            }
+        }
+
+        function updateTranslationProgress(percent) {
+            const progressBar = document.querySelector('.progress-bar');
+            if (progressBar) {
+                progressBar.style.width = percent + '%';
+            }
+        }
+
+        function showTranslationSuccess() {
+            showNotification('✅ Translation completed successfully!', 'success');
+        }
+
+        function updateUsageDisplay() {
+            // No usage limit anymore - hide the usage display
+            const usageContainer = document.querySelector('.translation-usage');
+            if (usageContainer) {
+                usageContainer.style.display = 'none';
+            }
+        }
+
+        // Speech Recognition
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            speechRecognition = new SpeechRecognition();
+            speechRecognition.continuous = false;
+            speechRecognition.interimResults = false;
+        }
+
+        // Google Maps initialization
+        function initMap() {
+            if (!window.mapsAvailable) {
+                document.getElementById('map').innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; 
+                               background: var(--background); color: var(--danger); flex-direction: column; gap: 15px;">
+                        <i class="fas fa-map-marked-alt" style="font-size: 48px;"></i>
+                        <h3>Maps API Key Required</h3>
+                        <p style="text-align: center; opacity: 0.8;">Configure Google Maps API key to view disaster locations</p>
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: 20.5937, lng: 78.9629 },
+                    zoom: 5,
+                    styles: [{ featureType: 'poi', stylers: [{ visibility: 'off' }] }]
+                });
+
+                const disasterLocations = [
+                    { position: { lat: 28.6139, lng: 77.209 }, title: 'Delhi NCR', type: 'Earthquake Alert', icon: '🏔️', severity: 'high' },
+                    { position: { lat: 22.5726, lng: 88.3639 }, title: 'Kolkata, West Bengal', type: 'Cyclone Alert', icon: '🌀', severity: 'critical' },
+                    { position: { lat: 26.9124, lng: 75.7873 }, title: 'Jaipur, Rajasthan', type: 'Heatwave Alert', icon: '🔥', severity: 'moderate' },
+                    { position: { lat: 9.9312, lng: 76.2673 }, title: 'Kochi, Kerala', type: 'Flood Alert', icon: '🌊', severity: 'high' },
+                    { position: { lat: 13.0827, lng: 80.2707 }, title: 'Chennai, Tamil Nadu', type: 'Cyclone Alert', icon: '🌀', severity: 'high' }
+                ];
+
+                disasterLocations.forEach(location => {
+                    const pinColor = location.severity === 'critical' ? '#e53e3e' :
+                        location.severity === 'high' ? '#ff6b35' :
+                            location.severity === 'moderate' ? '#f7931e' : '#43d9ad';
+
+                    const marker = new google.maps.Marker({
+                        position: location.position,
+                        map: map,
+                        title: `${location.type} - ${location.title}`,
+                        animation: google.maps.Animation.DROP,
+                        icon: {
+                            path: google.maps.SymbolPath.CIRCLE,
+                            scale: 12,
+                            fillColor: pinColor,
+                            fillOpacity: 0.9,
+                            strokeColor: '#ffffff',
+                            strokeWeight: 3
+                        }
+                    });
+
+                    const infoWindow = new google.maps.InfoWindow({
+                        content: `
+                            <div style="padding: 10px; font-family: Arial; color: #333;">
+                                <h3 style="margin: 0 0 8px 0; color: ${pinColor};">${location.icon} ${location.type}</h3>
+                                <p style="margin: 0 0 8px 0; font-weight: bold;">${location.title}</p>
+                                <p style="margin: 0; font-size: 12px; color: #666;">
+                                    Severity: <span style="color: ${pinColor}; font-weight: bold; text-transform: uppercase;">${location.severity}</span>
+                                </p>
+                            </div>
+                        `
+                    });
+
+                    marker.addListener('click', () => {
+                        infoWindow.open({ anchor: marker, map });
+                    });
+                });
+
+            } catch (error) {
+                console.error('Maps initialization error:', error);
+                document.getElementById('map').innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; 
+                               background: var(--background); color: var(--danger); flex-direction: column; gap: 15px;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px;"></i>
+                        <h3>Maps Load Error</h3>
+                        <p style="text-align: center; opacity: 0.8;">Unable to load Google Maps. Check your API key.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ✅ IMPROVED Backend AI Translation Function with robust DOM updates
+        async function applyGeminiTranslation() {
+            const select = document.getElementById('languageSelect');
+            const targetLanguage = select.value;
+            const targetLanguageName = languageNames[targetLanguage];
+
+            // ✅ FIXED: Handle English reversion properly
+            if (targetLanguage === 'en') {
+                // Always allow reversion to English when not currently in English
+                // OR when user explicitly wants to revert
+                if (currentLanguage !== 'en' || originalTexts.size > 0) {
+                    // Revert to original English texts
+                    revertToOriginalTexts();
+                    return;
+                } else {
+                    showNotification('Page is already in English.', 'info');
+                    return;
+                }
+            }
+            
+            if (!window.aiAvailable) {
+                showNotification('AI translation requires API key configuration', 'warning');
+                hideTranslationLoading();
+                return;
+            }
+
+            showTranslationLoading();
+
+            try {
+                // ✅ IMPROVED: Use unique IDs for robust element mapping
+                const elementsToTranslate = collectTranslatableElements();
+                
+                if (elementsToTranslate.length === 0) {
+                    console.log('No elements to translate');
+                    hideTranslationLoading();
+                    showNotification('No translatable content found', 'info');
+                    return;
+                }
+
+                console.log(`🔍 Collected ${elementsToTranslate.length} elements for translation`);
+                updateTranslationProgress(20);
+
+                // Prepare texts with unique identifiers
+                const textsWithIds = elementsToTranslate.map(item =>
+                    `${item.id}: ${item.text}`
+                );
+
+                console.log('📤 Sending to translation API...');
+                updateTranslationProgress(40);
+
+                // Call backend API
+                const response = await fetch('/api/translate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: textsWithIds.join('\n'),
+                        target_language: targetLanguageName
+                    })
+                });
+
+                updateTranslationProgress(70);
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || `HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('📨 Translation response received');
+                updateTranslationProgress(85);
+
+                // ✅ NEW: Store original texts before first translation
+                if (currentLanguage === 'en') {
+                    storeOriginalTexts(elementsToTranslate);
+                }
+
+                // ✅ IMPROVED: Apply translations with robust error handling
+                const appliedCount = applyTranslationsToDOM(data.translated_text, elementsToTranslate);
+
+                // ✅ NEW: Update app title with phonetic transliteration
+                updateAppTitle(targetLanguage);
+
+                // Handle RTL languages
+                if (targetLanguage === 'ur' || targetLanguage === 'sd') {
+                    document.body.classList.add('rtl');
+                } else {
+                    document.body.classList.remove('rtl');
+                }
+
+                // ✅ NEW: Update current language state
+                currentLanguage = targetLanguage;
+                
+                // Show revert button when not in English
+                const revertBtn = document.getElementById('revertBtn');
+                if (revertBtn) {
+                    revertBtn.style.display = targetLanguage === 'en' ? 'none' : 'block';
+                }
+
+                updateTranslationProgress(100);
+
+                setTimeout(() => {
+                    hideTranslationLoading();
+                    showTranslationSuccess();
+                    showNotification(`✅ Page translated to ${targetLanguageName} (${appliedCount} items updated)`, 'success');
+                    toggleTranslationPanel();
+                }, 500);
+
+            } catch (error) {
+                console.error('❌ Translation Error:', error);
+                hideTranslationLoading();
+                showNotification(error.message || 'Translation failed', 'error');
+            }
+        }
+
+        // ✅ NEW: Collect translatable elements with unique IDs and validation
+        function collectTranslatableElements() {
+            const elements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, div, button, a, label, td, th, li, option, input[placeholder]');
+            const elementsToTranslate = [];
+            
+            elements.forEach((element, index) => {
+                if (shouldTranslateElement(element)) {
+                    // Generate unique ID for this element
+                    const uniqueId = `tr_${Date.now()}_${index}`;
+                    element.setAttribute('data-translate-id', uniqueId);
+                    
+                    let textToTranslate = '';
+                    if (element.tagName === 'INPUT' && element.placeholder) {
+                        textToTranslate = element.placeholder;
+                    } else {
+                        textToTranslate = element.textContent.trim();
+                    }
+                    
+                    if (textToTranslate && textToTranslate.length > 2) {
+                        // Clean text (remove emojis but preserve meaningful content)
+                        const cleanText = textToTranslate.replace(/[📞🌪️✅❌🚨⚠️🔥🌊🌀🏔️]/g, '').trim();
+                        
+                        if (cleanText.length > 2) {
+                            elementsToTranslate.push({
+                                id: uniqueId,
+                                element: element,
+                                text: cleanText,
+                                originalText: textToTranslate,
+                                isInput: element.tagName === 'INPUT' && element.placeholder
+                            });
+                            
+                            console.log(`✅ Added: ${element.tagName} - "${cleanText.substring(0, 50)}"`);
+                        }
+                    }
+                }
+            });
+            
+            return elementsToTranslate;
+        }
+
+        // ✅ ENHANCED: Better element filtering with selective inclusion of menu and chat elements
+        function shouldTranslateElement(element) {
+            // Skip if marked as no-translate
+            if (element.hasAttribute('data-no-translate')) return false;
+            
+            // Skip certain classes and IDs
+            if (element.classList.contains('contact-number') ||
+                element.classList.contains('panel-close') ||
+                element.classList.contains('chatbot-close') ||
+                element.id === 'map') return false;
+            
+            // ✅ NEW: SPECIAL CASES - Allow translation of specific UI elements
+            // Allow hamburger menu items (but preserve icons)
+            if (element.classList.contains('menu-item')) {
+                return hasTranslatableTextContent(element);
+            }
+            
+            // Allow initial chatbot messages (bot/system messages, not user input)
+            if (element.classList.contains('message') &&
+                (element.classList.contains('bot') || element.classList.contains('system'))) {
+                return hasTranslatableTextContent(element);
+            }
+            
+            // ✅ NEW: Skip elements with interactive children (buttons, links, inputs)
+            // BUT make exceptions for menu items and certain message containers
+            if (!element.classList.contains('menu-item') &&
+                !element.closest('.hamburger-menu') &&
+                element.querySelector('button, a, input, select, textarea, .action-btn, .voice-btn')) {
+                return false;
+            }
+            
+            // ✅ NEW: Skip if element itself is interactive (with exceptions)
+            if (element.tagName === 'BUTTON' || element.tagName === 'INPUT' ||
+                element.tagName === 'SELECT' ||
+                element.classList.contains('action-btn') ||
+                element.classList.contains('voice-btn') ||
+                element.classList.contains('accessibility-btn')) {
+                return false;
+            }
+            
+            // Allow links in menu but preserve their structure
+            if (element.tagName === 'A' && !element.closest('.hamburger-menu')) {
+                return false;
+            }
+            
+            // Skip if inside certain containers (with exceptions for menu)
+            if (element.closest('#map') ||
+                element.closest('.translation-panel') ||
+                element.closest('.accessibility-panel') ||
+                element.closest('.notification') ||
+                element.closest('.fixed-actions') ||
+                element.closest('.voice-controls')) return false;
+            
+            // ✅ MODIFIED: Allow chatbot messages but skip input areas
+            if (element.closest('.chatbot-input-area') ||
+                element.closest('.chatbot-input-container')) return false;
+            
+            const text = element.textContent.trim();
+            
+            // Skip empty, very short, or number-only text
+            if (!text || text.length < 3 || text.match(/^\d+$/)) return false;
+            
+            // Skip emoji-only content
+            if (text.match(/^[📞🌪️✅❌🚨⚠️🔥🌊🌀🏔️\s]+$/)) return false;
+            
+            // ✅ NEW: Skip if text contains HTML-like content (preserve structure)
+            if (text.includes('<') && text.includes('>')) return false;
+            
+            return true;
+        }
+        
+        // ✅ NEW: Helper function to check if element has meaningful translatable text
+        function hasTranslatableTextContent(element) {
+            const text = element.textContent.trim();
+            if (!text || text.length < 3) return false;
+            
+            // Check if text is mostly icons/emojis
+            const iconPattern = /^[\s]*<i\s+class|^\s*[📞🌪️✅❌🚨⚠️🔥🌊🌀🏔️]/;
+            if (iconPattern.test(text)) return false;
+            
+            // Look for meaningful text content
+            const meaningfulText = text.replace(/[📞🌪️✅❌🚨⚠️🔥🌊🌀🏔️\s]/g, '').replace(/\s+/g, ' ').trim();
+            return meaningfulText.length > 2;
+        }
+
+        // ✅ NEW: Robust translation application with comprehensive error handling
+        function applyTranslationsToDOM(translatedText, elementsData) {
+            console.log('🔄 Applying translations to DOM...');
+            
+            const translatedLines = translatedText.split('\n').filter(line => line.trim());
+            let successCount = 0;
+            let errorCount = 0;
+            
+            // Create lookup map for faster element access
+            const elementMap = new Map();
+            elementsData.forEach(item => {
+                elementMap.set(item.id, item);
+            });
+            
+            console.log(`📝 Processing ${translatedLines.length} translated lines`);
+            console.log(`🗂️ Element map contains ${elementMap.size} elements`);
+            
+            translatedLines.forEach((line, lineIndex) => {
+                try {
+                    // More flexible regex pattern
+                    const match = line.match(/^([^:]+):\s*(.+)$/);
+                    if (match) {
+                        const elementId = match[1].trim();
+                        const translation = match[2].trim();
+                        const elementData = elementMap.get(elementId);
+                        
+                        if (elementData && translation) {
+                            // Verify element still exists and is valid
+                            const element = elementData.element;
+                            if (element && element.isConnected) {
+                                const success = updateElementTextSafely(element, translation, elementData.isInput);
+                                if (success) {
+                                    successCount++;
+                                    console.log(`✅ Updated ${element.tagName}: "${translation.substring(0, 50)}"`);
+                                } else {
+                                    errorCount++;
+                                    console.warn(`❌ Failed to update ${element.tagName}`);
+                                }
+                            } else {
+                                errorCount++;
+                                console.warn(`❌ Element no longer exists: ${elementId}`);
+                            }
+                        } else {
+                            errorCount++;
+                            console.warn(`❌ No matching element or translation for: ${elementId}`);
+                        }
+                    } else {
+                        // Try fallback parsing for malformed lines
+                        const fallbackSuccess = handleMalformedTranslationLine(line, elementMap);
+                        if (fallbackSuccess) {
+                            successCount++;
+                        } else {
+                            errorCount++;
+                            console.warn(`❌ Could not parse line ${lineIndex}: "${line}"`);
+                        }
+                    }
+                } catch (error) {
+                    errorCount++;
+                    console.error(`❌ Error processing line ${lineIndex}:`, error);
+                }
+            });
+            
+            console.log(`🎯 Translation complete: ${successCount} succeeded, ${errorCount} failed`);
+            
+            if (errorCount > 0) {
+                console.warn(`⚠️ ${errorCount} translations failed - see console for details`);
+            }
+            
+            return successCount;
+        }
+
+        // ✅ ENHANCED: Safe element text updating that preserves child elements
+        function updateElementTextSafely(element, newText, isInput = false) {
+            try {
+                console.log(`🔄 Updating ${element.tagName} with: "${newText.substring(0, 50)}"`);
+                
+                if (isInput || element.tagName === 'INPUT') {
+                    if (element.placeholder !== undefined) {
+                        element.placeholder = newText;
+                        return true;
+                    } else if (element.value !== undefined) {
+                        element.value = newText;
+                        return true;
+                    }
+                }
+                
+                // ✅ NEW: Preserve child elements by only replacing text nodes
+                if (element.children.length > 0) {
+                    console.log(`⚠️ Element has ${element.children.length} children - using selective text replacement`);
+                    return updateTextNodesOnly(element, newText);
+                }
+                
+                // For elements without children, safe to replace textContent
+                const originalText = element.textContent;
+                element.textContent = newText;
+                
+                // Verify the update worked
+                if (element.textContent === newText) {
+                    console.log(`✅ Successfully updated element`);
+                    return true;
+                } else {
+                    // Fallback: try innerHTML (but be careful)
+                    console.warn(`⚠️ textContent update failed, trying innerHTML`);
+                    element.innerHTML = escapeHtml(newText);
+                    return element.textContent.includes(newText);
+                }
+                
+            } catch (error) {
+                console.error(`❌ Failed to update element:`, error);
+                return false;
+            }
+        }
+        
+        // ✅ NEW: Update only text nodes, preserve child elements
+        function updateTextNodesOnly(element, newText) {
+            try {
+                const walker = document.createTreeWalker(
+                    element,
+                    NodeFilter.SHOW_TEXT,
+                    {
+                        acceptNode: function(node) {
+                            // Only accept direct text nodes, not those inside child elements
+                            return node.parentNode === element ?
+                                NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+                        }
+                    },
+                    false
+                );
+                
+                const textNodes = [];
+                let node;
+                while (node = walker.nextNode()) {
+                    if (node.textContent.trim()) {
+                        textNodes.push(node);
+                    }
+                }
+                
+                if (textNodes.length > 0) {
+                    // Replace the first meaningful text node
+                    textNodes[0].textContent = newText;
+                    // Clear other text nodes to avoid duplication
+                    for (let i = 1; i < textNodes.length; i++) {
+                        textNodes[i].textContent = '';
+                    }
+                    console.log(`✅ Updated ${textNodes.length} text nodes while preserving child elements`);
+                    return true;
+                } else {
+                    console.warn(`⚠️ No direct text nodes found in element`);
+                    return false;
+                }
+                
+            } catch (error) {
+                console.error(`❌ Text node update failed:`, error);
+                return false;
+            }
+        }
+        
+        // ✅ NEW: Escape HTML to prevent injection
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ✅ NEW: Handle malformed translation lines as fallback
+        function handleMalformedTranslationLine(line, elementMap) {
+            // Try to extract meaningful content even from malformed lines
+            const colonIndex = line.indexOf(':');
+            if (colonIndex > 0 && colonIndex < line.length - 1) {
+                const possibleId = line.substring(0, colonIndex).trim();
+                const possibleTranslation = line.substring(colonIndex + 1).trim();
+                
+                if (elementMap.has(possibleId) && possibleTranslation) {
+                    const elementData = elementMap.get(possibleId);
+                    if (elementData.element && elementData.element.isConnected) {
+                        return updateElementTextSafely(elementData.element, possibleTranslation, elementData.isInput);
+                    }
+                }
+            }
+            return false;
+        }
+
+        // ✅ IMPROVED: Alias for backward compatibility
+        function updateElementText(element, newText) {
+            // Use the new robust function
+            return updateElementTextSafely(element, newText, element.tagName === 'INPUT' && element.placeholder);
+        }
+
+        // ✅ NEW: Test function for debugging DOM updates
+        function testDOMUpdate() {
+            console.log('🧪 Testing DOM update functionality...');
+            
+            // Find a test element
+            const testElement = document.querySelector('h2, h3, p');
+            if (!testElement) {
+                console.error('❌ No test element found');
+                showNotification('❌ No test element found for DOM update test', 'error');
+                return;
+            }
+            
+            const originalText = testElement.textContent;
+            const testText = `TEST: DOM Update Working! (${new Date().toLocaleTimeString()})`;
+            
+            console.log('🎯 Testing element:', testElement.tagName, originalText);
+            
+            // Test the update
+            const success = updateElementTextSafely(testElement, testText);
+            
+            if (success) {
+                console.log('✅ DOM update test PASSED');
+                showNotification('✅ DOM Update Test PASSED', 'success');
+                
+                // Restore original text after 3 seconds
+                setTimeout(() => {
+                    updateElementTextSafely(testElement, originalText);
+                    console.log('🔄 Original text restored');
+                }, 3000);
+            } else {
+                console.error('❌ DOM update test FAILED');
+                showNotification('❌ DOM Update Test FAILED', 'error');
+            }
+        }
+        
+        // ✅ NEW: Enable mock mode for testing
+        function enableMockMode() {
+            window.forceMockMode = true;
+            console.log('🧪 Mock mode enabled for testing');
+            showNotification('🧪 Mock mode enabled - unlimited testing available', 'info');
+        }
+        
+        // ✅ FIXED: Store original texts for reversion capability
+        function storeOriginalTexts(elementsData) {
+            console.log('💾 Storing original texts for reversion...');
+            originalTexts.clear();
+            
+            // Store app title
+            const appNameElement = document.querySelector('.app-name');
+            if (appNameElement) {
+                originalTexts.set('app-title', appNameElement.textContent);
+            }
+            
+            // Store all translatable elements using the provided data
+            if (elementsData && elementsData.length > 0) {
+                elementsData.forEach(item => {
+                    if (item.isInput) {
+                        originalTexts.set(item.id, { type: 'placeholder', text: item.originalText });
+                    } else {
+                        originalTexts.set(item.id, { type: 'textContent', text: item.originalText });
+                    }
+                });
+            } else {
+                // Fallback: collect elements now if not provided
+                const elements = collectTranslatableElements();
+                elements.forEach(item => {
+                    if (item.isInput) {
+                        originalTexts.set(item.id, { type: 'placeholder', text: item.originalText });
+                    } else {
+                        originalTexts.set(item.id, { type: 'textContent', text: item.originalText });
+                    }
+                });
+            }
+            
+            console.log(`💾 Stored ${originalTexts.size} original texts`);
+        }
+        
+        // ✅ ENHANCED: Revert to original English texts with improved debugging
+        function revertToOriginalTexts() {
+            console.log('🔄 Reverting to original English texts...');
+            console.log(`📊 Original texts stored: ${originalTexts.size} items`);
+            showTranslationLoading();
+            
+            let revertedCount = 0;
+            let errorCount = 0;
+            
+            // Revert app title
+            const appNameElement = document.querySelector('.app-name');
+            if (appNameElement && originalTexts.has('app-title')) {
+                appNameElement.textContent = originalTexts.get('app-title');
+                revertedCount++;
+                console.log('✅ App title reverted');
+            }
+            
+            // Revert all stored elements
+            originalTexts.forEach((data, id) => {
+                if (id === 'app-title') return; // Already handled
+                
+                const element = document.querySelector(`[data-translate-id="${id}"]`);
+                if (element) {
+                    try {
+                        if (data.type === 'placeholder') {
+                            element.placeholder = data.text;
+                            console.log(`✅ Reverted placeholder for ${element.tagName}: "${data.text.substring(0, 30)}"`);
+                        } else {
+                            // Use the safe update function
+                            const success = updateElementTextSafely(element, data.text);
+                            if (success) {
+                                console.log(`✅ Reverted ${element.tagName}: "${data.text.substring(0, 30)}"`);
+                            } else {
+                                console.warn(`⚠️ Failed to revert ${element.tagName}: "${data.text.substring(0, 30)}"`);
+                                errorCount++;
+                                return; // Skip to next iteration
+                            }
+                        }
+                        revertedCount++;
+                    } catch (error) {
+                        console.error(`❌ Error reverting element ${id}:`, error);
+                        errorCount++;
+                    }
+                } else {
+                    console.warn(`❌ Element not found for ID: ${id}`);
+                    errorCount++;
+                }
+            });
+            
+            // Remove RTL styling
+            document.body.classList.remove('rtl');
+            
+            // Update language state
+            currentLanguage = 'en';
+            document.getElementById('languageSelect').value = 'en';
+            
+            // Hide revert button when back to English
+            const revertBtn = document.getElementById('revertBtn');
+            if (revertBtn) {
+                revertBtn.style.display = 'none';
+            }
+            
+            setTimeout(() => {
+                hideTranslationLoading();
+                const message = errorCount > 0 ?
+                    `🔄 Reverted to English (${revertedCount} items restored, ${errorCount} errors)` :
+                    `🔄 Reverted to English (${revertedCount} items restored)`;
+                showNotification(message, errorCount > 0 ? 'warning' : 'success');
+                console.log(`🔄 Reversion complete: ${revertedCount} succeeded, ${errorCount} errors`);
+                toggleTranslationPanel();
+            }, 300);
+        }
+        
+        // ✅ NEW: Update app title with phonetic transliteration
+        function updateAppTitle(targetLanguage) {
+            const appNameElement = document.querySelector('.app-name');
+            if (!appNameElement) return;
+            
+            const transliteration = appTitleTransliterations[targetLanguage];
+            if (transliteration) {
+                appNameElement.textContent = transliteration;
+                console.log(`📝 App title transliterated to: ${transliteration}`);
+            }
+        }
+        
+        // ✅ NEW: Visual feedback for updated elements
+        function highlightUpdatedElement(element) {
+            const originalBg = element.style.backgroundColor;
+            element.style.backgroundColor = 'rgba(67, 217, 173, 0.3)';
+            element.style.transition = 'background-color 0.3s ease';
+            
+            setTimeout(() => {
+                element.style.backgroundColor = originalBg;
+                setTimeout(() => {
+                    element.style.transition = '';
+                }, 300);
+            }, 600);
+        }
+        // Backend AI Chat Function
+        async function sendMessage(type) {
+            const input = document.getElementById(`${type}-input`);
+            const messagesContainer = document.getElementById(`${type}-messages`);
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            const userMessage = document.createElement('div');
+            userMessage.className = 'message user';
+            userMessage.textContent = message;
+            messagesContainer.appendChild(userMessage);
+
+            input.value = '';
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            try {
+                let response;
+
+                if (type === 'ai' && window.aiAvailable && isOnline) {
+                    const typingDiv = document.createElement('div');
+                    typingDiv.className = 'message bot typing';
+                    typingDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI is thinking...';
+                    messagesContainer.appendChild(typingDiv);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+                    // ✅ Call backend API
+                    const apiResponse = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            message: message,
+                            type: type
+                        })
+                    });
+
+                    messagesContainer.removeChild(typingDiv);
+
+                    if (!apiResponse.ok) {
+                        const error = await apiResponse.json();
+                        throw new Error(error.error || `HTTP ${apiResponse.status}`);
+                    }
+
+                    const data = await apiResponse.json();
+                    response = data.response;
+
+                } else {
+                    response = getLocalResponse(message, type);
+                    if (!isOnline) {
+                        response += ' (Offline mode - Limited responses available)';
+                    }
+                    if (!window.aiAvailable && type === 'ai') {
+                        response = '🤖 AI Assistant is unavailable. Please configure your A4F API key. Meanwhile, here\'s basic help: ' + getLocalResponse(message, type);
+                    }
+                }
+                const botMessage = document.createElement('div');
+                botMessage.className = type === 'ai' ? 'message bot' : 'message system';
+                botMessage.textContent = response;
+                messagesContainer.appendChild(botMessage);
+
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            } catch (error) {
+                console.error('AI Chat Error:', error);
+
+                const typingIndicators = messagesContainer.querySelectorAll('.typing');
+                typingIndicators.forEach(indicator => indicator.remove());
+
+                const errorMessage = document.createElement('div');
+                errorMessage.className = type === 'ai' ? 'message bot' : 'message system';
+                errorMessage.textContent = error.message || 'AI service temporarily unavailable. For emergencies, call 112 immediately.';
+
+                messagesContainer.appendChild(errorMessage);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+
+        // Local responses for when AI is unavailable
+        function getLocalResponse(message, type) {
+            const lowerMessage = message.toLowerCase();
+
+            const responses = {
+                'earthquake': '🏔️ EARTHQUAKE SAFETY: DROP to hands and knees, COVER head and neck, HOLD ON until shaking stops. Stay away from windows and heavy objects.',
+                'flood': '🌊 FLOOD SAFETY: Move to higher ground immediately. Never walk or drive through flood water. 6 inches can knock you down, 12 inches can carry away a vehicle.',
+                'cyclone': '🌀 CYCLONE SAFETY: Stay indoors, away from windows. Have emergency supplies ready. Follow evacuation orders from authorities.',
+                'fire': '🔥 FIRE SAFETY: Stay low, exit quickly. Check doors before opening. Call 101. Have meeting point planned.',
+                'emergency contacts': '📞 EMERGENCY NUMBERS: National Emergency (112), Disaster Management (1078), Fire Services (101), Police (100), Ambulance (108).',
+                'evacuation': '🚨 EVACUATION: Listen to official instructions, take emergency kit, help elderly/disabled neighbors, stay calm.',
+                'supplies': '🎒 EMERGENCY KIT: Water (1 gallon/person/day), non-perishable food, flashlight, batteries, first aid kit, medications, documents.',
+                'default': type === 'ai' ?
+                    '🤖 I can help with disaster preparedness, emergency procedures, and safety guidelines. What specific disaster information do you need?' :
+                    '🚨 Emergency support is available 24/7. Stay safe and follow official instructions. For immediate help, call 112.'
+            };
+
+            if (lowerMessage.includes('earthquake') || lowerMessage.includes('tremor')) return responses.earthquake;
+            if (lowerMessage.includes('flood') || lowerMessage.includes('water')) return responses.flood;
+            if (lowerMessage.includes('cyclone') || lowerMessage.includes('storm') || lowerMessage.includes('hurricane')) return responses.cyclone;
+            if (lowerMessage.includes('fire') || lowerMessage.includes('burn')) return responses.fire;
+            if (lowerMessage.includes('contact') || lowerMessage.includes('number') || lowerMessage.includes('call')) return responses['emergency contacts'];
+            if (lowerMessage.includes('evacuat') || lowerMessage.includes('leave') || lowerMessage.includes('escape')) return responses.evacuation;
+            if (lowerMessage.includes('kit') || lowerMessage.includes('supplies') || lowerMessage.includes('prepare')) return responses.supplies;
+
+            return responses.default;
+        }
+
+        // Translation loading functions
+        function showTranslationLoading() {
+            const loading = document.getElementById('translationLoading');
+            const button = document.getElementById('translateBtn');
+            loading.classList.add('active');
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Translating with AI...';
+            updateTranslationProgress(10);
+        }
+
+        function hideTranslationLoading() {
+            const loading = document.getElementById('translationLoading');
+            const button = document.getElementById('translateBtn');
+            loading.classList.remove('active');
+            button.disabled = false;
+            button.innerHTML = '<i class="fas fa-robot"></i> Translate with AI';
+            updateTranslationProgress(0);
+        }
+
+        function updateTranslationProgress(percent) {
+            const progressBar = document.getElementById('progressBar');
+            if (progressBar) {
+                progressBar.style.width = percent + '%';
+            }
+        }
+
+        function showTranslationSuccess() {
+            const button = document.getElementById('translateBtn');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-check"></i> Translation Complete!';
+            button.style.background = 'var(--success)';
+
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = '';
+            }, 2000);
+        }
+
+        function updateUsageDisplay() {
+            // No usage limit anymore - hide the usage display
+            const usageContainer = document.getElementById('translationUsage');
+            if (usageContainer) {
+                usageContainer.style.display = 'none';
+            }
+        }
+
+
+
+        // PWA Functions
+        function initPWA() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('{{ url_for("service_worker") }}')
+                    .then(registration => console.log('✅ Service Worker registered'))
+                    .catch(error => console.log('❌ Service Worker registration failed:', error));
+            }
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                showPWABanner();
+            });
+
+            document.getElementById('pwaInstallBtn').addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`PWA install result: ${outcome}`);
+                    deferredPrompt = null;
+                    hidePWABanner();
+                }
+            });
+
+            window.addEventListener('online', () => {
+                isOnline = true;
+                updateOfflineStatus();
+                showNotification('🌐 Back online', 'success');
+            });
+
+            window.addEventListener('offline', () => {
+                isOnline = false;
+                updateOfflineStatus();
+                showNotification('📱 You\'re offline - Limited features available', 'warning');
+            });
+
+            updateOfflineStatus();
+        }
+
+        function showPWABanner() {
+            document.getElementById('pwaInstallBanner').classList.add('show');
+        }
+
+        function hidePWABanner() {
+            document.getElementById('pwaInstallBanner').classList.remove('show');
+        }
+
+        function updateOfflineStatus() {
+            const indicator = document.getElementById('offlineIndicator');
+            if (isOnline) {
+                indicator.classList.remove('show');
+            } else {
+                indicator.classList.add('show');
+            }
+        }
+
+        // Translation Functions
+        function toggleTranslationPanel() {
+            const panel = document.getElementById('translationPanel');
+            isTranslationPanelOpen = !isTranslationPanelOpen;
+            panel.classList.toggle('active', isTranslationPanelOpen);
+        }
+
+        // Accessibility Functions
+        function toggleAccessibilityPanel() {
+            const panel = document.getElementById('accessibilityPanel');
+            isAccessibilityPanelOpen = !isAccessibilityPanelOpen;
+            panel.classList.toggle('active', isAccessibilityPanelOpen);
+        }
+
+        function changeFontSize(size) {
+            document.body.className = document.body.className.replace(/font-\w+/g, '');
+            document.body.classList.add(`font-${size}`);
+
+            document.querySelectorAll('#accessibilityPanel .accessibility-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function toggleHighContrast() {
+            document.body.classList.toggle('high-contrast');
+            event.target.classList.toggle('active');
+        }
+
+        function toggleTextToSpeech() {
+            isTextToSpeechEnabled = !isTextToSpeechEnabled;
+            event.target.classList.toggle('active', isTextToSpeechEnabled);
+        }
+
+        // Voice Functions
+        function startVoiceInput(type) {
+            if (!speechRecognition) {
+                showNotification('Voice input not supported in this browser', 'warning');
+                return;
+            }
+
+            const button = event.target.closest('.voice-btn');
+            button.classList.add('active');
+
+            speechRecognition.lang = 'en-US';
+            speechRecognition.onresult = function (event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById(`${type}-input`).value = transcript;
+                button.classList.remove('active');
+                showNotification('🎤 Voice input captured', 'success');
+            };
+
+            speechRecognition.onerror = function () {
+                button.classList.remove('active');
+                showNotification('Voice input error. Please try again.', 'error');
+            };
+
+            speechRecognition.onend = function () {
+                button.classList.remove('active');
+            };
+
+            speechRecognition.start();
+            showNotification('🎤 Listening... Speak now', 'info');
+        }
+
+        function readLastMessage(type) {
+            if (!isTextToSpeechEnabled) {
+                showNotification('Please enable Text to Speech first', 'info');
+                return;
+            }
+
+            const messages = document.querySelectorAll(`#${type}-messages .message`);
+            if (messages.length > 0) {
+                const lastMessage = messages[messages.length - 1];
+                speakText(lastMessage.textContent);
+            }
+        }
+
+        function speakText(text) {
+            if (speechSynthesis && isTextToSpeechEnabled) {
+                speechSynthesis.cancel();
+
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                utterance.pitch = 1.0;
+
+                speechSynthesis.speak(utterance);
+                showNotification('🔊 Reading message aloud', 'info');
+            }
+        }
+
+        // Navigation Functions
+        function toggleMenu() {
+            const menu = document.querySelector('.hamburger-menu');
+            const overlay = document.querySelector('.menu-overlay');
+            const hamburger = document.querySelector('.hamburger i');
+
+            const isOpen = menu.classList.contains('active');
+
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+
+            hamburger.className = isOpen ? 'fas fa-bars' : 'fas fa-times';
+        }
+
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.fa-chevron-down');
+
+            content.classList.toggle('active');
+
+            if (content.classList.contains('active')) {
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function openAIAssistant() {
+            if (!window.aiAvailable) {
+                showNotification('AI Assistant requires A4F API key configuration', 'warning');
+            }
+            document.getElementById('ai-chatbot').classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            setTimeout(() => {
+                document.getElementById('ai-input').focus();
+            }, 300);
+        }
+        function startQuickChat() {
+            document.getElementById('quick-chatbot').classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            setTimeout(() => {
+                document.getElementById('quick-input').focus();
+            }, 300);
+        }
+
+        function closeChatbot(chatbotId) {
+            document.getElementById(chatbotId).classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function makeEmergencyCall() {
+            if (confirm('Do you want to call the emergency number 112?')) {
+                window.location.href = 'tel:112';
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                const activeModal = document.querySelector('.chatbot-overlay.active');
+                if (activeModal) {
+                    closeChatbot(activeModal.id);
+                }
+
+                const activeMenu = document.querySelector('.hamburger-menu.active');
+                if (activeMenu) {
+                    toggleMenu();
+                }
+
+                if (isTranslationPanelOpen) {
+                    toggleTranslationPanel();
+                }
+
+                if (isAccessibilityPanelOpen) {
+                    toggleAccessibilityPanel();
+                }
+            }
+
+            if (e.key === 'Enter' && !e.shiftKey) {
+                const target = e.target;
+                if (target.classList.contains('chatbot-input')) {
+                    e.preventDefault();
+                    const type = target.id.includes('ai') ? 'ai' : 'quick';
+                    sendMessage(type);
+                }
+            }
+        });
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function () {
+            initPWA();
+
+            const languageSelect = document.getElementById('languageSelect');
+            languageSelect.addEventListener('change', function () {
+                selectedLanguage = this.value;
+            });
+
+            // Initialize revert button visibility
+            const revertBtn = document.getElementById('revertBtn');
+            if (revertBtn) {
+                revertBtn.style.display = currentLanguage === 'en' ? 'none' : 'block';
+            }
+
+            const textareas = document.querySelectorAll('.chatbot-input');
+            textareas.forEach(textarea => {
+                textarea.addEventListener('input', function () {
+                    this.style.height = 'auto';
+                    this.style.height = this.scrollHeight + 'px';
+                });
+            });
+
+            document.querySelectorAll('.chatbot-overlay').forEach(overlay => {
+                overlay.addEventListener('click', function (e) {
+                    if (e.target === this) {
+                        closeChatbot(this.id);
+                    }
+                });
+            });
+
+            // Emergency alert rotation
+            setInterval(function () {
+                const alerts = [
+                    'CYCLONE ALERT: Heavy rainfall expected in coastal areas of Odisha and West Bengal. Take necessary precautions.',
+                    'FLOOD WARNING: Water levels rising in Yamuna river. Stay away from riverbanks.',
+                    'HEATWAVE ALERT: Temperature may reach 45°C in Delhi NCR. Stay hydrated and avoid direct sunlight.',
+                    'EARTHQUAKE ADVISORY: Minor tremors detected in Himachal Pradesh region. Be prepared for aftershocks.',
+                    'LANDSLIDE WARNING: Heavy rains in hill stations. Avoid traveling to mountainous areas.'
+                ];
+
+                const randomAlert = alerts[Math.floor(Math.random() * alerts.length)];
+                const alertElement = document.querySelector('.emergency-alert');
+                if (alertElement) {
+                    alertElement.innerHTML = `<strong>LIVE UPDATE:</strong> ${randomAlert}`;
+                }
+            }, 30000);
+
+            console.log('🚀 Disaster Management PWA loaded successfully');
+            showNotification('🚀 Disaster Management App Ready', 'success');
+        });
+    </script>
+</body>
+
+</html>

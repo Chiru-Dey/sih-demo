@@ -1,0 +1,61 @@
+<!-- Translation Panel -->
+<button class="translation-toggle" onclick="toggleTranslationPanel()">
+    <i class="fas fa-language"></i>
+</button>
+
+<div class="translation-panel" id="translationPanel">
+    <div class="panel-header">
+        <h4><i class="fas fa-language"></i> Translation</h4>
+        <button class="panel-close" onclick="toggleTranslationPanel()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- Daily usage limit removed -->
+
+    <select class="language-selector" id="languageSelect">
+        <option value="en">English</option>
+        <option value="hi">हिन्दी (Hindi)</option>
+        <option value="as">অসমীয়া (Assamese)</option>
+        <option value="bn">বাংলা (Bengali)</option>
+        <option value="gu">ગુજરાતી (Gujarati)</option>
+        <option value="kn">ಕನ್ನಡ (Kannada)</option>
+        <option value="ks">کٲشُر (Kashmiri)</option>
+        <option value="gom">कोंकणी (Konkani)</option>
+        <option value="ml">മലയാളം (Malayalam)</option>
+        <option value="mni">মৈতৈলোন্ (Manipuri)</option>
+        <option value="mr">मराठी (Marathi)</option>
+        <option value="ne">नेपाली (Nepali)</option>
+        <option value="or">ଓଡ଼ିଆ (Odia)</option>
+        <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+        <option value="sa">संस्कृत (Sanskrit)</option>
+        <option value="sd">سنڌي (Sindhi)</option>
+        <option value="ta">தமிழ் (Tamil)</option>
+        <option value="te">తెలుగు (Telugu)</option>
+        <option value="ur">اردو (Urdu)</option>
+        <option value="brx">बड़ो (Bodo)</option>
+        <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ (Santhali)</option>
+        <option value="mai">मैथिली (Maithili)</option>
+        <option value="doi">डोगरी (Dogri)</option>
+    </select>
+
+    <div class="translation-loading" id="translationLoading">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Translating with AI...</span>
+        </div>
+        <div class="loading-progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <button class="apply-translation-btn" onclick="console.log('🔘 Translate button clicked'); applyGeminiTranslation()"
+        id="translateBtn">
+        <i class="fas fa-robot"></i> Translate with AI
+    </button>
+
+    <button class="revert-btn" onclick="revertToOriginalTexts()" id="revertBtn">
+        <i class="fas fa-undo"></i> Revert to English
+    </button>
+
+</div>

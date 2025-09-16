@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Disastrous - Disaster Management App{% endblock %}
+
+{% block content %}
+<!-- Map Section -->
+<section class="map-section">
+    <h2 style="margin-bottom: 15px; color: var(--accent);">Live Disaster Monitoring</h2>
+    <div class="map-container">
+        <div id="map"></div>
+    </div>
+</section>
+
+<!-- Rescue Services Section -->
+<section class="collapsible-section">
+    <button class="section-header" onclick="toggleSection(this)">
+        <h3><i class="fas fa-ambulance"></i> Emergency Rescue Services</h3>
+        <i class="fas fa-chevron-down"></i>
+    </button>
+    <div class="section-content">
+        <div class="emergency-contact">
+            <div>
+                <h4>National Emergency Number</h4>
+                <div class="contact-number">📞 112</div>
+            </div>
+            <button class="quick-chat-btn" onclick="startQuickChat()">
+                <i class="fas fa-comments"></i> Quick Chat
+            </button>
+        </div>
+        <div class="emergency-contact">
+            <div>
+                <h4>Disaster Management Helpline</h4>
+                <div class="contact-number">📞 1078</div>
+            </div>
+            <button class="quick-chat-btn" onclick="startQuickChat()">
+                <i class="fas fa-comments"></i> Quick Chat
+            </button>
+        </div>
+        <div class="emergency-contact">
+            <div>
+                <h4>Fire Services</h4>
+                <div class="contact-number" data-no-translate>📞 101</div>
+            </div>
+            <button class="quick-chat-btn" onclick="startQuickChat()">
+                <i class="fas fa-comments"></i> Quick Chat
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- Guidelines Section -->
+<section class="collapsible-section">
+    <button class="section-header" onclick="toggleSection(this)">
+        <h3><i class="fas fa-list-check"></i> Safety Guidelines</h3>
+        <i class="fas fa-chevron-down"></i>
+    </button>
+    <div class="section-content">
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h4>✅ Do's</h4>
+                <ul>
+                    <li>Stay informed through official channels</li>
+                    <li>Keep emergency supplies ready</li>
+                    <li>Follow evacuation orders immediately</li>
+                    <li>Help neighbors and elderly</li>
+                    <li>Keep important documents safe</li>
+                </ul>
+            </div>
+            <div class="guideline-card dont">
+                <h4>❌ Don'ts</h4>
+                <ul>
+                    <li>Don't ignore warning messages</li>
+                    <li>Don't venture into flooded areas</li>
+                    <li>Don't spread unverified information</li>
+                    <li>Don't use elevators during earthquakes</li>
+                    <li>Don't touch electrical appliances with wet hands</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

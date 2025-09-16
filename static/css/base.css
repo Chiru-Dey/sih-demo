@@ -1,0 +1,368 @@
+/* Disaster Management App - Base Styles */
+
+:root {
+    --background: #11151c;
+    --foreground: #212736;
+    --accent: #5978f3;
+    --primary: #dbc69a;
+    --danger: #e25555;
+    --success: #43d9ad;
+    --white: #f4f4f9;
+    --shadow: rgba(0, 0, 0, 0.7);
+    --font-size: 16px;
+}
+
+/* High Contrast Mode */
+body.high-contrast {
+    --background: #000000;
+    --foreground: #ffffff;
+    --accent: #ffff00;
+    --primary: #ffffff;
+    --danger: #ff0000;
+    --success: #00ff00;
+    --white: #ffffff;
+    --shadow: rgba(255, 255, 255, 0.7);
+}
+
+/* Font Size Classes */
+body.font-small {
+    --font-size: 14px;
+}
+
+body.font-medium {
+    --font-size: 16px;
+}
+
+body.font-large {
+    --font-size: 18px;
+}
+
+body.font-xlarge {
+    --font-size: 22px;
+}
+
+/* RTL Support */
+body.rtl {
+    direction: rtl;
+}
+
+body.rtl .hamburger {
+    right: 0;
+    left: auto;
+}
+
+body.rtl .fixed-actions {
+    left: 20px;
+    right: auto;
+}
+
+body.rtl .hamburger-menu {
+    right: -300px;
+    left: auto;
+}
+
+body.rtl .hamburger-menu.active {
+    right: 0;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: var(--background);
+    color: var(--white);
+    min-height: 100vh;
+    padding-top: 130px;
+    font-size: var(--font-size);
+    transition: all 0.3s ease;
+}
+
+/* Skip to Content Link */
+.skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: var(--accent);
+    color: var(--white);
+    padding: 8px;
+    text-decoration: none;
+    border-radius: 4px;
+    z-index: 2000;
+}
+
+.skip-to-content:focus {
+    top: 6px;
+}
+
+/* Header */
+.header {
+    background: var(--foreground);
+    backdrop-filter: blur(10px);
+    padding: 15px 20px;
+    box-shadow: 0 2px 20px var(--shadow);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1002;
+}
+
+.header-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.hamburger {
+    position: absolute;
+    left: 0;
+    font-size: 24px;
+    color: var(--accent);
+    cursor: pointer;
+    z-index: 1003;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+    background: rgba(34, 40, 56, 0.3);
+    border: none;
+}
+
+.hamburger:hover,
+.hamburger:focus {
+    background: var(--accent);
+    color: var(--primary);
+    outline: 2px solid var(--primary);
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(45deg, var(--danger), var(--accent));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: var(--white);
+}
+
+.logo::before {
+    content: '🌪️';
+    font-size: 32px;
+}
+
+.app-name {
+    color: var(--primary);
+    font-size: calc(var(--font-size) + 12px);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Main Content */
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+/* Collapsible Sections */
+.collapsible-section {
+    background: var(--foreground);
+    border-radius: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 20px var(--shadow);
+    overflow: hidden;
+}
+
+.section-header {
+    background: var(--accent);
+    color: var(--background);
+    padding: 15px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font-size: calc(var(--font-size) + 2px);
+}
+
+.section-header:hover,
+.section-header:focus {
+    background: var(--primary);
+    outline: 2px solid var(--white);
+}
+
+.section-content {
+    padding: 20px;
+    display: none;
+    color: var(--primary);
+    font-size: var(--font-size);
+}
+
+.section-content.active {
+    display: block;
+}
+
+/* Map Section */
+.map-section {
+    background: var(--foreground);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 32px var(--shadow);
+}
+
+.map-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--background);
+    border-radius: 15px;
+    border: 2px solid var(--accent);
+    overflow: hidden;
+    height: 500px;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    border-radius: 13px;
+}
+
+/* Fixed Action Buttons */
+.fixed-actions {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 1000;
+}
+
+.action-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    color: var(--white);
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.action-btn:focus {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.ai-assistant {
+    background: linear-gradient(135deg, var(--accent), var(--success));
+}
+
+.emergency-call {
+    background: linear-gradient(135deg, var(--danger), var(--accent));
+}
+
+.quick-chat {
+    background: linear-gradient(135deg, var(--success), var(--accent));
+}
+
+.action-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Animations */
+@keyframes progressGlow {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    body {
+        padding-top: 160px;
+    }
+
+    .fixed-actions {
+        bottom: 15px;
+        right: 15px;
+    }
+
+    .action-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding-top: 140px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .pwa-install-banner,
+    .accessibility-panel,
+    .translation-panel,
+    .accessibility-toggle,
+    .translation-toggle,
+    .fixed-actions,
+    .hamburger-menu,
+    .chatbot-overlay {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+        padding-top: 0 !important;
+    }
+}

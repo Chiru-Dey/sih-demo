@@ -1,0 +1,73 @@
+<!-- AI Chatbot -->
+<div class="chatbot-overlay" id="ai-chatbot">
+    <div class="chatbot-popup">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <i class="fas fa-robot"></i>
+                <span>AI Disaster Assistant</span>
+            </div>
+            <button class="chatbot-close" onclick="closeChatbot('ai-chatbot')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chatbot-messages" id="ai-messages">
+            <div class="message bot">
+                👋 Hello! I'm your AI Disaster Assistant. How can I help you today?
+            </div>
+        </div>
+        <div class="voice-controls">
+            <button class="voice-btn" onclick="startVoiceInput('ai')">
+                <i class="fas fa-microphone"></i> Voice
+            </button>
+            <button class="voice-btn" onclick="readLastMessage('ai')">
+                <i class="fas fa-volume-up"></i> Read
+            </button>
+        </div>
+        <div class="chatbot-input-area">
+            <div class="chatbot-input-container">
+                <textarea class="chatbot-input" id="ai-input"
+                    placeholder="Ask me anything about disaster preparedness..." rows="1"></textarea>
+                <button class="chatbot-send" onclick="sendMessage('ai')" id="ai-send">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Chat -->
+<div class="chatbot-overlay" id="quick-chatbot">
+    <div class="chatbot-popup">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <i class="fas fa-headset"></i>
+                <span>Emergency Support</span>
+            </div>
+            <button class="chatbot-close" onclick="closeChatbot('quick-chatbot')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chatbot-messages" id="quick-messages">
+            <div class="message system">
+                🚨 Emergency Support Connected. How can we assist you?
+            </div>
+        </div>
+        <div class="voice-controls">
+            <button class="voice-btn" onclick="startVoiceInput('quick')">
+                <i class="fas fa-microphone"></i> Voice
+            </button>
+            <button class="voice-btn" onclick="readLastMessage('quick')">
+                <i class="fas fa-volume-up"></i> Read
+            </button>
+        </div>
+        <div class="chatbot-input-area">
+            <div class="chatbot-input-container">
+                <textarea class="chatbot-input" id="quick-input" placeholder="Describe your emergency situation..."
+                    rows="1"></textarea>
+                <button class="chatbot-send" onclick="sendMessage('quick')" id="quick-send">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
