@@ -161,7 +161,7 @@ async function restoreTranslationFromSession() {
     }
 }
 
-// ✅ IMPROVED Backend AI Translation Function with robust DOM updates
+// ✅ IMPROVED Backend AI Translation Function with robust DOM updates and chunking
 async function applyGeminiTranslation() {
     console.log('🚀 Starting translation process...');
 
@@ -177,13 +177,9 @@ async function applyGeminiTranslation() {
 
     console.log(`🌐 Target language: ${targetLanguage} (${targetLanguageName})`);
 
-    // ✅ FIXED: Handle English reversion properly
     if (targetLanguage === 'en') {
-        // Always allow reversion to English when not currently in English
-        // OR when user explicitly wants to revert
         if (currentLanguage !== 'en' || originalTexts.size > 0) {
             console.log('🔄 Reverting to English...');
-            // Revert to original English texts
             revertToOriginalTexts();
             return;
         } else {
@@ -192,8 +188,6 @@ async function applyGeminiTranslation() {
         }
     }
 
-    // Check if AI service is available
-    console.log(`🤖 AI Available: ${window.aiAvailable}`);
     if (!window.aiAvailable) {
         console.warn('⚠️ AI service not available');
         showNotification('AI translation requires API key configuration', 'warning');
@@ -202,9 +196,9 @@ async function applyGeminiTranslation() {
     }
 
     showTranslationLoading();
+    let appliedCount = 0;
 
     try {
-        // ✅ IMPROVED: Use unique IDs for robust element mapping
         const elementsToTranslate = collectTranslatableElements();
 
         if (elementsToTranslate.length === 0) {
@@ -217,63 +211,75 @@ async function applyGeminiTranslation() {
         console.log(`🔍 Collected ${elementsToTranslate.length} elements for translation`);
         updateTranslationProgress(20);
 
-        // Prepare texts with unique identifiers
-        const textsWithIds = elementsToTranslate.map(item =>
-            `${item.id}: ${item.text}`
-        );
-
-        console.log('📤 Sending to translation API...');
-        updateTranslationProgress(40);
-
-        // Call backend API
-        const response = await fetch('/api/translate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                text: textsWithIds.join('\n'),
-                target_language: targetLanguageName
-            })
-        });
-
-        updateTranslationProgress(70);
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.error || `HTTP ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('📨 Translation response received');
-        updateTranslationProgress(85);
-
-        // ✅ NEW: Store original texts before first translation
         if (currentLanguage === 'en') {
             storeOriginalTexts(elementsToTranslate);
         }
 
-        // ✅ IMPROVED: Apply translations with robust error handling
-        const appliedCount = applyTranslationsToDOM(data.translated_text, elementsToTranslate);
+        const textsWithIds = elementsToTranslate.map(item => `${item.id}: ${item.text}`);
+        const CHARACTER_LIMIT = 9500; // Safety margin for 10,000 char limit
 
-        // ✅ NEW: Update app title with phonetic transliteration
+        const chunks = [];
+        let currentChunk = [];
+        let currentChunkLength = 0;
+
+        for (const line of textsWithIds) {
+            if (currentChunkLength + line.length + 1 > CHARACTER_LIMIT) {
+                chunks.push(currentChunk.join('\n'));
+                currentChunk = [line];
+                currentChunkLength = line.length;
+            } else {
+                currentChunk.push(line);
+                currentChunkLength += line.length + 1;
+            }
+        }
+        if (currentChunk.length > 0) {
+            chunks.push(currentChunk.join('\n'));
+        }
+
+        const totalChunks = chunks.length;
+        console.log(`📦 Text split into ${totalChunks} chunks for translation.`);
+
+        for (let i = 0; i < totalChunks; i++) {
+            const chunk = chunks[i];
+            const chunkNumber = i + 1;
+
+            const progressMessage = `Translating chunk ${chunkNumber} of ${totalChunks}...`;
+            console.log(`📤 Sending chunk ${chunkNumber}/${totalChunks}...`);
+            showTranslationLoading(progressMessage);
+            updateTranslationProgress(20 + (chunkNumber / totalChunks) * 65);
+
+            const response = await fetch('/api/translate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    text: chunk,
+                    target_language: targetLanguageName
+                })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.error || `HTTP ${response.status} on chunk ${chunkNumber}`);
+            }
+
+            const data = await response.json();
+            console.log(`📨 Translation response for chunk ${chunkNumber} received`);
+            
+            appliedCount += applyTranslationsToDOM(data.translated_text, elementsToTranslate);
+        }
+
         updateAppTitle(targetLanguage);
 
-        // Handle RTL languages
         if (targetLanguage === 'ur' || targetLanguage === 'sd') {
             document.body.classList.add('rtl');
         } else {
             document.body.classList.remove('rtl');
         }
 
-        // ✅ NEW: Update current language state
         currentLanguage = targetLanguage;
-
-        // ✅ FIXED: Save language preference to backend session and localStorage
         await saveUserPreferences({ language: targetLanguage });
         localStorage.setItem('selectedLanguage', targetLanguage);
 
-        // Show revert button when not in English
         const revertBtn = document.getElementById('revertBtn');
         if (revertBtn) {
             revertBtn.style.display = targetLanguage === 'en' ? 'none' : 'block';
@@ -727,7 +733,7 @@ function updateAppTitle(targetLanguage) {
 }
 
 // Translation loading functions
-function showTranslationLoading() {
+function showTranslationLoading(message = 'Translating with AI...') {
     const loading = document.getElementById('translationLoading');
     const button = document.getElementById('translateBtn');
     if (loading) {
@@ -735,7 +741,7 @@ function showTranslationLoading() {
     }
     if (button) {
         button.disabled = true;
-        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Translating with AI...';
+        button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${message}`;
     }
     updateTranslationProgress(10);
 }
