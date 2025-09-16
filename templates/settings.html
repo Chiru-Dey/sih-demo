@@ -10,6 +10,67 @@
     </div>
 
     <div class="settings-container">
+        <!-- App Settings -->
+        <div class="settings-section">
+            <h2><i class="fas fa-mobile-alt"></i> App Settings</h2>
+            <div class="settings-grid">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>Theme</h3>
+                        <p>Switch between light and dark themes</p>
+                    </div>
+                    <div class="theme-switcher">
+                        <button type="button" class="theme-btn active" data-theme="light"><i class="fas fa-sun"></i>
+                            Light</button>
+                        <button type="button" class="theme-btn" data-theme="dark"><i class="fas fa-moon"></i>
+                            Dark</button>
+                    </div>
+                </div>
+
+                <div class="setting-item full-width">
+                    <div class="setting-info">
+                        <h3>Language</h3>
+                        <p>Choose your preferred language</p>
+                    </div>
+                    <select id="app-language" class="form-control">
+                        <option value="en">English</option>
+                        <option value="hi">हिंदी (Hindi)</option>
+                        <option value="bn">বাংলা (Bengali)</option>
+                        <option value="te">తెలుగు (Telugu)</option>
+                        <option value="ta">தமிழ் (Tamil)</option>
+                        <option value="mr">मराठी (Marathi)</option>
+                        <option value="gu">ગુજરાતી (Gujarati)</option>
+                        <option value="kn">ಕನ್ನಡ (Kannada)</option>
+                        <option value="ml">മലയാളം (Malayalam)</option>
+                        <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+                        <option value="or">ଓଡ଼ିଆ (Odia)</option>
+                        <option value="as">অসমীয়া (Assamese)</option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>High Contrast</h3>
+                        <p>Increase contrast for better accessibility</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="high-contrast">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <h3>Offline Mode</h3>
+                        <p>Cache data for offline access</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="offline-mode" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
         <!-- Notification Settings -->
         <div class="settings-section">
             <h2><i class="fas fa-bell"></i> Notification Settings</h2>
@@ -70,7 +131,8 @@
                         <p>Set the distance for receiving location-based alerts</p>
                     </div>
                     <div class="range-input">
-                        <input type="range" id="alert-radius" min="10" max="500" value="100" oninput="updateRangeValue('alert-radius', 'radius-value', ' km')">
+                        <input type="range" id="alert-radius" min="10" max="500" value="100"
+                            oninput="updateRangeValue('alert-radius', 'radius-value', ' km')">
                         <span class="range-value" id="radius-value">100 km</span>
                     </div>
                 </div>
@@ -80,7 +142,7 @@
                         <h3>Minimum Alert Severity</h3>
                         <p>Choose the minimum severity level for alerts</p>
                     </div>
-                    <select id="min-severity" class="setting-select">
+                    <select id="min-severity" class="form-control">
                         <option value="low">All Alerts (Low, Medium, High, Critical)</option>
                         <option value="medium" selected>Medium & Above</option>
                         <option value="high">High & Critical Only</option>
@@ -103,9 +165,9 @@
                     <div class="setting-info">
                         <h3>Quiet Hours Time</h3>
                         <div class="time-inputs">
-                            <input type="time" id="quiet-start" value="22:00">
+                            <input type="time" id="quiet-start" value="22:00" class="form-control">
                             <span>to</span>
-                            <input type="time" id="quiet-end" value="07:00">
+                            <input type="time" id="quiet-end" value="07:00" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -144,71 +206,12 @@
                         <p>Set your home or primary location for alerts</p>
                     </div>
                     <div class="location-input">
-                        <input type="text" id="primary-location" placeholder="Enter address or coordinates" class="setting-input">
+                        <input type="text" id="primary-location" placeholder="Enter address or coordinates"
+                            class="form-control">
                         <button type="button" class="btn-secondary" onclick="getCurrentLocation()">
                             <i class="fas fa-crosshairs"></i> Use Current
                         </button>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- App Settings -->
-        <div class="settings-section">
-            <h2><i class="fas fa-mobile-alt"></i> App Settings</h2>
-            <div class="settings-grid">
-                <div class="setting-item full-width">
-                    <div class="setting-info">
-                        <h3>Language</h3>
-                        <p>Choose your preferred language</p>
-                    </div>
-                    <select id="app-language" class="setting-select">
-                        <option value="en">English</option>
-                        <option value="hi">हिंदी (Hindi)</option>
-                        <option value="bn">বাংলা (Bengali)</option>
-                        <option value="te">తెలుగు (Telugu)</option>
-                        <option value="ta">தமிழ் (Tamil)</option>
-                        <option value="mr">मराठी (Marathi)</option>
-                        <option value="gu">ગુજરાતી (Gujarati)</option>
-                        <option value="kn">ಕನ್ನಡ (Kannada)</option>
-                        <option value="ml">മലയാളം (Malayalam)</option>
-                        <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
-                        <option value="or">ଓଡ଼ିଆ (Odia)</option>
-                        <option value="as">অসমীয়া (Assamese)</option>
-                    </select>
-                </div>
-
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <h3>Dark Mode</h3>
-                        <p>Use dark theme for better visibility</p>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="dark-mode">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <h3>High Contrast</h3>
-                        <p>Increase contrast for better accessibility</p>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="high-contrast">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-
-                <div class="setting-item">
-                    <div class="setting-info">
-                        <h3>Offline Mode</h3>
-                        <p>Cache data for offline access</p>
-                    </div>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="offline-mode" checked>
-                        <span class="slider"></span>
-                    </label>
                 </div>
             </div>
         </div>
@@ -244,7 +247,7 @@
                         <h3>Emergency Contact</h3>
                         <p>Contact to notify in case of emergency</p>
                     </div>
-                    <input type="tel" id="emergency-contact" placeholder="+91 XXXXXXXXXX" class="setting-input">
+                    <input type="tel" id="emergency-contact" placeholder="+91 XXXXXXXXXX" class="form-control">
                 </div>
             </div>
         </div>
@@ -269,7 +272,8 @@
                         <p>Restore settings from a backup file</p>
                     </div>
                     <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importData()">
-                    <button type="button" class="btn-secondary" onclick="document.getElementById('import-file').click()">
+                    <button type="button" class="btn-secondary"
+                        onclick="document.getElementById('import-file').click()">
                         <i class="fas fa-upload"></i> Import
                     </button>
                 </div>
@@ -306,180 +310,216 @@
 </div>
 
 <script>
-// Initialize settings
-document.addEventListener('DOMContentLoaded', function() {
-    loadSettings();
-    
-    // Handle quiet hours toggle
-    document.getElementById('quiet-hours').addEventListener('change', function() {
-        const configDiv = document.querySelector('.quiet-hours-config');
-        configDiv.style.display = this.checked ? 'block' : 'none';
-    });
-});
+    // Initialize settings
+    document.addEventListener('DOMContentLoaded', function () {
+        loadSettings();
 
-function updateRangeValue(rangeId, valueId, unit) {
-    const range = document.getElementById(rangeId);
-    const valueSpan = document.getElementById(valueId);
-    valueSpan.textContent = range.value + unit;
-}
-
-function getCurrentLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
-            document.getElementById('primary-location').value = `${lat}, ${lng}`;
-        }, function(error) {
-            alert('Unable to get your location. Please enter manually.');
+        // Handle quiet hours toggle
+        document.getElementById('quiet-hours').addEventListener('change', function () {
+            const configDiv = document.querySelector('.quiet-hours-config');
+            configDiv.style.display = this.checked ? 'flex' : 'none';
         });
-    } else {
-        alert('Geolocation is not supported by this browser.');
+
+        // Theme switcher
+        const themeButtons = document.querySelectorAll('.theme-btn');
+        themeButtons.forEach(btn => {
+            btn.addEventListener('click', function () {
+                const theme = this.dataset.theme;
+                setTheme(theme);
+
+                themeButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    });
+
+    function updateRangeValue(rangeId, valueId, unit) {
+        const range = document.getElementById(rangeId);
+        const valueSpan = document.getElementById(valueId);
+        valueSpan.textContent = range.value + unit;
     }
-}
 
-function saveSettings() {
-    const settings = {
-        notifications: {
-            push: document.getElementById('push-notifications').checked,
-            sms: document.getElementById('sms-alerts').checked,
-            email: document.getElementById('email-notifications').checked,
-            sound: document.getElementById('sound-alerts').checked
-        },
-        alerts: {
-            radius: document.getElementById('alert-radius').value,
-            minSeverity: document.getElementById('min-severity').value,
-            quietHours: document.getElementById('quiet-hours').checked,
-            quietStart: document.getElementById('quiet-start').value,
-            quietEnd: document.getElementById('quiet-end').value
-        },
-        location: {
-            services: document.getElementById('location-services').checked,
-            background: document.getElementById('background-location').checked,
-            primary: document.getElementById('primary-location').value
-        },
-        app: {
-            language: document.getElementById('app-language').value,
-            darkMode: document.getElementById('dark-mode').checked,
-            highContrast: document.getElementById('high-contrast').checked,
-            offlineMode: document.getElementById('offline-mode').checked
-        },
-        privacy: {
-            dataCollection: document.getElementById('data-collection').checked,
-            crashReports: document.getElementById('crash-reports').checked,
-            emergencyContact: document.getElementById('emergency-contact').value
-        }
-    };
-    
-    localStorage.setItem('disastrous-settings', JSON.stringify(settings));
-    showNotification('Settings saved successfully!', 'success');
-}
-
-function loadSettings() {
-    const savedSettings = localStorage.getItem('disastrous-settings');
-    if (savedSettings) {
-        const settings = JSON.parse(savedSettings);
-        
-        // Load notification settings
-        if (settings.notifications) {
-            document.getElementById('push-notifications').checked = settings.notifications.push;
-            document.getElementById('sms-alerts').checked = settings.notifications.sms;
-            document.getElementById('email-notifications').checked = settings.notifications.email;
-            document.getElementById('sound-alerts').checked = settings.notifications.sound;
-        }
-        
-        // Load alert settings
-        if (settings.alerts) {
-            document.getElementById('alert-radius').value = settings.alerts.radius || 100;
-            updateRangeValue('alert-radius', 'radius-value', ' km');
-            document.getElementById('min-severity').value = settings.alerts.minSeverity || 'medium';
-            document.getElementById('quiet-hours').checked = settings.alerts.quietHours;
-            document.getElementById('quiet-start').value = settings.alerts.quietStart || '22:00';
-            document.getElementById('quiet-end').value = settings.alerts.quietEnd || '07:00';
-        }
-        
-        // Load location settings
-        if (settings.location) {
-            document.getElementById('location-services').checked = settings.location.services;
-            document.getElementById('background-location').checked = settings.location.background;
-            document.getElementById('primary-location').value = settings.location.primary || '';
-        }
-        
-        // Load app settings
-        if (settings.app) {
-            document.getElementById('app-language').value = settings.app.language || 'en';
-            document.getElementById('dark-mode').checked = settings.app.darkMode;
-            document.getElementById('high-contrast').checked = settings.app.highContrast;
-            document.getElementById('offline-mode').checked = settings.app.offlineMode;
-        }
-        
-        // Load privacy settings
-        if (settings.privacy) {
-            document.getElementById('data-collection').checked = settings.privacy.dataCollection;
-            document.getElementById('crash-reports').checked = settings.privacy.crashReports;
-            document.getElementById('emergency-contact').value = settings.privacy.emergencyContact || '';
-        }
-        
-        // Show quiet hours config if enabled
-        if (settings.alerts && settings.alerts.quietHours) {
-            document.querySelector('.quiet-hours-config').style.display = 'block';
+    function getCurrentLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                document.getElementById('primary-location').value = `${lat}, ${lng}`;
+            }, function (error) {
+                alert('Unable to get your location. Please enter manually.');
+            });
+        } else {
+            alert('Geolocation is not supported by this browser.');
         }
     }
-}
 
-function exportData() {
-    const settings = localStorage.getItem('disastrous-settings');
-    if (settings) {
-        const blob = new Blob([settings], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'disastrous-settings.json';
-        a.click();
-        URL.revokeObjectURL(url);
-        showNotification('Settings exported successfully!', 'success');
-    } else {
-        showNotification('No settings to export', 'warning');
-    }
-}
-
-function importData() {
-    const fileInput = document.getElementById('import-file');
-    const file = fileInput.files[0];
-    
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const settings = JSON.parse(e.target.result);
-                localStorage.setItem('disastrous-settings', JSON.stringify(settings));
-                loadSettings();
-                showNotification('Settings imported successfully!', 'success');
-            } catch (error) {
-                showNotification('Invalid settings file', 'error');
+    function saveSettings() {
+        const settings = {
+            notifications: {
+                push: document.getElementById('push-notifications').checked,
+                sms: document.getElementById('sms-alerts').checked,
+                email: document.getElementById('email-notifications').checked,
+                sound: document.getElementById('sound-alerts').checked
+            },
+            alerts: {
+                radius: document.getElementById('alert-radius').value,
+                minSeverity: document.getElementById('min-severity').value,
+                quietHours: document.getElementById('quiet-hours').checked,
+                quietStart: document.getElementById('quiet-start').value,
+                quietEnd: document.getElementById('quiet-end').value
+            },
+            location: {
+                services: document.getElementById('location-services').checked,
+                background: document.getElementById('background-location').checked,
+                primary: document.getElementById('primary-location').value
+            },
+            app: {
+                language: document.getElementById('app-language').value,
+                theme: document.querySelector('.theme-btn.active').dataset.theme,
+                highContrast: document.getElementById('high-contrast').checked,
+                offlineMode: document.getElementById('offline-mode').checked
+            },
+            privacy: {
+                dataCollection: document.getElementById('data-collection').checked,
+                crashReports: document.getElementById('crash-reports').checked,
+                emergencyContact: document.getElementById('emergency-contact').value
             }
         };
-        reader.readAsText(file);
-    }
-}
 
-function clearCache() {
-    if (confirm('Clear all cached data? This will remove offline content.')) {
-        if ('caches' in window) {
-            caches.keys().then(function(names) {
-                names.forEach(function(name) {
-                    caches.delete(name);
-                });
-            });
+        localStorage.setItem('disastrous-settings', JSON.stringify(settings));
+        showNotification('Settings saved successfully!', 'success');
+    }
+
+    function loadSettings() {
+        const savedSettings = localStorage.getItem('disastrous-settings');
+        if (savedSettings) {
+            const settings = JSON.parse(savedSettings);
+
+            // Load notification settings
+            if (settings.notifications) {
+                document.getElementById('push-notifications').checked = settings.notifications.push;
+                document.getElementById('sms-alerts').checked = settings.notifications.sms;
+                document.getElementById('email-notifications').checked = settings.notifications.email;
+                document.getElementById('sound-alerts').checked = settings.notifications.sound;
+            }
+
+            // Load alert settings
+            if (settings.alerts) {
+                document.getElementById('alert-radius').value = settings.alerts.radius || 100;
+                updateRangeValue('alert-radius', 'radius-value', ' km');
+                document.getElementById('min-severity').value = settings.alerts.minSeverity || 'medium';
+                document.getElementById('quiet-hours').checked = settings.alerts.quietHours;
+                document.getElementById('quiet-start').value = settings.alerts.quietStart || '22:00';
+                document.getElementById('quiet-end').value = settings.alerts.quietEnd || '07:00';
+            }
+
+            // Load location settings
+            if (settings.location) {
+                document.getElementById('location-services').checked = settings.location.services;
+                document.getElementById('background-location').checked = settings.location.background;
+                document.getElementById('primary-location').value = settings.location.primary || '';
+            }
+
+            // Load app settings
+            if (settings.app) {
+                document.getElementById('app-language').value = settings.app.language || 'en';
+                setTheme(settings.app.theme || 'dark');
+                document.getElementById('high-contrast').checked = settings.app.highContrast;
+                document.getElementById('offline-mode').checked = settings.app.offlineMode;
+            } else {
+                setTheme('dark');
+            }
+
+            // Load privacy settings
+            if (settings.privacy) {
+                document.getElementById('data-collection').checked = settings.privacy.dataCollection;
+                document.getElementById('crash-reports').checked = settings.privacy.crashReports;
+                document.getElementById('emergency-contact').value = settings.privacy.emergencyContact || '';
+            }
+
+            // Show quiet hours config if enabled
+            if (settings.alerts && settings.alerts.quietHours) {
+                document.querySelector('.quiet-hours-config').style.display = 'flex';
+            }
         }
-        showNotification('Cache cleared successfully!', 'success');
     }
-}
 
-function resetSettings() {
-    if (confirm('Reset all settings to default? This action cannot be undone.')) {
-        localStorage.removeItem('disastrous-settings');
-        location.reload();
+    function exportData() {
+        const settings = localStorage.getItem('disastrous-settings');
+        if (settings) {
+            const blob = new Blob([settings], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'disastrous-settings.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification('Settings exported successfully!', 'success');
+        } else {
+            showNotification('No settings to export', 'warning');
+        }
     }
-}
+
+    function importData() {
+        const fileInput = document.getElementById('import-file');
+        const file = fileInput.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const settings = JSON.parse(e.target.result);
+                    localStorage.setItem('disastrous-settings', JSON.stringify(settings));
+                    loadSettings();
+                    showNotification('Settings imported successfully!', 'success');
+                } catch (error) {
+                    showNotification('Invalid settings file', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+    }
+
+    function clearCache() {
+        if (confirm('Clear all cached data? This will remove offline content.')) {
+            if ('caches' in window) {
+                caches.keys().then(function (names) {
+                    names.forEach(function (name) {
+                        caches.delete(name);
+                    });
+                });
+            }
+            showNotification('Cache cleared successfully!', 'success');
+        }
+    }
+
+    function resetSettings() {
+        if (confirm('Reset all settings to default? This action cannot be undone.')) {
+            localStorage.removeItem('disastrous-settings');
+            location.reload();
+        }
+    }
+
+    function setTheme(theme) {
+        document.body.classList.remove('dark-mode', 'light-mode');
+        document.body.classList.add(theme + '-mode');
+
+        const themeButtons = document.querySelectorAll('.theme-btn');
+        themeButtons.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.theme === theme) {
+                btn.classList.add('active');
+            }
+        });
+
+        // Save the theme to local storage
+        const savedSettings = localStorage.getItem('disastrous-settings');
+        let settings = savedSettings ? JSON.parse(savedSettings) : {};
+        if (!settings.app) {
+            settings.app = {};
+        }
+        settings.app.theme = theme;
+        localStorage.setItem('disastrous-settings', JSON.stringify(settings));
+    }
 </script>
 {% endblock %}

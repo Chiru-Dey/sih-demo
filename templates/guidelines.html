@@ -11,19 +11,19 @@
 
     <div class="guidelines-navigation">
         <div class="guidelines-tabs">
-            <button class="tab-btn active" onclick="showGuideline('earthquake')">
+            <button class="btn-primary active" onclick="showGuideline('earthquake')">
                 <i class="fas fa-mountain"></i> Earthquake
             </button>
-            <button class="tab-btn" onclick="showGuideline('flood')">
+            <button class="btn-secondary" onclick="showGuideline('flood')">
                 <i class="fas fa-water"></i> Flood
             </button>
-            <button class="tab-btn" onclick="showGuideline('fire')">
+            <button class="btn-secondary" onclick="showGuideline('fire')">
                 <i class="fas fa-fire"></i> Fire
             </button>
-            <button class="tab-btn" onclick="showGuideline('cyclone')">
+            <button class="btn-secondary" onclick="showGuideline('cyclone')">
                 <i class="fas fa-wind"></i> Cyclone
             </button>
-            <button class="tab-btn" onclick="showGuideline('general')">
+            <button class="btn-secondary" onclick="showGuideline('general')">
                 <i class="fas fa-shield-alt"></i> General
             </button>
         </div>
@@ -283,7 +283,7 @@
         document.getElementById(type).classList.add('active');
 
         // Add active class to clicked tab
-        event.target.classList.add('active');
+        event.currentTarget.classList.add('active');
     }
 </script>
 {% endblock %}

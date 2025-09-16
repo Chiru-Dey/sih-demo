@@ -22,7 +22,7 @@
                     <p class="contact-number">112</p>
                     <p class="contact-desc">All Emergency Services</p>
                 </div>
-                <button class="call-btn" onclick="callEmergency('112')">
+                <button class="btn-primary" onclick="callEmergency('112')">
                     <i class="fas fa-phone"></i> Call Now
                 </button>
             </div>
@@ -36,7 +36,7 @@
                     <p class="contact-number">101</p>
                     <p class="contact-desc">Fire & Rescue Services</p>
                 </div>
-                <button class="call-btn" onclick="callEmergency('101')">
+                <button class="btn-primary" onclick="callEmergency('101')">
                     <i class="fas fa-phone"></i> Call
                 </button>
             </div>
@@ -50,7 +50,7 @@
                     <p class="contact-number">100</p>
                     <p class="contact-desc">Law Enforcement</p>
                 </div>
-                <button class="call-btn" onclick="callEmergency('100')">
+                <button class="btn-primary" onclick="callEmergency('100')">
                     <i class="fas fa-phone"></i> Call
                 </button>
             </div>
@@ -64,7 +64,7 @@
                     <p class="contact-number">108</p>
                     <p class="contact-desc">Ambulance Service</p>
                 </div>
-                <button class="call-btn" onclick="callEmergency('108')">
+                <button class="btn-primary" onclick="callEmergency('108')">
                     <i class="fas fa-phone"></i> Call
                 </button>
             </div>
@@ -78,7 +78,7 @@
                     <p class="contact-number">1078</p>
                     <p class="contact-desc">NDRF Helpline</p>
                 </div>
-                <button class="call-btn" onclick="callEmergency('1078')">
+                <button class="btn-primary" onclick="callEmergency('1078')">
                     <i class="fas fa-phone"></i> Call
                 </button>
             </div>
@@ -92,160 +92,49 @@
                     <p class="contact-number">1098</p>
                     <p class="contact-desc">Child Protection</p>
                 </div>
-                <button class="call-btn" onclick="callEmergency('1098')">
+                <button class="btn-primary" onclick="callEmergency('1098')">
                     <i class="fas fa-phone"></i> Call
                 </button>
             </div>
         </div>
     </div>
 
-    <div class="rescue-grid">
-        <!-- Active Rescue Operations -->
-        <div class="rescue-section">
-            <h2><i class="fas fa-helicopter"></i> Active Rescue Operations</h2>
-            <div class="rescue-operations">
-                <div class="operation-card high-priority">
-                    <div class="operation-header">
-                        <span class="operation-id">#R2024-001</span>
-                        <span class="priority-badge high">HIGH PRIORITY</span>
-                    </div>
-                    <div class="operation-content">
-                        <h3><i class="fas fa-water"></i> Flood Rescue - Yamuna Basin</h3>
-                        <p><strong>Location:</strong> Sector 21, Noida</p>
-                        <p><strong>Victims:</strong> 15 people stranded</p>
-                        <p><strong>Resources:</strong> 2 boats, 8 personnel</p>
-                        <p><strong>Status:</strong> In Progress</p>
-                        <div class="operation-time">
-                            <i class="fas fa-clock"></i> Started 2 hours ago
-                        </div>
-                    </div>
-                </div>
-
-                <div class="operation-card medium-priority">
-                    <div class="operation-header">
-                        <span class="operation-id">#R2024-002</span>
-                        <span class="priority-badge medium">MEDIUM PRIORITY</span>
-                    </div>
-                    <div class="operation-content">
-                        <h3><i class="fas fa-mountain"></i> Landslide Response</h3>
-                        <p><strong>Location:</strong> Manali Highway, Himachal Pradesh</p>
-                        <p><strong>Victims:</strong> Road blockage, 50+ vehicles stuck</p>
-                        <p><strong>Resources:</strong> Heavy machinery, 12 personnel</p>
-                        <p><strong>Status:</strong> Assessment Phase</p>
-                        <div class="operation-time">
-                            <i class="fas fa-clock"></i> Started 45 minutes ago
-                        </div>
-                    </div>
-                </div>
+    <div class="form-container">
+        <h2><i class="fas fa-sos"></i> Request Rescue</h2>
+        <form id="rescue-request-form">
+            <div class="form-group">
+                <label for="emergency-type">Emergency Type</label>
+                <select id="emergency-type" class="form-control" required>
+                    <option value="">Select Emergency Type</option>
+                    <option value="flood">Flood/Water Rescue</option>
+                    <option value="fire">Fire Emergency</option>
+                    <option value="collapse">Building Collapse</option>
+                    <option value="landslide">Landslide</option>
+                    <option value="medical">Medical Emergency</option>
+                    <option value="other">Other</option>
+                </select>
             </div>
-        </div>
 
-        <!-- Request Rescue -->
-        <div class="rescue-request">
-            <h2><i class="fas fa-sos"></i> Request Rescue</h2>
-            <div class="request-form">
-                <div class="form-group">
-                    <label for="emergency-type">Emergency Type:</label>
-                    <select id="emergency-type" required>
-                        <option value="">Select Emergency Type</option>
-                        <option value="flood">Flood/Water Rescue</option>
-                        <option value="fire">Fire Emergency</option>
-                        <option value="collapse">Building Collapse</option>
-                        <option value="landslide">Landslide</option>
-                        <option value="medical">Medical Emergency</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="victim-count">Number of People Affected:</label>
-                    <input type="number" id="victim-count" min="1" placeholder="e.g., 5">
-                </div>
-
-                <div class="form-group">
-                    <label for="location-details">Exact Location:</label>
-                    <textarea id="location-details" placeholder="Provide detailed location information..."></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="contact-person">Your Contact Number:</label>
-                    <input type="tel" id="contact-person" placeholder="+91 XXXXXXXXXX">
-                </div>
-
-                <div class="form-group">
-                    <label for="additional-info">Additional Information:</label>
-                    <textarea id="additional-info"
-                        placeholder="Any additional details that can help rescue teams..."></textarea>
-                </div>
-
-                <div class="form-actions">
-                    <button type="button" class="btn-emergency" onclick="submitRescueRequest()">
-                        <i class="fas fa-paper-plane"></i> Submit Emergency Request
-                    </button>
-                    <button type="button" class="btn-secondary" onclick="getCurrentLocation()">
-                        <i class="fas fa-map-marker-alt"></i> Use Current Location
-                    </button>
-                </div>
+            <div class="form-group">
+                <label for="victim-count">Number of People Affected</label>
+                <input type="number" id="victim-count" class="form-control" min="1" placeholder="e.g., 5">
             </div>
-        </div>
 
-        <!-- Rescue Resources -->
-        <div class="rescue-resources">
-            <h2><i class="fas fa-truck"></i> Available Resources</h2>
-            <div class="resources-grid">
-                <div class="resource-card">
-                    <i class="fas fa-helicopter"></i>
-                    <h3>Helicopters</h3>
-                    <p class="resource-count">3 Available</p>
-                    <p class="resource-status available">Ready for Deployment</p>
-                </div>
-                <div class="resource-card">
-                    <i class="fas fa-ship"></i>
-                    <h3>Rescue Boats</h3>
-                    <p class="resource-count">8 Available</p>
-                    <p class="resource-status available">Ready for Deployment</p>
-                </div>
-                <div class="resource-card">
-                    <i class="fas fa-truck-medical"></i>
-                    <h3>Ambulances</h3>
-                    <p class="resource-count">12 Available</p>
-                    <p class="resource-status available">Ready for Deployment</p>
-                </div>
-                <div class="resource-card">
-                    <i class="fas fa-users"></i>
-                    <h3>Rescue Teams</h3>
-                    <p class="resource-count">45 Personnel</p>
-                    <p class="resource-status available">On Standby</p>
-                </div>
+            <div class="form-group">
+                <label for="location-details">Exact Location</label>
+                <textarea id="location-details" class="form-control"
+                    placeholder="Provide detailed location information..."></textarea>
             </div>
-        </div>
 
-        <!-- Recent Rescues -->
-        <div class="recent-rescues">
-            <h2><i class="fas fa-check-circle"></i> Recent Successful Rescues</h2>
-            <div class="rescue-history">
-                <div class="rescue-item completed">
-                    <div class="rescue-info">
-                        <h4>Cyclone Evacuation - Coastal Villages</h4>
-                        <p>Successfully evacuated 500+ families</p>
-                        <span class="rescue-date">Completed 2 days ago</span>
-                    </div>
-                    <div class="rescue-badge success">
-                        <i class="fas fa-check"></i> Completed
-                    </div>
-                </div>
-                <div class="rescue-item completed">
-                    <div class="rescue-info">
-                        <h4>Flash Flood Response - Urban Area</h4>
-                        <p>25 people rescued from submerged vehicles</p>
-                        <span class="rescue-date">Completed 1 week ago</span>
-                    </div>
-                    <div class="rescue-badge success">
-                        <i class="fas fa-check"></i> Completed
-                    </div>
-                </div>
+            <div class="form-group">
+                <label for="contact-person">Your Contact Number</label>
+                <input type="tel" id="contact-person" class="form-control" placeholder="+91 XXXXXXXXXX">
             </div>
-        </div>
+
+            <button type="submit" class="btn-primary">
+                <i class="fas fa-paper-plane"></i> Submit Request
+            </button>
+        </form>
     </div>
 </div>
 
@@ -256,41 +145,25 @@
         }
     }
 
+    document.getElementById('rescue-request-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        submitRescueRequest();
+    });
+
     function submitRescueRequest() {
         const emergencyType = document.getElementById('emergency-type').value;
         const victimCount = document.getElementById('victim-count').value;
         const location = document.getElementById('location-details').value;
         const contact = document.getElementById('contact-person').value;
 
-        if (!emergencyType || !victimCount || !location || !contact) {
-            alert('Please fill in all required fields.');
+        if (!emergencyType || !location || !contact) {
+            showNotification('Please fill in all required fields.', 'warning');
             return;
         }
 
-        if (confirm('Submit emergency rescue request? This will alert rescue services immediately.')) {
-            // Here you would typically send the data to your backend
-            alert('Emergency request submitted successfully! Rescue teams have been notified.');
-            // Reset form
-            document.getElementById('emergency-type').value = '';
-            document.getElementById('victim-count').value = '';
-            document.getElementById('location-details').value = '';
-            document.getElementById('contact-person').value = '';
-            document.getElementById('additional-info').value = '';
-        }
-    }
-
-    function getCurrentLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-                document.getElementById('location-details').value = `Latitude: ${lat}, Longitude: ${lng}`;
-            }, function (error) {
-                alert('Unable to get your location. Please enter manually.');
-            });
-        } else {
-            alert('Geolocation is not supported by this browser.');
-        }
+        showNotification('Emergency request submitted successfully!', 'success');
+        // Reset form
+        document.getElementById('rescue-request-form').reset();
     }
 </script>
 {% endblock %}

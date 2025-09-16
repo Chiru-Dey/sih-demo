@@ -326,6 +326,20 @@ document.addEventListener('keydown', function (e) {
     }
 });
 
+// Theme initialization
+function applyTheme() {
+    const savedSettings = localStorage.getItem('disastrous-settings');
+    let theme = 'dark'; // Default to dark theme
+    if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        if (settings.app && settings.app.theme) {
+            theme = settings.app.theme;
+        }
+    }
+    document.body.classList.add(theme + '-mode');
+}
+applyTheme();
+
 // Initialize everything
 document.addEventListener('DOMContentLoaded', function () {
     initPWA();

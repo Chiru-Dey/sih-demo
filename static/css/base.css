@@ -1,15 +1,32 @@
 /* Disaster Management App - Base Styles */
 
 :root {
+    --background: #f4f4f9;
+    --foreground: #ffffff;
+    --text: #11151c;
+    --text-secondary: #555;
+    --accent: #3d52a0;
+    --primary: #7091e6;
+    --danger: #d9534f;
+    --success: #5cb85c;
+    --white: #11151c;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --border: #ddd;
+    --font-size: 16px;
+}
+
+body.dark-mode {
     --background: #11151c;
     --foreground: #212736;
+    --text: #f4f4f9;
+    --text-secondary: #aaa;
     --accent: #5978f3;
     --primary: #dbc69a;
     --danger: #e25555;
     --success: #43d9ad;
     --white: #f4f4f9;
     --shadow: rgba(0, 0, 0, 0.7);
-    --font-size: 16px;
+    --border: #444;
 }
 
 /* High Contrast Mode */
@@ -74,7 +91,7 @@ body.rtl .hamburger-menu.active {
 body {
     font-family: 'Arial', sans-serif;
     background: var(--background);
-    color: var(--white);
+    color: var(--text);
     min-height: 100vh;
     padding-top: 130px;
     font-size: var(--font-size);
@@ -365,4 +382,97 @@ body {
         color: black !important;
         padding-top: 0 !important;
     }
+}
+/* General Page Styles */
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    color: var(--primary);
+}
+
+.page-header p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+}
+
+/* Modern Form Styles */
+.form-container {
+    background: var(--foreground);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px var(--shadow);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--text-secondary);
+}
+
+.input-group {
+    position: relative;
+}
+
+.input-group i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 12px 12px 45px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background-color: var(--background);
+    color: var(--text);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(var(--accent), 0.2);
+}
+
+.form-control:focus + i {
+    color: var(--accent);
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: var(--accent);
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
 }

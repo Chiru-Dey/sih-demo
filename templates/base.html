@@ -32,8 +32,7 @@
 
 <body
     class="{% if user_preferences.dark_mode %}dark-mode{% endif %} {% if user_preferences.high_contrast %}high-contrast{% endif %}"
-    style="font-size: {{ user_preferences.font_size }}px;"
-    data-language="{{ user_preferences.language }}"
+    style="font-size: {{ user_preferences.font_size }}px;" data-language="{{ user_preferences.language }}"
     data-font-size="{{ user_preferences.font_size }}"
     data-high-contrast="{{ 'true' if user_preferences.high_contrast else 'false' }}"
     data-dark-mode="{{ 'true' if user_preferences.dark_mode else 'false' }}">
@@ -48,8 +47,8 @@
             <strong>Install Disastrous</strong><br>
             Get quick access to disaster alerts and emergency services!
         </div>
-        <button class="pwa-install-btn" id="pwaInstallBtn">Install</button>
-        <button class="pwa-install-close" onclick="hidePWABanner()">
+        <button class="btn-primary" id="pwaInstallBtn">Install</button>
+        <button class="btn-secondary" onclick="hidePWABanner()">
             <i class="fas fa-times"></i>
         </button>
     </div>
