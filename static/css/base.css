@@ -13,6 +13,24 @@
     --shadow: rgba(0, 0, 0, 0.1);
     --border: #ddd;
     --font-size: 16px;
+
+    /* Notification Colors */
+    --notification-info-bg: #5978f3;
+    --notification-success-bg: #28a745;
+    --notification-warning-bg: #ffc107;
+    --notification-error-bg: #dc3545;
+
+    /* Map Pin Colors */
+    --pin-color-critical: #e53e3e;
+    --pin-color-high: #ff6b35;
+    --pin-color-moderate: #f7931e;
+    --pin-color-low: #28a745;
+    --pin-color-text: #ffffff;
+
+    /* Map Info Window */
+    --info-window-bg: #ffffff;
+    --info-window-text: #2d3748;
+    --info-window-subtext: #718096;
 }
 
 body.dark-mode {
@@ -27,6 +45,24 @@ body.dark-mode {
     --white: #f4f4f9;
     --shadow: rgba(0, 0, 0, 0.7);
     --border: #444;
+
+    /* Notification Colors */
+    --notification-info-bg: #5978f3;
+    --notification-success-bg: #43d9ad;
+    --notification-warning-bg: #f7931e;
+    --notification-error-bg: #e25555;
+
+    /* Map Pin Colors */
+    --pin-color-critical: #e53e3e;
+    --pin-color-high: #ff6b35;
+    --pin-color-moderate: #f7931e;
+    --pin-color-low: #43d9ad;
+    --pin-color-text: #ffffff;
+
+    /* Map Info Window */
+    --info-window-bg: #2c344b;
+    --info-window-text: #f4f4f9;
+    --info-window-subtext: #a0aec0;
 }
 
 /* High Contrast Mode */
@@ -475,4 +511,9 @@ body {
 .btn-primary:hover {
     opacity: 0.9;
     transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: var(--white);
 }

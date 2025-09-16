@@ -337,6 +337,13 @@ function applyTheme() {
         }
     }
     document.body.classList.add(theme + '-mode');
+    updateMetaThemeColor(theme);
+}
+
+function updateMetaThemeColor(theme) {
+    const themeColor = theme === 'dark' ? '#11151c' : '#5978f3';
+    document.getElementById('theme-color-meta').setAttribute('content', themeColor);
+    document.getElementById('ms-tile-color-meta').setAttribute('content', themeColor);
 }
 applyTheme();
 

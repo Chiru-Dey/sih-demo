@@ -1471,13 +1471,13 @@
                 animation: slideIn 0.3s ease;
             `;
 
-            const colors = {
-                success: '#43d9ad',
-                warning: '#f7931e',
-                error: '#e25555',
-                info: '#5978f3'
+            const notificationColors = {
+                info: getComputedStyle(document.documentElement).getPropertyValue('--notification-info-bg').trim(),
+                success: getComputedStyle(document.documentElement).getPropertyValue('--notification-success-bg').trim(),
+                warning: getComputedStyle(document.documentElement).getPropertyValue('--notification-warning-bg').trim(),
+                error: getComputedStyle(document.documentElement).getPropertyValue('--notification-error-bg').trim()
             };
-            notification.style.background = colors[type] || colors.info;
+            notification.style.backgroundColor = notificationColors[type];
 
             document.body.appendChild(notification);
 
@@ -1632,9 +1632,20 @@
                 ];
 
                 disasterLocations.forEach(location => {
-                    const pinColor = location.severity === 'critical' ? '#e53e3e' :
-                        location.severity === 'high' ? '#ff6b35' :
-                            location.severity === 'moderate' ? '#f7931e' : '#43d9ad';
+                    let pinColor;
+                    switch (location.severity) {
+                        case 'critical':
+                            pinColor = getComputedStyle(document.documentElement).getPropertyValue('--pin-color-critical').trim();
+                            break;
+                        case 'high':
+                            pinColor = getComputedStyle(document.documentElement).getPropertyValue('--pin-color-high').trim();
+                            break;
+                        case 'moderate':
+                            pinColor = getComputedStyle(document.documentElement).getPropertyValue('--pin-color-moderate').trim();
+                            break;
+                        default:
+                            pinColor = getComputedStyle(document.documentElement).getPropertyValue('--pin-color-low').trim();
+                    }
 
                     const marker = new google.maps.Marker({
                         position: location.position,
@@ -1646,17 +1657,17 @@
                             scale: 12,
                             fillColor: pinColor,
                             fillOpacity: 0.9,
-                            strokeColor: '#ffffff',
+                            strokeColor: getComputedStyle(document.documentElement).getPropertyValue('--pin-color-text').trim(),
                             strokeWeight: 3
                         }
                     });
 
                     const infoWindow = new google.maps.InfoWindow({
                         content: `
-                            <div style="padding: 10px; font-family: Arial; color: #333;">
+                            <div style="padding: 10px; font-family: Arial; background-color: var(--info-window-bg); color: var(--info-window-text);">
                                 <h3 style="margin: 0 0 8px 0; color: ${pinColor};">${location.icon} ${location.type}</h3>
                                 <p style="margin: 0 0 8px 0; font-weight: bold;">${location.title}</p>
-                                <p style="margin: 0; font-size: 12px; color: #666;">
+                                <p style="margin: 0; font-size: 12px; color: var(--info-window-subtext);">
                                     Severity: <span style="color: ${pinColor}; font-weight: bold; text-transform: uppercase;">${location.severity}</span>
                                 </p>
                             </div>
