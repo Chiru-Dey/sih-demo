@@ -2,29 +2,9 @@
 
 // Global translation function will be assigned after the main function is defined
 
-// Save user preferences to backend session
-async function saveUserPreferences(preferences) {
-    try {
-        const response = await fetch('/api/preferences', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(preferences)
-        });
-
-        if (response.ok) {
-            console.log('✅ Preferences saved to backend session');
-            // Update local preferences object
-            if (window.userPreferences) {
-                Object.assign(window.userPreferences, preferences);
-            }
-        } else {
-            console.warn('⚠️ Failed to save preferences to backend');
-        }
-    } catch (error) {
-        console.error('❌ Error saving preferences:', error);
-    }
+// Save user preferences to localStorage
+function saveUserPreference(key, value) {
+    saveSetting(`app.${key}`, value);
 }
 
 // Translation Panel Functions
@@ -174,6 +154,7 @@ async function applyGeminiTranslation() {
 
     const targetLanguage = select.value;
     const targetLanguageName = languageNames[targetLanguage];
+    const wasPanelOpen = isTranslationPanelOpen;
 
     console.log(`🌐 Target language: ${targetLanguage} (${targetLanguageName})`);
 
@@ -243,9 +224,8 @@ async function applyGeminiTranslation() {
             const chunk = chunks[i];
             const chunkNumber = i + 1;
 
-            const progressMessage = `Translating chunk ${chunkNumber} of ${totalChunks}...`;
             console.log(`📤 Sending chunk ${chunkNumber}/${totalChunks}...`);
-            showTranslationLoading(progressMessage);
+            showTranslationLoading();
             updateTranslationProgress(20 + (chunkNumber / totalChunks) * 65);
 
             const response = await fetch('/api/translate', {
@@ -277,7 +257,7 @@ async function applyGeminiTranslation() {
         }
 
         currentLanguage = targetLanguage;
-        await saveUserPreferences({ language: targetLanguage });
+        saveUserPreference('language', targetLanguage);
         localStorage.setItem('selectedLanguage', targetLanguage);
 
         const revertBtn = document.getElementById('revertBtn');
@@ -291,7 +271,6 @@ async function applyGeminiTranslation() {
             hideTranslationLoading();
             showTranslationSuccess();
             showNotification(`✅ Page translated to ${targetLanguageName} (${appliedCount} items updated)`, 'success');
-            toggleTranslationPanel();
         }, 500);
 
     } catch (error) {
@@ -373,8 +352,7 @@ function shouldTranslateElement(element) {
     }
 
     // ✅ NEW: Skip if element itself is interactive (with exceptions)
-    if (element.tagName === 'BUTTON' || element.tagName === 'INPUT' ||
-        element.tagName === 'SELECT' ||
+    if (element.tagName === 'SELECT' ||
         element.classList.contains('action-btn') ||
         element.classList.contains('voice-btn') ||
         element.classList.contains('accessibility-btn')) {
@@ -699,8 +677,8 @@ function revertToOriginalTexts() {
         languageSelect.value = 'en';
     }
 
-    // Save language preference to backend session and localStorage
-    saveUserPreferences({ language: 'en' });
+    // Save language preference to localStorage
+    saveUserPreference('language', 'en');
     localStorage.setItem('selectedLanguage', 'en');
 
     // Hide revert button when back to English
@@ -716,7 +694,9 @@ function revertToOriginalTexts() {
             `🔄 Reverted to English (${revertedCount} items restored)`;
         showNotification(message, errorCount > 0 ? 'warning' : 'success');
         console.log(`🔄 Reversion complete: ${revertedCount} succeeded, ${errorCount} errors`);
-        toggleTranslationPanel();
+        if (isTranslationPanelOpen) {
+            toggleTranslationPanel();
+        }
     }, 300);
 }
 
@@ -733,7 +713,7 @@ function updateAppTitle(targetLanguage) {
 }
 
 // Translation loading functions
-function showTranslationLoading(message = 'Translating with AI...') {
+function showTranslationLoading() {
     const loading = document.getElementById('translationLoading');
     const button = document.getElementById('translateBtn');
     if (loading) {
@@ -741,7 +721,6 @@ function showTranslationLoading(message = 'Translating with AI...') {
     }
     if (button) {
         button.disabled = true;
-        button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${message}`;
     }
     updateTranslationProgress(10);
 }

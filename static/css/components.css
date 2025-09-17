@@ -23,7 +23,7 @@
 
 .pwa-install-text {
     flex: 1;
-    font-size: 14px;
+    font-size: 0.875rem;
 }
 
 .pwa-install-btn {
@@ -34,14 +34,14 @@
     border-radius: 20px;
     cursor: pointer;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 0.75rem;
 }
 
 .pwa-install-close {
     background: none;
     border: none;
     color: var(--white);
-    font-size: 18px;
+    font-size: 1.125rem;
     cursor: pointer;
     padding: 2px;
 }
@@ -56,7 +56,7 @@
     color: var(--white);
     padding: 8px 16px;
     border-radius: 20px;
-    font-size: 12px;
+    font-size: 0.75rem;
     z-index: 1020;
     display: none;
 }
@@ -96,7 +96,7 @@
     border-radius: 8px 0 0 8px;
     cursor: pointer;
     z-index: 1006;
-    font-size: 14px;
+    font-size: 0.875rem;
     writing-mode: vertical-lr;
     text-orientation: mixed;
 }
@@ -127,7 +127,7 @@
 }
 
 .loading-spinner i {
-    font-size: 20px;
+    font-size: 1.25rem;
     margin-right: 8px;
 }
 
@@ -184,7 +184,7 @@
     border-radius: 8px 0 0 8px;
     cursor: pointer;
     z-index: 1006;
-    font-size: 14px;
+    font-size: 0.875rem;
     writing-mode: vertical-lr;
     text-orientation: mixed;
 }
@@ -206,7 +206,7 @@
     background: none;
     border: none;
     color: var(--danger);
-    font-size: 16px;
+    font-size: 1rem;
     cursor: pointer;
     padding: 4px;
     border-radius: 50%;
@@ -224,7 +224,7 @@
     padding: 8px;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 0.75rem;
     margin-bottom: 15px;
 }
 
@@ -241,7 +241,7 @@
     padding: 10px;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: bold;
     transition: all 0.3s ease;
     margin-top: 10px;
@@ -266,7 +266,7 @@
     padding: 10px;
     border-radius: 6px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: bold;
     transition: all 0.3s ease;
     margin-top: 10px;
@@ -304,7 +304,7 @@
     padding: 6px 10px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 11px;
+    font-size: 0.6875rem;
     transition: all 0.3s ease;
     flex: 1;
     min-width: 50px;
@@ -335,7 +335,7 @@
 .emergency-alert::before {
     content: '⚠️';
     margin-right: 10px;
-    font-size: calc(var(--font-size) + 2px);
+    font-size: calc(var(--font-size) + 0.125rem);
 }
 
 /* Emergency Contacts */
@@ -351,7 +351,7 @@
 }
 
 .contact-number {
-    font-size: calc(var(--font-size) + 8px);
+    font-size: calc(var(--font-size) + 0.5rem);
     font-weight: bold;
     color: var(--danger);
     flex: 1;
@@ -399,7 +399,7 @@
 .guideline-card h4 {
     color: var(--accent);
     margin-bottom: 10px;
-    font-size: calc(var(--font-size) + 2px);
+    font-size: calc(var(--font-size) + 0.125rem);
 }
 
 /* Chatbot Styles */
@@ -458,7 +458,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    font-size: calc(var(--font-size) + 2px);
+    font-size: calc(var(--font-size) + 0.125rem);
     font-weight: bold;
 }
 
@@ -466,7 +466,7 @@
     background: none;
     border: none;
     color: var(--white);
-    font-size: 24px;
+    font-size: 1.5rem;
     cursor: pointer;
     padding: 5px;
     border-radius: 50%;
@@ -573,7 +573,7 @@
     width: 44px;
     height: 44px;
     color: var(--white);
-    font-size: 18px;
+    font-size: 1.125rem;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -601,7 +601,7 @@
     padding: 8px 12px;
     border-radius: 20px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 0.75rem;
     transition: all 0.3s ease;
 }
 
@@ -727,11 +727,11 @@
     }
 
     .emergency-alert {
-        padding: 8px 10px;
-        font-size: calc(var(--font-size) - 2px);
-        top: 100px;
+            padding: 8px 10px;
+            font-size: calc(var(--font-size) - 0.125rem);
+            top: 100px;
+        }
     }
-}
 
 /* ================================
    PAGE-SPECIFIC STYLES

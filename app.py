@@ -275,6 +275,18 @@ def authority_login():
     context = get_template_context()
     return render_template('authority_login.html', **context)
 
+@app.route('/contacts')
+def contacts():
+    """Serve the emergency contacts page"""
+    context = get_template_context()
+    return render_template('contacts.html', **context)
+
+@app.route('/profile')
+def profile():
+    """Serve the user profile page"""
+    context = get_template_context()
+    return render_template('profile.html', **context)
+
 # PWA specific routes
 @app.route('/manifest.json')
 def manifest():
@@ -482,6 +494,7 @@ def chat():
             
         message = data.get('message', '').strip()
         chat_type = data.get('type', 'ai')
+        language = data.get('language', 'en')
         
         # Input validation
         if not message:
@@ -489,7 +502,7 @@ def chat():
         if len(message) > 5000:
             return jsonify({'error': 'Message too long (maximum 5,000 characters allowed)'}), 400
         
-        print(f"[INFO] Chat request - Type: {chat_type}, Length: {len(message)} chars")
+        print(f"[INFO] Chat request - Type: {chat_type}, Lang: {language}, Length: {len(message)} chars")
         
         # Sanitize message to prevent Unicode encoding errors
         message = sanitize_unicode_text(message)
@@ -498,16 +511,32 @@ def chat():
         
         # Create context based on chat type
         if chat_type == 'ai':
-            system_prompt = """You are a disaster management AI assistant.
-                              Provide helpful, accurate information about disaster preparedness, safety procedures,
-                              emergency protocols, and evacuation plans. Keep responses concise but informative.
-                              Use appropriate symbols and formatting."""
-            user_prompt = f"The user is asking: {message}"
+            system_prompt = f"""You are a helpful AI assistant for "Disastrous", a disaster management web application.
+Your primary goal is to assist users with disaster preparedness, safety information, and navigating the application.
+
+CURRENT CONTEXT:
+- The user is interacting with you in the '{language}' language. You MUST respond in this language.
+- The user is on a web application with the following pages:
+  - Home: Main dashboard.
+  - Forecasts: Weather predictions and warnings.
+  - Alerts: Active emergency alerts.
+  - Rescue: Information on rescue operations and contacts.
+  - Guidelines: Safety guidelines for various disasters.
+  - Settings: User preferences for the app.
+
+YOUR TASKS:
+1.  **Language**: Respond exclusively in '{language}'.
+2.  **Disaster Assistance**: Provide accurate information on disaster safety, preparedness, and emergency procedures.
+3.  **Navigation Support**: If the user asks where to find something, guide them to the correct page. For example, if they ask about "what to do in an earthquake", you can provide safety tips and also mention "You can find more details on the 'Guidelines' page."
+4.  **Tone**: Be helpful, clear, and concise, especially for emergency-related queries.
+
+Keep responses informative and easy to understand."""
+            user_prompt = f"The user's message is: {message}"
         else:
-            system_prompt = """You are an emergency support assistant.
-                              Provide immediate guidance and safety instructions. If it's a true emergency,
-                              remind them to call 112 immediately. Keep responses urgent and helpful."""
-            user_prompt = f"The user is reporting: {message}"
+            system_prompt = f"""You are an emergency support assistant.
+                               Provide immediate guidance and safety instructions in '{language}'. If it's a true emergency,
+                               remind them to call 112 immediately. Keep responses urgent and helpful."""
+            user_prompt = f"The user is reporting in '{language}': {message}"
         
         try:
             print(f"[INFO] Making chat API call...")

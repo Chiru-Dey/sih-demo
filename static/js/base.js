@@ -54,6 +54,33 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+// Centralized Settings Management
+function getSetting(key, defaultValue = null) {
+    const savedSettings = localStorage.getItem('disastrous-settings');
+    if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        // Use optional chaining to safely access nested properties
+        const value = key.split('.').reduce((o, i) => o?.[i], settings);
+        return value !== undefined ? value : defaultValue;
+    }
+    return defaultValue;
+}
+
+function saveSetting(key, value) {
+    const savedSettings = localStorage.getItem('disastrous-settings');
+    let settings = savedSettings ? JSON.parse(savedSettings) : {};
+    const keys = key.split('.');
+    let current = settings;
+    for (let i = 0; i < keys.length - 1; i++) {
+        if (!current[keys[i]]) {
+            current[keys[i]] = {};
+        }
+        current = current[keys[i]];
+    }
+    current[keys[keys.length - 1]] = value;
+    localStorage.setItem('disastrous-settings', JSON.stringify(settings));
+}
+
 // Global variables
 let currentLanguage = 'en';
 let selectedLanguage = 'en';
@@ -330,13 +357,27 @@ document.addEventListener('keydown', function (e) {
 function applyTheme() {
     const savedSettings = localStorage.getItem('disastrous-settings');
     let theme = 'dark'; // Default to dark theme
+    let fontSize = '16px'; // Default font size
+    let highContrast = false;
     if (savedSettings) {
         const settings = JSON.parse(savedSettings);
-        if (settings.app && settings.app.theme) {
-            theme = settings.app.theme;
+        if (settings.app) {
+            if (settings.app.theme) {
+                theme = settings.app.theme;
+            }
+            if (settings.app.fontSize) {
+                fontSize = settings.app.fontSize + 'px';
+            }
+            if (settings.app.highContrast) {
+                highContrast = settings.app.highContrast;
+            }
         }
     }
     document.body.classList.add(theme + '-mode');
+    if (highContrast) {
+        document.body.classList.add('high-contrast');
+    }
+    document.documentElement.style.fontSize = fontSize;
     updateMetaThemeColor(theme);
 }
 
@@ -345,10 +386,100 @@ function updateMetaThemeColor(theme) {
     document.getElementById('theme-color-meta').setAttribute('content', themeColor);
     document.getElementById('ms-tile-color-meta').setAttribute('content', themeColor);
 }
+
+function setTheme(theme, showNotification = false) {
+    document.body.classList.remove('dark-mode', 'light-mode');
+    document.body.classList.add(theme + '-mode');
+    updateMetaThemeColor(theme);
+
+    // Update active button state on settings page
+    const themeButtons = document.querySelectorAll('.theme-btn');
+    if (themeButtons) {
+        themeButtons.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.theme === theme) {
+                btn.classList.add('active');
+            }
+        });
+    }
+
+    if (showNotification) {
+        showNotification(`Theme set to ${theme}`, 'success');
+    }
+}
+
 applyTheme();
+
+function getCurrentLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            const locationInput = document.getElementById('primary-location');
+            if (locationInput) {
+                locationInput.value = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+                showNotification('📍 Location captured!', 'success');
+            }
+        }, function (error) {
+            showNotification('Unable to get your location. Please enter manually.', 'error');
+        });
+    } else {
+        showNotification('Geolocation is not supported by this browser.', 'warning');
+    }
+}
+
+function checkNotificationPermissions() {
+    const savedSettings = localStorage.getItem('disastrous-settings');
+    if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        if (settings.notifications && settings.notifications.push) {
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        showNotification('Push notifications enabled!', 'success');
+                    } else {
+                        showNotification('Push notifications blocked.', 'warning');
+                    }
+                });
+            }
+        }
+    }
+}
+
+function checkLocationServices() {
+    const savedSettings = localStorage.getItem('disastrous-settings');
+    if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        if (settings.location && settings.location.services) {
+            // If services are enabled but we don't have a primary location, ask for it.
+            if (!settings.location.primary) {
+                getCurrentLocation();
+            }
+        }
+    }
+}
 
 // Initialize everything
 document.addEventListener('DOMContentLoaded', function () {
+    checkNotificationPermissions();
+    checkLocationServices();
+    // Apply font size on settings page
+    const fontSizeSlider = document.getElementById('font-size');
+    if (fontSizeSlider) {
+        fontSizeSlider.addEventListener('input', function() {
+            const newSize = this.value + 'px';
+            document.documentElement.style.fontSize = newSize;
+        });
+    }
+
+    // Apply high contrast on settings page
+    const highContrastToggle = document.getElementById('high-contrast');
+    if (highContrastToggle) {
+        highContrastToggle.addEventListener('change', function() {
+            document.body.classList.toggle('high-contrast', this.checked);
+        });
+    }
+
     initPWA();
 
     // ✅ RE-FIXED: More robust event listeners for navigation

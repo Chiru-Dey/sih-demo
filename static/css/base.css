@@ -12,7 +12,7 @@
     --white: #11151c;
     --shadow: rgba(0, 0, 0, 0.1);
     --border: #ddd;
-    --font-size: 16px;
+    --font-size: 1rem;
 
     /* Notification Colors */
     --notification-info-bg: #5978f3;
@@ -68,30 +68,51 @@ body.dark-mode {
 /* High Contrast Mode */
 body.high-contrast {
     --background: #000000;
-    --foreground: #ffffff;
+    --foreground: #000000;
+    --text: #ffffff;
+    --text-secondary: #dddddd;
     --accent: #ffff00;
-    --primary: #ffffff;
-    --danger: #ff0000;
-    --success: #00ff00;
+    --primary: #ffff00;
+    --danger: #ff4d4d;
+    --success: #4dff4d;
     --white: #ffffff;
-    --shadow: rgba(255, 255, 255, 0.7);
+    --shadow: rgba(255, 255, 255, 0.5);
+    --border: #ffffff;
+}
+
+body.high-contrast .btn-primary,
+body.high-contrast .action-btn {
+    background: #000000;
+    color: #ffff00;
+    border: 2px solid #ffff00;
+}
+
+body.high-contrast .form-control {
+    background: #000000;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+}
+
+body.high-contrast a {
+    color: #ffff00;
+    text-decoration: underline;
 }
 
 /* Font Size Classes */
 body.font-small {
-    --font-size: 14px;
+    --font-size: 0.875rem;
 }
 
 body.font-medium {
-    --font-size: 16px;
+    --font-size: 1rem;
 }
 
 body.font-large {
-    --font-size: 18px;
+    --font-size: 1.125rem;
 }
 
 body.font-xlarge {
-    --font-size: 22px;
+    --font-size: 1.375rem;
 }
 
 /* RTL Support */
@@ -176,7 +197,7 @@ body {
 .hamburger {
     position: absolute;
     left: 0;
-    font-size: 24px;
+    font-size: 1.5rem;
     color: var(--accent);
     cursor: pointer;
     z-index: 1003;
@@ -209,7 +230,7 @@ body {
 
 .app-name {
     color: var(--primary);
-    font-size: calc(var(--font-size) + 12px);
+    font-size: calc(var(--font-size) + 0.75rem);
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 2px;
@@ -244,7 +265,7 @@ body {
     border: none;
     width: 100%;
     text-align: left;
-    font-size: calc(var(--font-size) + 2px);
+    font-size: calc(var(--font-size) + 0.125rem);
 }
 
 .section-header:hover,
@@ -307,7 +328,7 @@ body {
     border-radius: 50%;
     border: none;
     color: var(--white);
-    font-size: 24px;
+    font-size: 1.5rem;
     cursor: pointer;
     box-shadow: 0 4px 20px var(--shadow);
     transition: all 0.3s ease;
@@ -380,7 +401,7 @@ body {
     .action-btn {
         width: 50px;
         height: 50px;
-        font-size: 20px;
+        font-size: 1.25rem;
     }
 }
 
@@ -517,7 +538,7 @@ body {
     border: none;
     text-align: left;
     outline: none;
-    font-size: 15px;
+    font-size: 0.9375rem;
     transition: 0.4s;
     border-radius: 8px;
     margin-bottom: 10px;

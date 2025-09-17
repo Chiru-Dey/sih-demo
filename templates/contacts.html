@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Emergency Contacts - Disastrous{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1><i class="fas fa-address-book"></i> Emergency Contacts</h1>
+        <p>Manage your list of emergency contacts</p>
+    </div>
+
+    <div class="contacts-container">
+        <div class="contact-form">
+            <h3>Add New Contact</h3>
+            <input type="text" id="contact-name" placeholder="Name" class="form-control">
+            <input type="tel" id="contact-phone" placeholder="Phone Number" class="form-control">
+            <input type="text" id="contact-relation" placeholder="Relation (e.g., Family, Doctor)" class="form-control">
+            <button type="button" class="btn-primary" onclick="addContact()"><i class="fas fa-plus"></i> Add Contact</button>
+        </div>
+
+        <div class="contact-list">
+            <h3>Your Contacts</h3>
+            <div id="contacts">
+                <!-- Contacts will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/components/contacts.js') }}"></script>
+{% endblock %}

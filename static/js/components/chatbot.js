@@ -1,5 +1,44 @@
 // Chatbot Component JavaScript
 
+// Save chat history to localStorage
+function saveChatHistory(type) {
+    const messagesContainer = document.getElementById(`${type}-messages`);
+    const messages = messagesContainer.querySelectorAll('.message');
+    const history = [];
+    messages.forEach(msg => {
+        if (!msg.classList.contains('typing') && !msg.classList.contains('typing-indicator')) {
+            let messageType = 'bot';
+            if (msg.classList.contains('user')) {
+                messageType = 'user';
+            } else if (msg.classList.contains('system')) {
+                messageType = 'system';
+            }
+            history.push({
+                type: messageType,
+                text: msg.textContent
+            });
+        }
+    });
+    localStorage.setItem(`chatHistory-${type}`, JSON.stringify(history));
+}
+
+// Load chat history from localStorage
+function loadChatHistory(type) {
+    const historyJSON = localStorage.getItem(`chatHistory-${type}`);
+    if (historyJSON) {
+        const history = JSON.parse(historyJSON);
+        const messagesContainer = document.getElementById(`${type}-messages`);
+        messagesContainer.innerHTML = ''; // Clear default messages
+        history.forEach(msg => {
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${msg.type}`;
+            messageEl.textContent = msg.text;
+            messagesContainer.appendChild(messageEl);
+        });
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+}
+
 // Backend AI Chat Function
 async function sendMessage(type) {
     const input = document.getElementById(`${type}-input`);
@@ -34,7 +73,8 @@ async function sendMessage(type) {
                 },
                 body: JSON.stringify({
                     message: message,
-                    type: type
+                    type: type,
+                    language: currentLanguage || 'en'
                 })
             });
 
@@ -67,6 +107,7 @@ async function sendMessage(type) {
         // Announce new message to screen readers
         announceToScreenReader(`${type === 'ai' ? 'AI Assistant' : 'Emergency Support'} responded: ${response.substring(0, 100)}...`);
 
+        saveChatHistory(type);
     } catch (error) {
         console.error('AI Chat Error:', error);
 
@@ -79,6 +120,7 @@ async function sendMessage(type) {
 
         messagesContainer.appendChild(errorMessage);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        saveChatHistory(type);
     }
 }
 
@@ -112,6 +154,9 @@ function getLocalResponse(message, type) {
 
 // Enhanced chatbot initialization
 function initChatbots() {
+    loadChatHistory('ai');
+    loadChatHistory('quick');
+
     // Add message timestamps
     function addTimestamp(messageElement) {
         const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});

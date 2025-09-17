@@ -1,53 +1,22 @@
 // Accessibility Component JavaScript
 
-// Load preferences from backend session data
+// Load accessibility preferences from localStorage
 function loadAccessibilityPreferences() {
-    if (window.userPreferences) {
-        // Apply font size
-        const fontSize = window.userPreferences.fontSize || 16;
-        document.body.style.fontSize = fontSize + 'px';
-        
-        // Update font size buttons
-        const fontButtons = document.querySelectorAll('#accessibilityPanel .accessibility-btn[onclick*="changeFontSize"]');
-        fontButtons.forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.textContent.includes('Normal') && fontSize === 16) btn.classList.add('active');
-            if (btn.textContent.includes('Large') && fontSize === 18) btn.classList.add('active');
-            if (btn.textContent.includes('Extra Large') && fontSize === 20) btn.classList.add('active');
-        });
-        
-        // Apply high contrast
-        if (window.userPreferences.highContrast) {
-            document.body.classList.add('high-contrast');
-            const contrastBtn = document.querySelector('#accessibilityPanel .accessibility-btn[onclick*="toggleHighContrast"]');
-            if (contrastBtn) contrastBtn.classList.add('active');
-        }
+    // Apply font size
+    const fontSize = getSetting('app.fontSize', 16);
+    document.documentElement.style.fontSize = fontSize + 'px';
+
+    // Apply high contrast
+    if (getSetting('app.highContrast', false)) {
+        document.body.classList.add('high-contrast');
+        const contrastBtn = document.querySelector('#accessibilityPanel .accessibility-btn[onclick*="toggleHighContrast"]');
+        if (contrastBtn) contrastBtn.classList.add('active');
     }
 }
 
-// Save accessibility preferences to backend session
-async function saveAccessibilityPreferences(preferences) {
-    try {
-        const response = await fetch('/api/preferences', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(preferences)
-        });
-        
-        if (response.ok) {
-            console.log('✅ Accessibility preferences saved to backend session');
-            // Update local preferences object
-            if (window.userPreferences) {
-                Object.assign(window.userPreferences, preferences);
-            }
-        } else {
-            console.warn('⚠️ Failed to save accessibility preferences to backend');
-        }
-    } catch (error) {
-        console.error('❌ Error saving accessibility preferences:', error);
-    }
+// Save accessibility preferences to localStorage
+function saveAccessibilityPreference(key, value) {
+    saveSetting(`app.${key}`, value);
 }
 
 // Accessibility Functions
@@ -58,38 +27,39 @@ function toggleAccessibilityPanel() {
 }
 
 function changeFontSize(size) {
-    document.body.className = document.body.className.replace(/font-\w+/g, '');
-    document.body.classList.add(`font-${size}`);
-
-    // Convert size name to pixel value
     let fontSize = 16;
-    if (size === 'large') fontSize = 18;
-    if (size === 'extra-large') fontSize = 20;
-    
-    // Apply font size directly
-    document.body.style.fontSize = fontSize + 'px';
+    switch (size) {
+        case 'small':
+            fontSize = 14;
+            break;
+        case 'medium':
+            fontSize = 16;
+            break;
+        case 'large':
+            fontSize = 18;
+            break;
+        case 'xlarge':
+            fontSize = 22;
+            break;
+    }
+    document.documentElement.style.fontSize = fontSize + 'px';
 
-    document.querySelectorAll('#accessibilityPanel .accessibility-btn').forEach(btn => {
+    document.querySelectorAll('#accessibilityPanel .accessibility-btn[onclick*="changeFontSize"]').forEach(btn => {
         btn.classList.remove('active');
     });
     event.target.classList.add('active');
-    
-    // Save to backend session
-    saveAccessibilityPreferences({ fontSize: fontSize });
-    
-    showNotification(`Font size changed to ${size}`, 'success');
+
+    saveAccessibilityPreference('fontSize', fontSize);
+    showNotification(`Font size set to ${size}`, 'success');
 }
 
 function toggleHighContrast() {
     document.body.classList.toggle('high-contrast');
-    event.target.classList.toggle('active');
-    
     const isEnabled = document.body.classList.contains('high-contrast');
-    
-    // Save to backend session
-    saveAccessibilityPreferences({ highContrast: isEnabled });
-    
-    showNotification(`High contrast mode ${isEnabled ? 'enabled' : 'disabled'}`, 'success');
+    event.target.classList.toggle('active', isEnabled);
+
+    saveAccessibilityPreference('highContrast', isEnabled);
+    showNotification(`High contrast ${isEnabled ? 'enabled' : 'disabled'}`, 'success');
 }
 
 function toggleTextToSpeech() {
@@ -307,7 +277,7 @@ function initAccessibility() {
     updateAriaAttributes();
     manageFocus();
     
-    // Load accessibility preferences from backend session
+    // Load accessibility preferences from localStorage
     loadAccessibilityPreferences();
     
     // Set up periodic ARIA updates

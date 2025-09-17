@@ -28,37 +28,6 @@
                         </div>
                     </div>
 
-                    <div class="setting-item full-width">
-                        <div class="setting-info">
-                            <h3>Language</h3>
-                            <p>Choose your preferred language</p>
-                        </div>
-                        <select id="app-language" class="form-control">
-                            <option value="en">English</option>
-                            <option value="hi">हिंदी (Hindi)</option>
-                            <option value="bn">বাংলা (Bengali)</option>
-                            <option value="te">తెలుగు (Telugu)</option>
-                            <option value="ta">தமிழ் (Tamil)</option>
-                            <option value="mr">मराठी (Marathi)</option>
-                            <option value="gu">ગુજરાતી (Gujarati)</option>
-                            <option value="kn">ಕನ್ನಡ (Kannada)</option>
-                            <option value="ml">മലയാളം (Malayalam)</option>
-                            <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
-                            <option value="or">ଓଡ଼ିଆ (Odia)</option>
-                            <option value="as">অসমীয়া (Assamese)</option>
-                        </select>
-                    </div>
-
-                    <div class="setting-item">
-                        <div class="setting-info">
-                            <h3>High Contrast</h3>
-                            <p>Increase contrast for better accessibility</p>
-                        </div>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="high-contrast">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
 
                     <div class="setting-item">
                         <div class="setting-info">
@@ -70,6 +39,7 @@
                             <span class="slider"></span>
                         </label>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -283,7 +253,8 @@
                             <h3>Import Data</h3>
                             <p>Restore settings from a backup file</p>
                         </div>
-                        <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importData()">
+                        <input type="file" id="import-file" accept=".json" style="display: none;"
+                            onchange="importData()">
                         <button type="button" class="btn-primary"
                             onclick="document.getElementById('import-file').click()">
                             <i class="fas fa-upload"></i> Import
@@ -338,7 +309,7 @@
         themeButtons.forEach(btn => {
             btn.addEventListener('click', function () {
                 const theme = this.dataset.theme;
-                setTheme(theme);
+                setTheme(theme, true);
 
                 themeButtons.forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
@@ -352,110 +323,69 @@
         valueSpan.textContent = range.value + unit;
     }
 
-    function getCurrentLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-                document.getElementById('primary-location').value = `${lat}, ${lng}`;
-            }, function (error) {
-                alert('Unable to get your location. Please enter manually.');
-            });
-        } else {
-            alert('Geolocation is not supported by this browser.');
-        }
-    }
-
     function saveSettings() {
-        const settings = {
-            notifications: {
-                push: document.getElementById('push-notifications').checked,
-                sms: document.getElementById('sms-alerts').checked,
-                email: document.getElementById('email-notifications').checked,
-                sound: document.getElementById('sound-alerts').checked
-            },
-            alerts: {
-                radius: document.getElementById('alert-radius').value,
-                minSeverity: document.getElementById('min-severity').value,
-                quietHours: document.getElementById('quiet-hours').checked,
-                quietStart: document.getElementById('quiet-start').value,
-                quietEnd: document.getElementById('quiet-end').value
-            },
-            location: {
-                services: document.getElementById('location-services').checked,
-                background: document.getElementById('background-location').checked,
-                primary: document.getElementById('primary-location').value
-            },
-            app: {
-                language: document.getElementById('app-language').value,
-                theme: document.querySelector('.theme-btn.active').dataset.theme,
-                highContrast: document.getElementById('high-contrast').checked,
-                offlineMode: document.getElementById('offline-mode').checked
-            },
-            privacy: {
-                dataCollection: document.getElementById('data-collection').checked,
-                crashReports: document.getElementById('crash-reports').checked,
-                emergencyContact: document.getElementById('emergency-contact').value
-            }
-        };
+        // Notifications
+        saveSetting('notifications.push', document.getElementById('push-notifications').checked);
+        saveSetting('notifications.sms', document.getElementById('sms-alerts').checked);
+        saveSetting('notifications.email', document.getElementById('email-notifications').checked);
+        saveSetting('notifications.sound', document.getElementById('sound-alerts').checked);
 
-        localStorage.setItem('disastrous-settings', JSON.stringify(settings));
+        // Alerts
+        saveSetting('alerts.radius', document.getElementById('alert-radius').value);
+        saveSetting('alerts.minSeverity', document.getElementById('min-severity').value);
+        saveSetting('alerts.quietHours', document.getElementById('quiet-hours').checked);
+        saveSetting('alerts.quietStart', document.getElementById('quiet-start').value);
+        saveSetting('alerts.quietEnd', document.getElementById('quiet-end').value);
+
+        // Location
+        saveSetting('location.services', document.getElementById('location-services').checked);
+        saveSetting('location.background', document.getElementById('background-location').checked);
+        saveSetting('location.primary', document.getElementById('primary-location').value);
+
+        // App
+        saveSetting('app.theme', document.querySelector('.theme-btn.active').dataset.theme);
+        saveSetting('app.offlineMode', document.getElementById('offline-mode').checked);
+
+        // Privacy
+        saveSetting('privacy.dataCollection', document.getElementById('data-collection').checked);
+        saveSetting('privacy.crashReports', document.getElementById('crash-reports').checked);
+        saveSetting('privacy.emergencyContact', document.getElementById('emergency-contact').value);
+
         showNotification('Settings saved successfully!', 'success');
     }
 
     function loadSettings() {
-        const savedSettings = localStorage.getItem('disastrous-settings');
-        if (savedSettings) {
-            const settings = JSON.parse(savedSettings);
+        // Load notification settings
+        document.getElementById('push-notifications').checked = getSetting('notifications.push', true);
+        document.getElementById('sms-alerts').checked = getSetting('notifications.sms', true);
+        document.getElementById('email-notifications').checked = getSetting('notifications.email', false);
+        document.getElementById('sound-alerts').checked = getSetting('notifications.sound', true);
 
-            // Load notification settings
-            if (settings.notifications) {
-                document.getElementById('push-notifications').checked = settings.notifications.push;
-                document.getElementById('sms-alerts').checked = settings.notifications.sms;
-                document.getElementById('email-notifications').checked = settings.notifications.email;
-                document.getElementById('sound-alerts').checked = settings.notifications.sound;
-            }
+        // Load alert settings
+        document.getElementById('alert-radius').value = getSetting('alerts.radius', 100);
+        updateRangeValue('alert-radius', 'radius-value', ' km');
+        document.getElementById('min-severity').value = getSetting('alerts.minSeverity', 'medium');
+        document.getElementById('quiet-hours').checked = getSetting('alerts.quietHours', false);
+        document.getElementById('quiet-start').value = getSetting('alerts.quietStart', '22:00');
+        document.getElementById('quiet-end').value = getSetting('alerts.quietEnd', '07:00');
 
-            // Load alert settings
-            if (settings.alerts) {
-                document.getElementById('alert-radius').value = settings.alerts.radius || 100;
-                updateRangeValue('alert-radius', 'radius-value', ' km');
-                document.getElementById('min-severity').value = settings.alerts.minSeverity || 'medium';
-                document.getElementById('quiet-hours').checked = settings.alerts.quietHours;
-                document.getElementById('quiet-start').value = settings.alerts.quietStart || '22:00';
-                document.getElementById('quiet-end').value = settings.alerts.quietEnd || '07:00';
-            }
+        // Load location settings
+        document.getElementById('location-services').checked = getSetting('location.services', true);
+        document.getElementById('background-location').checked = getSetting('location.background', false);
+        document.getElementById('primary-location').value = getSetting('location.primary', '');
 
-            // Load location settings
-            if (settings.location) {
-                document.getElementById('location-services').checked = settings.location.services;
-                document.getElementById('background-location').checked = settings.location.background;
-                document.getElementById('primary-location').value = settings.location.primary || '';
-            }
+        // Load app settings
+        setTheme(getSetting('app.theme', 'dark'));
+        document.getElementById('offline-mode').checked = getSetting('app.offlineMode', true);
 
-            // Load app settings
-            if (settings.app) {
-                document.getElementById('app-language').value = settings.app.language || 'en';
-                setTheme(settings.app.theme || 'dark');
-                document.getElementById('high-contrast').checked = settings.app.highContrast;
-                document.getElementById('offline-mode').checked = settings.app.offlineMode;
-            } else {
-                setTheme('dark');
-            }
+        // Load privacy settings
+        document.getElementById('data-collection').checked = getSetting('privacy.dataCollection', false);
+        document.getElementById('crash-reports').checked = getSetting('privacy.crashReports', true);
+        document.getElementById('emergency-contact').value = getSetting('privacy.emergencyContact', '');
 
-            // Load privacy settings
-            if (settings.privacy) {
-                document.getElementById('data-collection').checked = settings.privacy.dataCollection;
-                document.getElementById('crash-reports').checked = settings.privacy.crashReports;
-                document.getElementById('emergency-contact').value = settings.privacy.emergencyContact || '';
-            }
-
-            // Show quiet hours config if enabled
-            if (settings.alerts && settings.alerts.quietHours) {
-                document.querySelector('.quiet-hours-config').style.display = 'flex';
-            }
-        } else {
-            setTheme('dark');
+        // Show quiet hours config if enabled
+        if (getSetting('alerts.quietHours', false)) {
+            document.querySelector('.quiet-hours-config').style.display = 'flex';
         }
     }
 
@@ -515,26 +445,5 @@
         }
     }
 
-    function setTheme(theme) {
-        document.body.classList.remove('dark-mode', 'light-mode');
-        document.body.classList.add(theme + '-mode');
-
-        const themeButtons = document.querySelectorAll('.theme-btn');
-        themeButtons.forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.dataset.theme === theme) {
-                btn.classList.add('active');
-            }
-        });
-
-        // Save the theme to local storage
-        const savedSettings = localStorage.getItem('disastrous-settings');
-        let settings = savedSettings ? JSON.parse(savedSettings) : {};
-        if (!settings.app) {
-            settings.app = {};
-        }
-        settings.app.theme = theme;
-        localStorage.setItem('disastrous-settings', JSON.stringify(settings));
-    }
 </script>
 {% endblock %}
