@@ -8,15 +8,15 @@
     "description": "A comprehensive disaster management Progressive Web App for India",
     "icons": [
         {
-            "src": "/static/icons/icon-192.png",
+            "src": "/static/disastrous_logo.jpg",
             "sizes": "192x192",
-            "type": "image/png",
+            "type": "image/jpeg",
             "purpose": "maskable any"
         },
         {
-            "src": "/static/icons/icon-512.png",
+            "src": "/static/disastrous_logo.jpg",
             "sizes": "512x512",
-            "type": "image/png",
+            "type": "image/jpeg",
             "purpose": "maskable any"
         }
     ],
