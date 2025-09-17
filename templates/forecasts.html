@@ -9,97 +9,105 @@
         <p>Real-time weather updates and disaster predictions</p>
     </div>
 
-    <div class="forecast-grid">
-        <!-- Current Weather -->
-        <div class="forecast-card current-weather">
-            <h2><i class="fas fa-thermometer-half"></i> Current Weather</h2>
-            <div class="weather-display">
-                <div class="temperature">28°C</div>
-                <div class="weather-info">
-                    <p><i class="fas fa-eye"></i> Visibility: 10 km</p>
-                    <p><i class="fas fa-wind"></i> Wind: 15 km/h NE</p>
-                    <p><i class="fas fa-tint"></i> Humidity: 65%</p>
-                    <p><i class="fas fa-cloud"></i> Partly Cloudy</p>
+    <button type="button" class="collapsible">Local</button>
+    <div class="content">
+        <p>No local forecasts available.</p>
+    </div>
+
+    <button type="button" class="collapsible active">Global</button>
+    <div class="content" style="display: block;">
+        <div class="forecast-grid">
+            <!-- Current Weather -->
+            <div class="forecast-card current-weather">
+                <h2><i class="fas fa-thermometer-half"></i> Current Weather</h2>
+                <div class="weather-display">
+                    <div class="temperature">28°C</div>
+                    <div class="weather-info">
+                        <p><i class="fas fa-eye"></i> Visibility: 10 km</p>
+                        <p><i class="fas fa-wind"></i> Wind: 15 km/h NE</p>
+                        <p><i class="fas fa-tint"></i> Humidity: 65%</p>
+                        <p><i class="fas fa-cloud"></i> Partly Cloudy</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- 5-Day Forecast -->
-        <div class="forecast-card">
-            <h2><i class="fas fa-calendar-week"></i> 5-Day Forecast</h2>
-            <div class="forecast-list">
-                <div class="forecast-item">
-                    <span class="day">Today</span>
-                    <span class="weather-icon"><i class="fas fa-sun"></i></span>
-                    <span class="temp">28°/22°C</span>
-                    <span class="rain">10%</span>
-                </div>
-                <div class="forecast-item">
-                    <span class="day">Tomorrow</span>
-                    <span class="weather-icon"><i class="fas fa-cloud-rain"></i></span>
-                    <span class="temp">25°/20°C</span>
-                    <span class="rain">80%</span>
-                </div>
-                <div class="forecast-item">
-                    <span class="day">Thursday</span>
-                    <span class="weather-icon"><i class="fas fa-cloud-sun"></i></span>
-                    <span class="temp">27°/21°C</span>
-                    <span class="rain">30%</span>
-                </div>
-                <div class="forecast-item">
-                    <span class="day">Friday</span>
-                    <span class="weather-icon"><i class="fas fa-sun"></i></span>
-                    <span class="temp">29°/23°C</span>
-                    <span class="rain">5%</span>
-                </div>
-                <div class="forecast-item">
-                    <span class="day">Saturday</span>
-                    <span class="weather-icon"><i class="fas fa-cloud"></i></span>
-                    <span class="temp">26°/19°C</span>
-                    <span class="rain">45%</span>
+            <!-- 5-Day Forecast -->
+            <div class="forecast-card">
+                <h2><i class="fas fa-calendar-week"></i> 5-Day Forecast</h2>
+                <div class="forecast-list">
+                    <div class="forecast-item">
+                        <span class="day">Today</span>
+                        <span class="weather-icon"><i class="fas fa-sun"></i></span>
+                        <span class="temp">28°/22°C</span>
+                        <span class="rain">10%</span>
+                    </div>
+                    <div class="forecast-item">
+                        <span class="day">Tomorrow</span>
+                        <span class="weather-icon"><i class="fas fa-cloud-rain"></i></span>
+                        <span class="temp">25°/20°C</span>
+                        <span class="rain">80%</span>
+                    </div>
+                    <div class="forecast-item">
+                        <span class="day">Thursday</span>
+                        <span class="weather-icon"><i class="fas fa-cloud-sun"></i></span>
+                        <span class="temp">27°/21°C</span>
+                        <span class="rain">30%</span>
+                    </div>
+                    <div class="forecast-item">
+                        <span class="day">Friday</span>
+                        <span class="weather-icon"><i class="fas fa-sun"></i></span>
+                        <span class="temp">29°/23°C</span>
+                        <span class="rain">5%</span>
+                    </div>
+                    <div class="forecast-item">
+                        <span class="day">Saturday</span>
+                        <span class="weather-icon"><i class="fas fa-cloud"></i></span>
+                        <span class="temp">26°/19°C</span>
+                        <span class="rain">45%</span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Disaster Predictions -->
-        <div class="forecast-card disaster-predictions">
-            <h2><i class="fas fa-exclamation-triangle"></i> Disaster Predictions</h2>
-            <div class="prediction-list">
-                <div class="prediction-item high-risk">
-                    <div class="prediction-header">
-                        <i class="fas fa-wind"></i>
-                        <span class="prediction-type">Cyclone Risk</span>
-                        <span class="risk-level high">High</span>
+            <!-- Disaster Predictions -->
+            <div class="forecast-card disaster-predictions">
+                <h2><i class="fas fa-exclamation-triangle"></i> Disaster Predictions</h2>
+                <div class="prediction-list">
+                    <div class="prediction-item high-risk">
+                        <div class="prediction-header">
+                            <i class="fas fa-wind"></i>
+                            <span class="prediction-type">Cyclone Risk</span>
+                            <span class="risk-level high">High</span>
+                        </div>
+                        <p>Potential cyclone formation in Bay of Bengal. Expected landfall in 3-4 days.</p>
                     </div>
-                    <p>Potential cyclone formation in Bay of Bengal. Expected landfall in 3-4 days.</p>
-                </div>
-                <div class="prediction-item medium-risk">
-                    <div class="prediction-header">
-                        <i class="fas fa-water"></i>
-                        <span class="prediction-type">Flood Risk</span>
-                        <span class="risk-level medium">Medium</span>
+                    <div class="prediction-item medium-risk">
+                        <div class="prediction-header">
+                            <i class="fas fa-water"></i>
+                            <span class="prediction-type">Flood Risk</span>
+                            <span class="risk-level medium">Medium</span>
+                        </div>
+                        <p>Heavy rainfall may cause flooding in low-lying areas near rivers.</p>
                     </div>
-                    <p>Heavy rainfall may cause flooding in low-lying areas near rivers.</p>
-                </div>
-                <div class="prediction-item low-risk">
-                    <div class="prediction-header">
-                        <i class="fas fa-mountain"></i>
-                        <span class="prediction-type">Landslide Risk</span>
-                        <span class="risk-level low">Low</span>
+                    <div class="prediction-item low-risk">
+                        <div class="prediction-header">
+                            <i class="fas fa-mountain"></i>
+                            <span class="prediction-type">Landslide Risk</span>
+                            <span class="risk-level low">Low</span>
+                        </div>
+                        <p>Minimal risk in hilly areas. Monitor weather conditions.</p>
                     </div>
-                    <p>Minimal risk in hilly areas. Monitor weather conditions.</p>
                 </div>
             </div>
-        </div>
 
-        <!-- Satellite View -->
-        <div class="forecast-card">
-            <h2><i class="fas fa-satellite"></i> Satellite View</h2>
-            <div class="satellite-view">
-                <div class="satellite-placeholder">
-                    <i class="fas fa-satellite-dish"></i>
-                    <p>Real-time satellite imagery</p>
-                    <button class="btn-primary">View Live Satellite</button>
+            <!-- Satellite View -->
+            <div class="forecast-card">
+                <h2><i class="fas fa-satellite"></i> Satellite View</h2>
+                <div class="satellite-view">
+                    <div class="satellite-placeholder">
+                        <i class="fas fa-satellite-dish"></i>
+                        <p>Real-time satellite imagery</p>
+                        <button class="btn-primary">View Live Satellite</button>
+                    </div>
                 </div>
             </div>
         </div>

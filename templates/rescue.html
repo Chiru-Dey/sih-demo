@@ -9,132 +9,140 @@
         <p>Emergency rescue coordination and assistance</p>
     </div>
 
-    <!-- Emergency Contacts -->
-    <div class="emergency-contacts-section">
-        <h2><i class="fas fa-phone-alt"></i> Emergency Contacts</h2>
-        <div class="contacts-grid">
-            <div class="contact-card urgent">
-                <div class="contact-icon">
-                    <i class="fas fa-phone"></i>
-                </div>
-                <div class="contact-info">
-                    <h3>Emergency Helpline</h3>
-                    <p class="contact-number">112</p>
-                    <p class="contact-desc">All Emergency Services</p>
-                </div>
-                <button class="btn-primary" onclick="callEmergency('112')">
-                    <i class="fas fa-phone"></i> Call Now
-                </button>
-            </div>
-
-            <div class="contact-card">
-                <div class="contact-icon">
-                    <i class="fas fa-fire-extinguisher"></i>
-                </div>
-                <div class="contact-info">
-                    <h3>Fire Department</h3>
-                    <p class="contact-number">101</p>
-                    <p class="contact-desc">Fire & Rescue Services</p>
-                </div>
-                <button class="btn-primary" onclick="callEmergency('101')">
-                    <i class="fas fa-phone"></i> Call
-                </button>
-            </div>
-
-            <div class="contact-card">
-                <div class="contact-icon">
-                    <i class="fas fa-shield-alt"></i>
-                </div>
-                <div class="contact-info">
-                    <h3>Police</h3>
-                    <p class="contact-number">100</p>
-                    <p class="contact-desc">Law Enforcement</p>
-                </div>
-                <button class="btn-primary" onclick="callEmergency('100')">
-                    <i class="fas fa-phone"></i> Call
-                </button>
-            </div>
-
-            <div class="contact-card">
-                <div class="contact-icon">
-                    <i class="fas fa-user-md"></i>
-                </div>
-                <div class="contact-info">
-                    <h3>Medical Emergency</h3>
-                    <p class="contact-number">108</p>
-                    <p class="contact-desc">Ambulance Service</p>
-                </div>
-                <button class="btn-primary" onclick="callEmergency('108')">
-                    <i class="fas fa-phone"></i> Call
-                </button>
-            </div>
-
-            <div class="contact-card">
-                <div class="contact-icon">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <div class="contact-info">
-                    <h3>Disaster Management</h3>
-                    <p class="contact-number">1078</p>
-                    <p class="contact-desc">NDRF Helpline</p>
-                </div>
-                <button class="btn-primary" onclick="callEmergency('1078')">
-                    <i class="fas fa-phone"></i> Call
-                </button>
-            </div>
-
-            <div class="contact-card">
-                <div class="contact-icon">
-                    <i class="fas fa-child"></i>
-                </div>
-                <div class="contact-info">
-                    <h3>Child Helpline</h3>
-                    <p class="contact-number">1098</p>
-                    <p class="contact-desc">Child Protection</p>
-                </div>
-                <button class="btn-primary" onclick="callEmergency('1098')">
-                    <i class="fas fa-phone"></i> Call
-                </button>
-            </div>
-        </div>
+    <button type="button" class="collapsible">Local</button>
+    <div class="content">
+        <p>No local rescue operations at the moment.</p>
     </div>
 
-    <div class="form-container">
-        <h2><i class="fas fa-sos"></i> Request Rescue</h2>
-        <form id="rescue-request-form">
-            <div class="form-group">
-                <label for="emergency-type">Emergency Type</label>
-                <select id="emergency-type" class="form-control" required>
-                    <option value="">Select Emergency Type</option>
-                    <option value="flood">Flood/Water Rescue</option>
-                    <option value="fire">Fire Emergency</option>
-                    <option value="collapse">Building Collapse</option>
-                    <option value="landslide">Landslide</option>
-                    <option value="medical">Medical Emergency</option>
-                    <option value="other">Other</option>
-                </select>
-            </div>
+    <button type="button" class="collapsible active">Global</button>
+    <div class="content" style="display: block;">
+        <!-- Emergency Contacts -->
+        <div class="emergency-contacts-section">
+            <h2><i class="fas fa-phone-alt"></i> Emergency Contacts</h2>
+            <div class="contacts-grid">
+                <div class="contact-card urgent">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h3>Emergency Helpline</h3>
+                        <p class="contact-number">112</p>
+                        <p class="contact-desc">All Emergency Services</p>
+                    </div>
+                    <button class="btn-primary" onclick="callEmergency('112')">
+                        <i class="fas fa-phone"></i> Call Now
+                    </button>
+                </div>
 
-            <div class="form-group">
-                <label for="victim-count">Number of People Affected</label>
-                <input type="number" id="victim-count" class="form-control" min="1" placeholder="e.g., 5">
-            </div>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-fire-extinguisher"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h3>Fire Department</h3>
+                        <p class="contact-number">101</p>
+                        <p class="contact-desc">Fire & Rescue Services</p>
+                    </div>
+                    <button class="btn-primary" onclick="callEmergency('101')">
+                        <i class="fas fa-phone"></i> Call
+                    </button>
+                </div>
 
-            <div class="form-group">
-                <label for="location-details">Exact Location</label>
-                <textarea id="location-details" class="form-control"
-                    placeholder="Provide detailed location information..."></textarea>
-            </div>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h3>Police</h3>
+                        <p class="contact-number">100</p>
+                        <p class="contact-desc">Law Enforcement</p>
+                    </div>
+                    <button class="btn-primary" onclick="callEmergency('100')">
+                        <i class="fas fa-phone"></i> Call
+                    </button>
+                </div>
 
-            <div class="form-group">
-                <label for="contact-person">Your Contact Number</label>
-                <input type="tel" id="contact-person" class="form-control" placeholder="+91 XXXXXXXXXX">
-            </div>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h3>Medical Emergency</h3>
+                        <p class="contact-number">108</p>
+                        <p class="contact-desc">Ambulance Service</p>
+                    </div>
+                    <button class="btn-primary" onclick="callEmergency('108')">
+                        <i class="fas fa-phone"></i> Call
+                    </button>
+                </div>
 
-            <button type="submit" class="btn-primary">
-                <i class="fas fa-paper-plane"></i> Submit Request
-            </button>
-        </form>
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h3>Disaster Management</h3>
+                        <p class="contact-number">1078</p>
+                        <p class="contact-desc">NDRF Helpline</p>
+                    </div>
+                    <button class="btn-primary" onclick="callEmergency('1078')">
+                        <i class="fas fa-phone"></i> Call
+                    </button>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-child"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h3>Child Helpline</h3>
+                        <p class="contact-number">1098</p>
+                        <p class="contact-desc">Child Protection</p>
+                    </div>
+                    <button class="btn-primary" onclick="callEmergency('1098')">
+                        <i class="fas fa-phone"></i> Call
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <h2><i class="fas fa-sos"></i> Request Rescue</h2>
+            <form id="rescue-request-form">
+                <div class="form-group">
+                    <label for="emergency-type">Emergency Type</label>
+                    <select id="emergency-type" class="form-control" required>
+                        <option value="">Select Emergency Type</option>
+                        <option value="flood">Flood/Water Rescue</option>
+                        <option value="fire">Fire Emergency</option>
+                        <option value="collapse">Building Collapse</option>
+                        <option value="landslide">Landslide</option>
+                        <option value="medical">Medical Emergency</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="victim-count">Number of People Affected</label>
+                    <input type="number" id="victim-count" class="form-control" min="1" placeholder="e.g., 5">
+                </div>
+
+                <div class="form-group">
+                    <label for="location-details">Exact Location</label>
+                    <textarea id="location-details" class="form-control"
+                        placeholder="Provide detailed location information..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="contact-person">Your Contact Number</label>
+                    <input type="tel" id="contact-person" class="form-control" placeholder="+91 XXXXXXXXXX">
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    <i class="fas fa-paper-plane"></i> Submit Request
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 

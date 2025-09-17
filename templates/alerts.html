@@ -9,67 +9,75 @@
         <p>Live disaster alerts and emergency notifications</p>
     </div>
 
-    <div class="alerts-grid">
-        <!-- Active Alerts -->
-        <div class="alerts-section">
-            <h2><i class="fas fa-bell"></i> Active Alerts</h2>
-            <div class="alert-list">
-                <div class="alert-item critical">
-                    <div class="alert-header">
-                        <i class="fas fa-wind"></i>
-                        <span class="alert-type">CYCLONE WARNING</span>
-                        <span class="alert-level critical">CRITICAL</span>
-                    </div>
-                    <div class="alert-content">
-                        <h3>Severe Cyclonic Storm Approaching</h3>
-                        <p><strong>Location:</strong> Odisha and West Bengal coastal areas</p>
-                        <p><strong>Expected Impact:</strong> Heavy rainfall, strong winds up to 120 km/h</p>
-                        <p><strong>Action Required:</strong> Immediate evacuation from coastal areas</p>
-                        <div class="alert-meta">
-                            <span><i class="fas fa-clock"></i> 2 hours ago</span>
-                            <span><i class="fas fa-map-marker-alt"></i> 150 km radius</span>
+    <button type="button" class="collapsible">Local</button>
+    <div class="content">
+        <p>No local alerts at the moment.</p>
+    </div>
+
+    <button type="button" class="collapsible active">Global</button>
+    <div class="content" style="display: block;">
+        <div class="alerts-grid">
+            <!-- Active Alerts -->
+            <div class="alerts-section">
+                <h2><i class="fas fa-bell"></i> Active Alerts</h2>
+                <div class="alert-list">
+                    <div class="alert-item critical">
+                        <div class="alert-header">
+                            <i class="fas fa-wind"></i>
+                            <span class="alert-type">CYCLONE WARNING</span>
+                            <span class="alert-level critical">CRITICAL</span>
+                        </div>
+                        <div class="alert-content">
+                            <h3>Severe Cyclonic Storm Approaching</h3>
+                            <p><strong>Location:</strong> Odisha and West Bengal coastal areas</p>
+                            <p><strong>Expected Impact:</strong> Heavy rainfall, strong winds up to 120 km/h</p>
+                            <p><strong>Action Required:</strong> Immediate evacuation from coastal areas</p>
+                            <div class="alert-meta">
+                                <span><i class="fas fa-clock"></i> 2 hours ago</span>
+                                <span><i class="fas fa-map-marker-alt"></i> 150 km radius</span>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="alert-item high">
-                    <div class="alert-header">
-                        <i class="fas fa-water"></i>
-                        <span class="alert-type">FLOOD WARNING</span>
-                        <span class="alert-level high">HIGH</span>
-                    </div>
-                    <div class="alert-content">
-                        <h3>Flash Flood Risk</h3>
-                        <p><strong>Location:</strong> Yamuna River basin, Delhi NCR</p>
-                        <p><strong>Expected Impact:</strong> Water levels rising rapidly</p>
-                        <p><strong>Action Required:</strong> Avoid low-lying areas and riverbanks</p>
-                        <div class="alert-meta">
-                            <span><i class="fas fa-clock"></i> 4 hours ago</span>
-                            <span><i class="fas fa-map-marker-alt"></i> 50 km radius</span>
+                    <div class="alert-item high">
+                        <div class="alert-header">
+                            <i class="fas fa-water"></i>
+                            <span class="alert-type">FLOOD WARNING</span>
+                            <span class="alert-level high">HIGH</span>
+                        </div>
+                        <div class="alert-content">
+                            <h3>Flash Flood Risk</h3>
+                            <p><strong>Location:</strong> Yamuna River basin, Delhi NCR</p>
+                            <p><strong>Expected Impact:</strong> Water levels rising rapidly</p>
+                            <p><strong>Action Required:</strong> Avoid low-lying areas and riverbanks</p>
+                            <div class="alert-meta">
+                                <span><i class="fas fa-clock"></i> 4 hours ago</span>
+                                <span><i class="fas fa-map-marker-alt"></i> 50 km radius</span>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="alert-item medium">
-                    <div class="alert-header">
-                        <i class="fas fa-thermometer-full"></i>
-                        <span class="alert-type">HEAT WAVE</span>
-                        <span class="alert-level medium">MEDIUM</span>
-                    </div>
-                    <div class="alert-content">
-                        <h3>Extreme Heat Conditions</h3>
-                        <p><strong>Location:</strong> Rajasthan, Gujarat, Madhya Pradesh</p>
-                        <p><strong>Expected Impact:</strong> Temperatures above 45°C for 3 days</p>
-                        <p><strong>Action Required:</strong> Stay hydrated, avoid outdoor activities</p>
-                        <div class="alert-meta">
-                            <span><i class="fas fa-clock"></i> 6 hours ago</span>
-                            <span><i class="fas fa-map-marker-alt"></i> Multi-state</span>
+                    <div class="alert-item medium">
+                        <div class="alert-header">
+                            <i class="fas fa-thermometer-full"></i>
+                            <span class="alert-type">HEAT WAVE</span>
+                            <span class="alert-level medium">MEDIUM</span>
+                        </div>
+                        <div class="alert-content">
+                            <h3>Extreme Heat Conditions</h3>
+                            <p><strong>Location:</strong> Rajasthan, Gujarat, Madhya Pradesh</p>
+                            <p><strong>Expected Impact:</strong> Temperatures above 45°C for 3 days</p>
+                            <p><strong>Action Required:</strong> Stay hydrated, avoid outdoor activities</p>
+                            <div class="alert-meta">
+                                <span><i class="fas fa-clock"></i> 6 hours ago</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Multi-state</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
 </div>
 {% endblock %}
