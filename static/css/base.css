@@ -488,7 +488,7 @@ body {
 
 .form-control {
     width: 100%;
-    padding: 12px 12px 12px 45px;
+    padding: 12px;
     border-radius: 8px;
     border: 1px solid var(--border);
     background-color: var(--background);
@@ -504,6 +504,10 @@ body {
 
 .form-control:focus + i {
     color: var(--accent);
+}
+
+.input-group .form-control {
+    padding-left: 45px;
 }
 
 .btn-primary {

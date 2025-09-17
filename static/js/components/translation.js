@@ -359,6 +359,10 @@ function shouldTranslateElement(element) {
         return false;
     }
 
+    if (element.tagName === 'INPUT' && element.placeholder) {
+        return true;
+    }
+
     // Allow links in menu but preserve their structure
     if (element.tagName === 'A' && !element.closest('.hamburger-menu')) {
         return false;
