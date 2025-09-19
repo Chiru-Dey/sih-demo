@@ -544,7 +544,7 @@ Keep responses informative and easy to understand."""
             
             # API call with timeout
             response = openai_client.chat.completions.create(
-                model="provider-3/gemini-2.0-flash",
+                model="provider-3/gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
