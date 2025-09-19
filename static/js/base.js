@@ -353,6 +353,21 @@ document.addEventListener('keydown', function (e) {
     }
 });
 
+document.addEventListener('click', function (e) {
+    const translationPanel = document.getElementById('translationPanel');
+    const accessibilityPanel = document.getElementById('accessibilityPanel');
+    const translationToggle = document.querySelector('.translation-toggle');
+    const accessibilityToggle = document.querySelector('.accessibility-toggle');
+
+    if (isTranslationPanelOpen && !translationPanel.contains(e.target) && !translationToggle.contains(e.target)) {
+        toggleTranslationPanel();
+    }
+
+    if (isAccessibilityPanelOpen && !accessibilityPanel.contains(e.target) && !accessibilityToggle.contains(e.target)) {
+        toggleAccessibilityPanel();
+    }
+});
+
 // Theme initialization
 function applyTheme() {
     const savedSettings = localStorage.getItem('disastrous-settings');

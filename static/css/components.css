@@ -558,7 +558,8 @@
     resize: none;
     outline: none;
     transition: border-color 0.3s ease;
-    min-height: 44px;
+    min-height: 48px;
+    line-height: 24px;
     max-height: 100px;
 }
 
@@ -570,8 +571,8 @@
     background: var(--accent);
     border: none;
     border-radius: 50%;
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     color: var(--white);
     font-size: 1.125rem;
     cursor: pointer;

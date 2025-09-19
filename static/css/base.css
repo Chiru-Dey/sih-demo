@@ -39,7 +39,7 @@ body.dark-mode {
     --text: #f4f4f9;
     --text-secondary: #aaa;
     --accent: #5978f3;
-    --primary: #dbc69a;
+    --primary: #0288D1;
     --danger: #e25555;
     --success: #43d9ad;
     --white: #f4f4f9;
@@ -182,7 +182,7 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    z-index: 1002;
+    z-index: 1006;
 }
 
 .header-content {
@@ -200,7 +200,7 @@ body {
     font-size: 1.5rem;
     color: var(--accent);
     cursor: pointer;
-    z-index: 1003;
+    z-index: 1005;
     padding: 10px;
     border-radius: 5px;
     transition: background 0.3s ease;
