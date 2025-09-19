@@ -382,7 +382,7 @@ def translate():
                 start_time = time.time()
                 try:
                     response = openai_client.chat.completions.create(
-                        model="provider-3/gemini-2.0-flash",
+                        model="provider-3/gpt-4o-mini",
                         messages=[{"role": "user", "content": prompt}],
                         temperature=0.1,
                         max_tokens=3000,
