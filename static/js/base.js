@@ -228,12 +228,16 @@ function toggleMenu() {
         return;
     }
 
-    const isOpen = menu.classList.contains('active');
-
     menu.classList.toggle('active');
     overlay.classList.toggle('active');
 
-    hamburger.className = isOpen ? 'fas fa-bars' : 'fas fa-times';
+    if (menu.classList.contains('active')) {
+        hamburger.classList.remove('fa-bars');
+        hamburger.classList.add('fa-times');
+    } else {
+        hamburger.classList.remove('fa-times');
+        hamburger.classList.add('fa-bars');
+    }
 }
 
 // ✅ RE-FIXED: Handle navigation menu clicks to prevent page reload issues

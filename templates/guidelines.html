@@ -11,21 +11,24 @@
 
     <div class="guidelines-navigation">
         <div class="guidelines-tabs">
-            <button class="tab-btn active" onclick="showGuideline('earthquake')">
-                <i class="fas fa-mountain"></i> Earthquake
-            </button>
-            <button class="tab-btn" onclick="showGuideline('flood')">
-                <i class="fas fa-water"></i> Flood
-            </button>
-            <button class="tab-btn" onclick="showGuideline('fire')">
-                <i class="fas fa-fire"></i> Fire
-            </button>
-            <button class="tab-btn" onclick="showGuideline('cyclone')">
-                <i class="fas fa-wind"></i> Cyclone
-            </button>
-            <button class="tab-btn" onclick="showGuideline('general')">
-                <i class="fas fa-shield-alt"></i> General
-            </button>
+            <button class="tab-btn active" onclick="showGuideline('earthquake')"><i class="fas fa-mountain"></i> Earthquake</button>
+            <button class="tab-btn" onclick="showGuideline('flood')"><i class="fas fa-water"></i> Flood</button>
+            <button class="tab-btn" onclick="showGuideline('urban_flood')"><i class="fas fa-city"></i> Urban Flood</button>
+            <button class="tab-btn" onclick="showGuideline('cyclone')"><i class="fas fa-wind"></i> Cyclone</button>
+            <button class="tab-btn" onclick="showGuideline('tsunami')"><i class="fas fa-water"></i> Tsunami</button>
+            <button class="tab-btn" onclick="showGuideline('landslides')"><i class="fas fa-mountain"></i> Landslides</button>
+            <button class="tab-btn" onclick="showGuideline('drought')"><i class="fas fa-tint-slash"></i> Drought</button>
+            <button class="tab-btn" onclick="showGuideline('cold_wave')"><i class="fas fa-snowflake"></i> Cold Wave</button>
+            <button class="tab-btn" onclick="showGuideline('thunderstorm')"><i class="fas fa-bolt"></i> Thunderstorm</button>
+            <button class="tab-btn" onclick="showGuideline('cloudburst')"><i class="fas fa-cloud-showers-heavy"></i> Cloudburst</button>
+            <button class="tab-btn" onclick="showGuideline('glof')"><i class="fas fa-glacier"></i> GLOF</button>
+            <button class="tab-btn" onclick="showGuideline('heat_wave')"><i class="fas fa-thermometer-full"></i> Heat Wave</button>
+            <button class="tab-btn" onclick="showGuideline('chemical_disaster')"><i class="fas fa-flask"></i> Chemical Disaster</button>
+            <button class="tab-btn" onclick="showGuideline('nuclear_emergency')"><i class="fas fa-atom"></i> Nuclear Emergency</button>
+            <button class="tab-btn" onclick="showGuideline('biological_emergency')"><i class="fas fa-biohazard"></i> Biological Emergency</button>
+            <button class="tab-btn" onclick="showGuideline('fire')"><i class="fas fa-fire"></i> Fire</button>
+            <button class="tab-btn" onclick="showGuideline('forest_fire')"><i class="fas fa-fire-alt"></i> Forest Fire</button>
+            <button class="tab-btn" onclick="showGuideline('general')"><i class="fas fa-shield-alt"></i> General</button>
         </div>
     </div>
 
@@ -204,6 +207,437 @@
                     <li>Use generators outdoors only</li>
                     <li>Photograph damage for insurance</li>
                     <li>Help neighbors who may need assistance</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Urban Flood Guidelines -->
+    <div id="urban_flood" class="guideline-content">
+        <div class="guideline-header">
+            <h2><i class="fas fa-city"></i> Urban Flood Safety Guidelines</h2>
+        </div>
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Before an Urban Flood</h3>
+                <ul class="guideline-list">
+                    <li>Check for flood alerts and warnings for your area.</li>
+                    <li>Clear drains and gutters around your property.</li>
+                    <li>Move valuables, electronics, and important documents to higher floors.</li>
+                    <li>Prepare an emergency kit with essentials.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-swimmer"></i> During an Urban Flood</h3>
+                <ul class="guideline-list">
+                    <li>Do not drive or walk through flooded roads.</li>
+                    <li>Avoid contact with floodwater as it may be contaminated.</li>
+                    <li>Turn off electricity at the main switch to prevent electrocution.</li>
+                    <li>Move to the highest point of your building if trapped.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-broom"></i> After an Urban Flood</h3>
+                <ul class="guideline-list">
+                    <li>Boil drinking water until authorities declare it safe.</li>
+                    <li>Check your home for structural damage before re-entering.</li>
+                    <li>Be cautious of snakes, insects, and other animals that may have entered your home.</li>
+                    <li>Clean and disinfect everything that was in contact with floodwater.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tsunami Guidelines -->
+    <div id="tsunami" class="guideline-content">
+        <div class="guideline-header">
+            <h2><i class="fas fa-water"></i> Tsunami Safety Guidelines</h2>
+        </div>
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Before a Tsunami</h3>
+                <ul class="guideline-list">
+                    <li>Know the tsunami risk for your area and identify evacuation routes to high ground.</li>
+                    <li>Prepare an emergency kit for your family.</li>
+                    <li>Listen to official warnings and alerts.</li>
+                    <li>Practice your evacuation plan with your family.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-running"></i> During a Tsunami</h3>
+                <ul class="guideline-list">
+                    <li>If you are in a coastal area and feel a strong earthquake, evacuate to high ground immediately.</li>
+                    <li>Do not wait for an official tsunami warning.</li>
+                    <li>Move as far inland as possible.</li>
+                    <li>A tsunami is a series of waves; do not return to the coast after the first wave.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-first-aid"></i> After a Tsunami</h3>
+                <ul class="guideline-list">
+                    <li>Stay away from the coast until authorities declare it safe.</li>
+                    <li>Be aware that more waves may be coming.</li>
+                    <li>Check for injuries and administer first aid if needed.</li>
+                    <li>Listen to the radio for updates and instructions.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Landslides Guidelines -->
+    <div id="landslides" class="guideline-content">
+        <div class="guideline-header">
+            <h2><i class="fas fa-mountain"></i> Landslides Safety Guidelines</h2>
+        </div>
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Before a Landslide</h3>
+                <ul class="guideline-list">
+                    <li>Determine if your property is in a landslide-prone area.</li>
+                    <li>Avoid building near steep slopes or mountain edges.</li>
+                    <li>Look for warning signs such as cracks in the ground, tilting trees, or bulging ground.</li>
+                    <li>Have an evacuation plan.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-running"></i> During a Landslide</h3>
+                <ul class="guideline-list">
+                    <li>Move to a safer location quickly.</li>
+                    <li>If you cannot escape, curl into a tight ball and protect your head.</li>
+                    <li>Stay away from the path of the landslide.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-first-aid"></i> After a Landslide</h3>
+                <ul class="guideline-list">
+                    <li>Stay away from the slide area as there may be a danger of more slides.</li>
+                    <li>Check for injured or trapped persons near the slide.</li>
+                    <li>Report any broken utility lines to the appropriate authorities.</li>
+                    <li>Listen for the latest emergency information.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drought Guidelines -->
+    <div id="drought" class="guideline-content">
+        <div class="guideline-header">
+            <h2><i class="fas fa-tint-slash"></i> Drought Safety Guidelines</h2>
+        </div>
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Before a Drought</h3>
+                <ul class="guideline-list">
+                    <li>Conserve water at all times.</li>
+                    <li>Install water-saving devices in your home.</li>
+                    <li>Use drought-resistant plants in your garden.</li>
+                    <li>Have a plan for obtaining water in an emergency.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-tint"></i> During a Drought</h3>
+                <ul class="guideline-list">
+                    <li>Follow water use restrictions imposed by authorities.</li>
+                    <li>Avoid wasting water in any way.</li>
+                    <li>Be extremely careful with fire, as dry conditions increase fire risk.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-leaf"></i> After a Drought</h3>
+                <ul class="guideline-list">
+                    <li>Continue to conserve water as it takes time for water sources to recover.</li>
+                    <li>Follow instructions from authorities regarding water use.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cold Wave Guidelines -->
+    <div id="cold_wave" class="guideline-content">
+        <div class="guideline-header">
+            <h2><i class="fas fa-snowflake"></i> Cold Wave Safety Guidelines</h2>
+        </div>
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Before a Cold Wave</h3>
+                <ul class="guideline-list">
+                    <li>Insulate your home to keep the heat in.</li>
+                    <li>Check your heating systems to ensure they are working properly.</li>
+                    <li>Stock up on food, water, and warm clothing.</li>
+                    <li>Bring pets indoors.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-thermometer-empty"></i> During a Cold Wave</h3>
+                <ul class="guideline-list">
+                    <li>Stay indoors as much as possible.</li>
+                    <li>Wear layers of warm clothing.</li>
+                    <li>Watch for signs of frostbite and hypothermia.</li>
+                    <li>Keep dry. Change wet clothing frequently.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-hands-helping"></i> After a Cold Wave</h3>
+                <ul class="guideline-list">
+                    <li>Check on elderly or vulnerable neighbors.</li>
+                    <li>Be careful of icy roads and walkways to prevent falls.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thunderstorm Guidelines -->
+    <div id="thunderstorm" class="guideline-content">
+        <div class="guideline-header">
+            <h2><i class="fas fa-bolt"></i> Thunderstorm Safety Guidelines</h2>
+        </div>
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Before a Thunderstorm</h3>
+                <ul class="guideline-list">
+                    <li>Secure outdoor objects that could be blown away.</li>
+                    <li>Unplug sensitive electronics to protect them from power surges.</li>
+                    <li>Have a battery-powered radio for updates.</li>
+                    <li>Know your emergency plan.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-house-damage"></i> During a Thunderstorm</h3>
+                <ul class="guideline-list">
+                    <li>Stay indoors in a safe location.</li>
+                    <li>Avoid using corded phones and electrical appliances.</li>
+                    <li>Stay away from windows and doors.</li>
+                    <li>Do not take a shower or bath.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-cloud-sun"></i> After a Thunderstorm</h3>
+                <ul class="guideline-list">
+                    <li>Wait at least 30 minutes after the last thunder before going outside.</li>
+                    <li>Check your property for damage.</li>
+                    <li>Stay away from downed power lines.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cloudburst and Hailstorm Guidelines -->
+    <div id="cloudburst" class="guideline-content">
+        <div class="guideline-header">
+            <h2><i class="fas fa-cloud-showers-heavy"></i> Cloudburst and Hailstorm Safety Guidelines</h2>
+        </div>
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Before a Cloudburst/Hailstorm</h3>
+                <ul class="guideline-list">
+                    <li>Monitor weather forecasts and warnings.</li>
+                    <li>Take shelter in a sturdy building.</li>
+                    <li>Bring pets and outdoor furniture inside.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-car-crash"></i> During a Cloudburst/Hailstorm</h3>
+                <ul class="guideline-list">
+                    <li>Stay indoors and away from windows and skylights.</li>
+                    <li>If you are in a car, pull over to a safe place and cover your head with your arms.</li>
+                    <li>Do not go outside to protect property.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-tools"></i> After a Cloudburst/Hailstorm</h3>
+                <ul class="guideline-list">
+                    <li>Check for damage to your property, including your roof and vehicles.</li>
+                    <li>Be careful of fallen debris and downed power lines.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Glacial Lake Outburst Flood (GLOF) Guidelines -->
+    <div id="glof" class="guideline-content">
+        <div class="guideline-header">
+            <h2><i class="fas fa-glacier"></i> GLOF Safety Guidelines</h2>
+        </div>
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Before a GLOF</h3>
+                <ul class="guideline-list">
+                    <li>Be aware of the risk if you live in an area downstream from a glacial lake.</li>
+                    <li>Have an evacuation plan and know the routes to higher ground.</li>
+                    <li>Pay attention to warnings from local authorities.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-running"></i> During a GLOF</h3>
+                <ul class="guideline-list">
+                    <li>Evacuate immediately to higher ground if you receive a warning or hear a loud, continuous roar.</li>
+                    <li>Do not wait for further instructions.</li>
+                    <li>Help your neighbors to evacuate.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-undo"></i> After a GLOF</h3>
+                <ul class="guideline-list">
+                    <li>Do not return to the affected area until authorities declare it safe.</li>
+                    <li>The floodwaters may have destabilized the ground.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Heat Wave Guidelines -->
+    <div id="heat_wave" class="guideline-content">
+        <div class="guideline-header">
+            <h2><i class="fas fa-thermometer-full"></i> Heat Wave Safety Guidelines</h2>
+        </div>
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Before a Heat Wave</h3>
+                <ul class="guideline-list">
+                    <li>Install air conditioning or ensure you have access to a cool place.</li>
+                    <li>Stay informed about upcoming heat waves.</li>
+                    <li>Plan to stay hydrated.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-temperature-high"></i> During a Heat Wave</h3>
+                <ul class="guideline-list">
+                    <li>Stay in cool, air-conditioned places as much as possible.</li>
+                    <li>Drink plenty of water, even if you don't feel thirsty.</li>
+                    <li>Avoid strenuous activities during the hottest part of the day.</li>
+                    <li>Check on vulnerable family members, friends, and neighbors.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-tint"></i> After a Heat Wave</h3>
+                <ul class="guideline-list">
+                    <li>Continue to stay hydrated and cool as your body recovers.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chemical (Industrial) Disasters Guidelines -->
+    <div id="chemical_disaster" class="guideline-content">
+        <div class="guideline-header">
+            <h2><i class="fas fa-flask"></i> Chemical Disaster Safety Guidelines</h2>
+        </div>
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Before a Chemical Disaster</h3>
+                <ul class="guideline-list">
+                    <li>Know the emergency plan for your community and workplace, including warning signals.</li>
+                    <li>Have a disaster kit with items to help you shelter-in-place.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-house-user"></i> During a Chemical Disaster</h3>
+                <ul class="guideline-list">
+                    <li>Follow instructions from emergency officials. You may be told to evacuate or shelter-in-place.</li>
+                    <li>If sheltering-in-place, go indoors, close all windows and doors, and turn off ventilation systems.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-check-circle"></i> After a Chemical Disaster</h3>
+                <ul class="guideline-list">
+                    <li>Do not return to the area until authorities have declared it safe.</li>
+                    <li>Follow decontamination procedures if you were exposed.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nuclear and Radiological Emergencies Guidelines -->
+    <div id="nuclear_emergency" class="guideline-content">
+        <div class="guideline-header">
+            <h2><i class="fas fa-atom"></i> Nuclear Emergency Safety Guidelines</h2>
+        </div>
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Before a Nuclear Emergency</h3>
+                <ul class="guideline-list">
+                    <li>Know your community's emergency plan and evacuation routes.</li>
+                    <li>Have an emergency kit.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-radiation-alt"></i> During a Nuclear Emergency</h3>
+                <ul class="guideline-list">
+                    <li>Follow instructions from emergency officials. You may be told to evacuate or shelter-in-place.</li>
+                    <li>If sheltering, go to a basement or the center of a building.</li>
+                    <li>Take potassium iodide (KI) only if advised by health officials.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-shower"></i> After a Nuclear Emergency</h3>
+                <ul class="guideline-list">
+                    <li>Follow decontamination procedures if you have been outside.</li>
+                    <li>Listen to authorities for information on when it is safe to leave your shelter.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biological and Public Health Emergencies (BPHE) Guidelines -->
+    <div id="biological_emergency" class="guideline-content">
+        <div class="guideline-header">
+            <h2><i class="fas fa-biohazard"></i> Biological Emergency Safety Guidelines</h2>
+        </div>
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Before a Biological Emergency</h3>
+                <ul class="guideline-list">
+                    <li>Practice good hygiene, including frequent hand washing.</li>
+                    <li>Keep your vaccinations up to date.</li>
+                    <li>Have a supply of food, water, and medical supplies.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-head-side-mask"></i> During a Biological Emergency</h3>
+                <ul class="guideline-list">
+                    <li>Follow public health guidelines, which may include social distancing, wearing masks, or quarantine.</li>
+                    <li>Seek medical attention if you develop symptoms.</li>
+                    <li>Stay informed through official sources.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-notes-medical"></i> After a Biological Emergency</h3>
+                <ul class="guideline-list">
+                    <li>Continue to follow advice from public health officials.</li>
+                    <li>Take care of your mental and physical health.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forest Fire Guidelines -->
+    <div id="forest_fire" class="guideline-content">
+        <div class="guideline-header">
+            <h2><i class="fas fa-fire-alt"></i> Forest Fire Safety Guidelines</h2>
+        </div>
+        <div class="guidelines-grid">
+            <div class="guideline-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Before a Forest Fire</h3>
+                <ul class="guideline-list">
+                    <li>Create a defensible space around your home by clearing flammable vegetation.</li>
+                    <li>Have an evacuation plan and an emergency kit ready.</li>
+                    <li>Know multiple ways out of your neighborhood.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-running"></i> During a Forest Fire</h3>
+                <ul class="guideline-list">
+                    <li>Evacuate immediately when authorities issue an evacuation order.</li>
+                    <li>Follow your evacuation plan.</li>
+                    <li>Close all windows and doors before you leave.</li>
+                </ul>
+            </div>
+            <div class="guideline-card">
+                <h3><i class="fas fa-home"></i> After a Forest Fire</h3>
+                <ul class="guideline-list">
+                    <li>Do not return home until authorities say it is safe.</li>
+                    <li>Check your property for embers or hot spots.</li>
+                    <li>Be aware of potential hazards like damaged trees or power lines.</li>
                 </ul>
             </div>
         </div>
