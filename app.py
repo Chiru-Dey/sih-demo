@@ -1,4 +1,5 @@
-from flask import Flask, render_template, send_from_directory, jsonify, request, session
+from flask import Flask, render_template, send_from_directory, jsonify, request, session, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
@@ -17,8 +18,22 @@ CORS(app)
 
 # Configuration
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-secret-key-here')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///disastrous.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['A4F_API_KEY'] = os.getenv('A4F_API_KEY', 'your-a4f-api-key')
 app.config['MAPS_API_KEY'] = os.getenv('MAPS_API_KEY', 'your-maps-api-key')
+
+db = SQLAlchemy(app)
+
+# Database Models
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False)
+    role = db.Column(db.String(80), nullable=False)
+
+    def __repr__(self):
+        return f'<User {self.email}>'
 
 # Initialize A4F OpenAI Client
 openai_client = None
@@ -74,6 +89,21 @@ def initialize_session():
             'notifications': True,
             'location_services': True
         }
+
+from functools import wraps
+
+def login_required(role="any"):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if 'user_id' not in session:
+                return redirect(url_for('authority_login', _external=True))
+            if role != "any" and session.get('user_role') != role:
+                # Instead of redirecting, maybe show an unauthorized page or flash a message
+                return redirect(url_for('authority_login', error="unauthorized", _external=True))
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
 
 # Helper function to get common template context
 def get_template_context():
@@ -269,11 +299,38 @@ def settings():
     }
     return render_template('settings.html', **context)
 
-@app.route('/authority-login')
+@app.route('/authority-register', methods=['GET', 'POST'])
+def authority_register():
+    """Serve the authority registration page and handle registration"""
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = User.query.filter_by(email=email).first()
+        if user:
+            return render_template('authority_register.html', error='User already exists', **get_template_context())
+        new_user = User(email=email, password=password, role='rescue')
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('authority_login'))
+    return render_template('authority_register.html', **get_template_context())
+
+@app.route('/authority-login', methods=['GET', 'POST'])
 def authority_login():
-    """Serve the authority login page"""
-    context = get_template_context()
-    return render_template('authority_login.html', **context)
+    """Serve the authority login page and handle login"""
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = User.query.filter_by(email=email).first()
+        if user and user.password == password:
+            session['user_id'] = user.id
+            session['user_role'] = user.role
+            if user.role == 'admin':
+                return redirect(url_for('admin_dashboard'))
+            elif user.role == 'rescue':
+                return redirect(url_for('rescue_dashboard'))
+        else:
+            return render_template('authority_login.html', error='Invalid credentials', **get_template_context())
+    return render_template('authority_login.html', **get_template_context())
 
 @app.route('/contacts')
 def contacts():
@@ -286,6 +343,20 @@ def profile():
     """Serve the user profile page"""
     context = get_template_context()
     return render_template('profile.html', **context)
+
+@app.route('/admin-dashboard')
+@login_required(role='admin')
+def admin_dashboard():
+    """Serve the admin dashboard page"""
+    context = get_template_context()
+    return render_template('admin_dashboard.html', **context)
+
+@app.route('/rescue-dashboard')
+@login_required(role='rescue')
+def rescue_dashboard():
+    """Serve the rescue dashboard page"""
+    context = get_template_context()
+    return render_template('rescue_dashboard.html', **context)
 
 # PWA specific routes
 @app.route('/manifest.json')
@@ -713,6 +784,17 @@ def health():
         'maps_configured': app.config['MAPS_API_KEY'] != 'your-maps-api-key',
         'timestamp': '2025-09-14T21:53:00Z'
     })
+
+# Create database and mock users
+with app.app_context():
+    db.create_all()
+    if not User.query.filter_by(email='admin@disastrous.com').first():
+        admin_user = User(email='admin@disastrous.com', password='admin', role='admin')
+        db.session.add(admin_user)
+    if not User.query.filter_by(email='rescue@disastrous.com').first():
+        rescue_user = User(email='rescue@disastrous.com', password='rescue', role='rescue')
+        db.session.add(rescue_user)
+    db.session.commit()
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

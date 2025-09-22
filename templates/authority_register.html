@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}Authority Login - Disastrous{% endblock %}
+{% block title %}Authority Registration - Disastrous{% endblock %}
 
 {% block content %}
 <div class="page-container">
     <div class="page-header">
-        <h1><i class="fas fa-user-shield"></i> Authority Login</h1>
-        <p>Secure access for emergency management authorities</p>
+        <h1><i class="fas fa-user-plus"></i> Authority Registration</h1>
+        <p>Register as a rescue service provider</p>
     </div>
 
     <div class="form-container">
-        <form id="authority-login-form" method="POST" action="{{ url_for('authority_login') }}">
+        <form id="authority-register-form" method="POST" action="{{ url_for('authority_register') }}">
             <div class="form-group">
                 <label for="email">Authority ID (Email)</label>
                 <div class="input-group">
@@ -30,11 +30,11 @@
             </div>
 
             <button type="submit" class="btn-primary">
-                <i class="fas fa-sign-in-alt"></i> Login
+                <i class="fas fa-user-plus"></i> Register
             </button>
         </form>
         <div class="form-footer">
-            <p>Don't have an account? <a href="{{ url_for('authority_register') }}">Register here</a></p>
+            <p>Already have an account? <a href="{{ url_for('authority_login') }}">Login here</a></p>
         </div>
     </div>
 </div>
