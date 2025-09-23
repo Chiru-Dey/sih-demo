@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Forecasts & Alerts{% endblock %}
+
+{% block body_class %}admin-dashboard{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/forecasts.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <!-- Region Filter -->
+    <div class="region-filter">
+        <div class="filter-content">
+            <div class="search-container">
+                <input type="text" id="regionSearch" class="region-search" 
+                       placeholder="Search regions..." aria-label="Search regions">
+                <button class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <div class="active-filters" id="activeFilters">
+                <!-- Active filter tags will be inserted here -->
+            </div>
+            <button class="clear-filters" id="clearFilters">
+                <i class="fas fa-times"></i> Clear All
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Forecasts Grid -->
+    <div class="forecasts-grid">
+        <!-- 3rd Party Forecasts -->
+        <div class="forecast-card third-party">
+            <div class="card-header">
+                <h2>3rd Party Forecasts</h2>
+                <div class="score-badges">
+                    <div class="trust-score" data-score="95">
+                        <svg class="score-circle">
+                            <circle class="score-circle-bg" cx="25" cy="25" r="20"></circle>
+                            <circle class="score-circle-progress" cx="25" cy="25" r="20"></circle>
+                        </svg>
+                        <span class="score-text">95%</span>
+                    </div>
+                    <div class="criticality-badge high">
+                        High Risk
+                    </div>
+                </div>
+            </div>
+            <div class="forecast-list" id="thirdPartyForecasts">
+                <div class="forecast-item">
+                    <div class="forecast-header">
+                        <h3>Severe Cyclone Warning</h3>
+                        <span class="timestamp">2h ago</span>
+                    </div>
+                    <p class="forecast-content">Category 4 cyclone approaching coastal regions. Expected landfall within 48 hours. Wind speeds up to 150mph predicted.</p>
+                    <div class="forecast-meta">
+                        <span class="source">Source: National Weather Service</span>
+                        <span class="region">Region: Eastern Coastal Area</span>
+                    </div>
+                </div>
+                <div class="forecast-item">
+                    <div class="forecast-header">
+                        <h3>Flash Flood Alert</h3>
+                        <span class="timestamp">4h ago</span>
+                    </div>
+                    <p class="forecast-content">Heavy rainfall expected to continue for next 24 hours. River levels rising rapidly. Immediate evacuation recommended for low-lying areas.</p>
+                    <div class="forecast-meta">
+                        <span class="source">Source: Regional Flood Center</span>
+                        <span class="region">Region: River Valley District</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI-based Forecasts -->
+        <div class="forecast-card ai-based">
+            <div class="card-header">
+                <h2>AI-based Forecasts</h2>
+                <div class="score-badges">
+                    <div class="trust-score" data-score="87">
+                        <svg class="score-circle">
+                            <circle class="score-circle-bg" cx="25" cy="25" r="20"></circle>
+                            <circle class="score-circle-progress" cx="25" cy="25" r="20"></circle>
+                        </svg>
+                        <span class="score-text">87%</span>
+                    </div>
+                    <div class="criticality-badge medium">
+                        Medium Risk
+                    </div>
+                </div>
+            </div>
+            <div class="forecast-list" id="aiForecasts">
+                <div class="forecast-item">
+                    <div class="forecast-header">
+                        <h3>Potential Landslide Risk</h3>
+                        <span class="timestamp">1h ago</span>
+                        <label class="forecast-checkbox">
+                            <input type="checkbox" name="ai-forecast" aria-label="Select forecast">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <p class="forecast-content">ML model predicts 78% probability of landslides in hillside communities due to sustained rainfall and soil saturation levels.</p>
+                    <div class="forecast-meta">
+                        <span class="source">Source: DisasterPredict AI</span>
+                        <span class="region">Region: Highland Districts</span>
+                        <span class="confidence">AI Confidence: 78%</span>
+                    </div>
+                </div>
+                <div class="forecast-item">
+                    <div class="forecast-header">
+                        <h3>Infrastructure Stress Warning</h3>
+                        <span class="timestamp">3h ago</span>
+                        <label class="forecast-checkbox">
+                            <input type="checkbox" name="ai-forecast" aria-label="Select forecast">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <p class="forecast-content">Pattern analysis indicates potential bridge structural issues in flood-affected areas. Immediate inspection recommended.</p>
+                    <div class="forecast-meta">
+                        <span class="source">Source: InfraWatch AI</span>
+                        <span class="region">Region: Central District</span>
+                        <span class="confidence">AI Confidence: 85%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="approval-actions">
+                <button class="btn-approve">
+                    <i class="fas fa-check"></i> Approve Selected
+                </button>
+                <button class="btn-reject">
+                    <i class="fas fa-times"></i> Reject Selected
+                </button>
+            </div>
+        </div>
+
+        <!-- Crowdsourced Forecasts -->
+        <div class="forecast-card crowdsourced">
+            <div class="card-header">
+                <h2>Crowdsourced Forecasts</h2>
+                <div class="score-badges">
+                    <div class="trust-score" data-score="82">
+                        <svg class="score-circle">
+                            <circle class="score-circle-bg" cx="25" cy="25" r="20"></circle>
+                            <circle class="score-circle-progress" cx="25" cy="25" r="20"></circle>
+                        </svg>
+                        <span class="score-text">82%</span>
+                    </div>
+                    <div class="criticality-badge low">
+                        Low Risk
+                    </div>
+                </div>
+            </div>
+            <div class="forecast-list" id="crowdsourcedForecasts">
+                <div class="forecast-item">
+                    <div class="forecast-header">
+                        <h3>Local Flooding Report</h3>
+                        <span class="timestamp">30m ago</span>
+                        <label class="forecast-checkbox">
+                            <input type="checkbox" name="crowd-forecast" aria-label="Select forecast">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <p class="forecast-content">Multiple residents reporting rapid water level rise in Market Street area. Storm drains appear blocked.</p>
+                    <div class="forecast-meta">
+                        <span class="source">Source: Community Reports (15 confirmations)</span>
+                        <span class="region">Region: Downtown District</span>
+                        <span class="reliability">Community Trust: High</span>
+                    </div>
+                </div>
+                <div class="forecast-item">
+                    <div class="forecast-header">
+                        <h3>Fire Risk Alert</h3>
+                        <span class="timestamp">1h ago</span>
+                        <label class="forecast-checkbox">
+                            <input type="checkbox" name="crowd-forecast" aria-label="Select forecast">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                    <p class="forecast-content">Local rangers and residents report extremely dry conditions and suspicious activities in forest area.</p>
+                    <div class="forecast-meta">
+                        <span class="source">Source: Forest Watch Network (8 confirmations)</span>
+                        <span class="region">Region: Northern Forest Reserve</span>
+                        <span class="reliability">Community Trust: Medium</span>
+                    </div>
+                </div>
+            </div>
+            <div class="approval-actions">
+                <button class="btn-approve">
+                    <i class="fas fa-check"></i> Approve Selected
+                </button>
+                <button class="btn-reject">
+                    <i class="fas fa-times"></i> Reject Selected
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/admin/forecasts.js') }}"></script>
+{% endblock %}

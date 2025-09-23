@@ -447,6 +447,31 @@ def admin_dashboard():
     context = get_template_context()
     return render_template('admin_dashboard.html', **context)
 
+@app.route('/admin/forecasts')
+@login_required(role='admin')
+def admin_forecasts():
+    """Serve the admin forecasts & alerts page"""
+    context = get_template_context()
+    # Add sample data for initial development
+    context['forecast_data'] = {
+        'third_party': {
+            'trust_score': 95,
+            'criticality': 'high',
+            'forecasts': []
+        },
+        'ai_based': {
+            'trust_score': 87,
+            'criticality': 'medium',
+            'forecasts': []
+        },
+        'crowdsourced': {
+            'trust_score': 82,
+            'criticality': 'low',
+            'forecasts': []
+        }
+    }
+    return render_template('admin/forecasts.html', **context)
+
 @app.route('/rescue-dashboard')
 @login_required(role='rescue')
 def rescue_dashboard():
@@ -842,6 +867,104 @@ def get_emergency_alerts():
 @app.route('/api/disaster-locations')
 def get_disaster_locations():
     """API endpoint for disaster locations"""
+
+@app.route('/api/admin/forecasts', methods=['GET'])
+@login_required(role='admin')
+def get_forecasts():
+    """Get all forecasts grouped by source"""
+    try:
+        # In a real app, this would fetch from database
+        forecasts = {
+            'third_party': {
+                'trust_score': 95,
+                'criticality': 'high',
+                'forecasts': [
+                    {
+                        'id': 'TP001',
+                        'title': 'Severe Cyclone Warning',
+                        'description': 'Category 4 cyclone approaching eastern coastline',
+                        'location': 'Bay of Bengal',
+                        'timestamp': '2025-09-23T10:00:00Z',
+                        'severity': 'high',
+                        'source': 'IMD Weather Service'
+                    }
+                ]
+            },
+            'ai_based': {
+                'trust_score': 87,
+                'criticality': 'medium',
+                'forecasts': [
+                    {
+                        'id': 'AI001',
+                        'title': 'Potential Flooding Risk',
+                        'description': 'ML models predict high flooding probability',
+                        'location': 'Yamuna Basin',
+                        'timestamp': '2025-09-23T11:30:00Z',
+                        'severity': 'medium',
+                        'source': 'DisasterPredict AI',
+                        'status': 'pending'
+                    }
+                ]
+            },
+            'crowdsourced': {
+                'trust_score': 82,
+                'criticality': 'low',
+                'forecasts': [
+                    {
+                        'id': 'CS001',
+                        'title': 'Landslide Warning',
+                        'description': 'Multiple reports of ground movement',
+                        'location': 'Himalayan Region',
+                        'timestamp': '2025-09-23T09:15:00Z',
+                        'severity': 'medium',
+                        'source': 'Community Reports',
+                        'status': 'pending'
+                    }
+                ]
+            }
+        }
+        return jsonify(forecasts), 200
+    except Exception as e:
+        print(f"Error fetching forecasts: {str(e)}")
+        return jsonify({'error': 'Failed to fetch forecasts'}), 500
+
+@app.route('/api/admin/forecasts/approve', methods=['POST'])
+@login_required(role='admin')
+def approve_forecasts():
+    """Approve selected forecasts"""
+    try:
+        data = request.get_json()
+        if not data or 'forecast_ids' not in data:
+            return jsonify({'error': 'No forecast IDs provided'}), 400
+            
+        forecast_ids = data['forecast_ids']
+        # In a real app, this would update database records
+        return jsonify({
+            'message': f'Successfully approved {len(forecast_ids)} forecasts',
+            'approved_ids': forecast_ids
+        }), 200
+    except Exception as e:
+        print(f"Error approving forecasts: {str(e)}")
+        return jsonify({'error': 'Failed to approve forecasts'}), 500
+
+@app.route('/api/admin/forecasts/reject', methods=['POST'])
+@login_required(role='admin')
+def reject_forecasts():
+    """Reject selected forecasts"""
+    try:
+        data = request.get_json()
+        if not data or 'forecast_ids' not in data:
+            return jsonify({'error': 'No forecast IDs provided'}), 400
+            
+        forecast_ids = data['forecast_ids']
+        # In a real app, this would update database records
+        return jsonify({
+            'message': f'Successfully rejected {len(forecast_ids)} forecasts',
+            'rejected_ids': forecast_ids
+        }), 200
+    except Exception as e:
+        print(f"Error rejecting forecasts: {str(e)}")
+        return jsonify({'error': 'Failed to reject forecasts'}), 500
     locations = [
         {
             'lat': 28.6139, 'lng': 77.209,
