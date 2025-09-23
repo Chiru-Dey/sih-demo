@@ -39,53 +39,39 @@
         <div class="forecast-card third-party">
             <div class="card-header" role="heading" aria-level="2">
                 <h2 id="third-party-header">3rd Party Forecasts</h2>
-                <div class="score-badges" aria-labelledby="third-party-header">
-                    <div class="trust-score" data-score="95">
-                        <svg class="score-circle">
-                            <circle class="score-circle-bg" cx="25" cy="25" r="20"></circle>
-                            <circle class="score-circle-progress" cx="25" cy="25" r="20"></circle>
-                        </svg>
-                        <span class="score-text">95%</span>
-                    </div>
-                    <div class="criticality-badge high">
-                        High Risk
-                    </div>
-                </div>
             </div>
             <div class="forecast-list" id="thirdPartyForecasts">
                 <div class="forecast-item">
-                    <label class="forecast-checkbox">
-                        <input type="checkbox" name="third-party-forecast" aria-label="Select cyclone warning forecast">
-                        <span class="checkmark"></span>
-                    </label>
-                    <div class="forecast-content-wrapper">
+                    <div class="forecast-checkbox">
+                        <input type="checkbox" id="forecast-tp-1" aria-label="Select cyclone warning forecast">
+                    </div>
+                    <div class="forecast-content">
                         <div class="forecast-header">
-                            <h3>Severe Cyclone Warning</h3>
+                            <span class="region-pill">Purba Medinipur</span>
                             <span class="timestamp">2h ago</span>
                         </div>
-                        <p class="forecast-content">Category 4 cyclone approaching West Bengal coast. Expected landfall near Digha within 48 hours. Wind speeds up to 240 km/h predicted.</p>
+                        <p class="forecast-text">Category 4 cyclone approaching West Bengal coast. Expected landfall near Digha within 48 hours. Wind speeds up to 240 km/h predicted.</p>
                         <div class="forecast-meta">
-                            <span class="source">Source: IMD Kolkata</span>
-                            <span class="region-pill">Purba Medinipur</span>
                             <span class="trust-score-pill">Trust: 95%</span>
+                            <span class="risk-pill risk-high">High Risk</span>
+                            <span class="source">Source: IMD Kolkata</span>
                         </div>
                     </div>
                 </div>
                 <div class="forecast-item">
-                    <label class="forecast-checkbox">
-                        <input type="checkbox" name="third-party-forecast" aria-label="Select flood alert forecast">
-                        <span class="checkmark"></span>
-                    </label>
-                    <div class="forecast-content-wrapper">
+                    <div class="forecast-checkbox">
+                        <input type="checkbox" id="forecast-tp-2" aria-label="Select flood alert forecast">
+                    </div>
+                    <div class="forecast-content">
                         <div class="forecast-header">
-                            <h3>Flash Flood Alert</h3>
+                            <span class="region-pill">Hooghly</span>
                             <span class="timestamp">4h ago</span>
                         </div>
-                        <p class="forecast-content">Heavy rainfall expected to continue for next 24 hours in Hooghly region. River Damodar levels rising rapidly. Immediate evacuation recommended for Arambagh and surrounding areas.</p>
+                        <p class="forecast-text">Heavy rainfall expected to continue for next 24 hours in Hooghly region. River Damodar levels rising rapidly. Immediate evacuation recommended for Arambagh and surrounding areas.</p>
                         <div class="forecast-meta">
-                            <span class="source">Source: Central Water Commission</span>
-                            <span class="region-pill">Hooghly</span>
                             <span class="trust-score-pill">Trust: 88%</span>
+                            <span class="risk-pill risk-high">High Risk</span>
+                            <span class="source">Source: Central Water Commission</span>
                         </div>
                     </div>
                 </div>
@@ -96,53 +82,39 @@
         <div class="forecast-card ai-based">
             <div class="card-header" role="heading" aria-level="2">
                 <h2 id="ai-based-header">AI-based Forecasts</h2>
-                <div class="score-badges" aria-labelledby="ai-based-header">
-                    <div class="trust-score" data-score="87">
-                        <svg class="score-circle">
-                            <circle class="score-circle-bg" cx="25" cy="25" r="20"></circle>
-                            <circle class="score-circle-progress" cx="25" cy="25" r="20"></circle>
-                        </svg>
-                        <span class="score-text">87%</span>
-                    </div>
-                    <div class="criticality-badge medium">
-                        Medium Risk
-                    </div>
-                </div>
             </div>
             <div class="forecast-list" id="aiForecasts">
                 <div class="forecast-item">
-                    <label class="forecast-checkbox">
-                        <input type="checkbox" name="ai-forecast" aria-label="Select landslide risk forecast">
-                        <span class="checkmark"></span>
-                    </label>
-                    <div class="forecast-content-wrapper">
+                    <div class="forecast-checkbox">
+                        <input type="checkbox" id="forecast-ai-1" aria-label="Select landslide risk forecast">
+                    </div>
+                    <div class="forecast-content">
                         <div class="forecast-header">
-                            <h3>Potential Landslide Risk</h3>
+                            <span class="region-pill">Darjeeling</span>
                             <span class="timestamp">1h ago</span>
                         </div>
-                        <p class="forecast-content">ML model predicts 78% probability of landslides in Darjeeling hills due to sustained rainfall and soil saturation levels. Areas near Kurseong and Kalimpong require immediate attention.</p>
+                        <p class="forecast-text">ML model predicts 78% probability of landslides in Darjeeling hills due to sustained rainfall and soil saturation levels. Areas near Kurseong and Kalimpong require immediate attention.</p>
                         <div class="forecast-meta">
-                            <span class="source">Source: DisasterPredict AI</span>
-                            <span class="region-pill">Darjeeling</span>
                             <span class="trust-score-pill">Trust: 78%</span>
+                            <span class="risk-pill risk-medium">Medium Risk</span>
+                            <span class="source">Source: DisasterPredict AI</span>
                         </div>
                     </div>
                 </div>
                 <div class="forecast-item">
-                    <label class="forecast-checkbox">
-                        <input type="checkbox" name="ai-forecast" aria-label="Select infrastructure warning forecast">
-                        <span class="checkmark"></span>
-                    </label>
-                    <div class="forecast-content-wrapper">
+                    <div class="forecast-checkbox">
+                        <input type="checkbox" id="forecast-ai-2" aria-label="Select infrastructure warning forecast">
+                    </div>
+                    <div class="forecast-content">
                         <div class="forecast-header">
-                            <h3>Infrastructure Stress Warning</h3>
+                            <span class="region-pill">Kolkata</span>
                             <span class="timestamp">3h ago</span>
                         </div>
-                        <p class="forecast-content">Pattern analysis indicates potential structural issues in Howrah Bridge due to increased water levels in Hooghly River. Immediate inspection of support structures recommended.</p>
+                        <p class="forecast-text">Pattern analysis indicates potential structural issues in Howrah Bridge due to increased water levels in Hooghly River. Immediate inspection of support structures recommended.</p>
                         <div class="forecast-meta">
-                            <span class="source">Source: InfraWatch AI</span>
-                            <span class="region-pill">Kolkata</span>
                             <span class="trust-score-pill">Trust: 85%</span>
+                            <span class="risk-pill risk-medium">Medium Risk</span>
+                            <span class="source">Source: InfraWatch AI</span>
                         </div>
                     </div>
                 </div>
@@ -161,53 +133,39 @@
         <div class="forecast-card crowdsourced">
             <div class="card-header" role="heading" aria-level="2">
                 <h2 id="crowdsourced-header">Crowdsourced Forecasts</h2>
-                <div class="score-badges" aria-labelledby="crowdsourced-header">
-                    <div class="trust-score" data-score="82">
-                        <svg class="score-circle">
-                            <circle class="score-circle-bg" cx="25" cy="25" r="20"></circle>
-                            <circle class="score-circle-progress" cx="25" cy="25" r="20"></circle>
-                        </svg>
-                        <span class="score-text">82%</span>
-                    </div>
-                    <div class="criticality-badge low">
-                        Low Risk
-                    </div>
-                </div>
             </div>
             <div class="forecast-list" id="crowdsourcedForecasts">
                 <div class="forecast-item">
-                    <label class="forecast-checkbox">
-                        <input type="checkbox" name="crowd-forecast" aria-label="Select local flooding report">
-                        <span class="checkmark"></span>
-                    </label>
-                    <div class="forecast-content-wrapper">
+                    <div class="forecast-checkbox">
+                        <input type="checkbox" id="forecast-cr-1" aria-label="Select local flooding report">
+                    </div>
+                    <div class="forecast-content">
                         <div class="forecast-header">
-                            <h3>Local Flooding Report</h3>
+                            <span class="region-pill">Kolkata</span>
                             <span class="timestamp">30m ago</span>
                         </div>
-                        <p class="forecast-content">Multiple residents reporting rapid water level rise in Burrabazar area. Storm drains near Mahatma Gandhi Road appear blocked. Local businesses affected.</p>
+                        <p class="forecast-text">Multiple residents reporting rapid water level rise in Burrabazar area. Storm drains near Mahatma Gandhi Road appear blocked. Local businesses affected.</p>
                         <div class="forecast-meta">
-                            <span class="source">Source: Community Reports (15 confirmations)</span>
-                            <span class="region-pill">Kolkata</span>
                             <span class="trust-score-pill">Trust: 82%</span>
+                            <span class="risk-pill risk-low">Low Risk</span>
+                            <span class="source">Source: Community Reports (15 confirmations)</span>
                         </div>
                     </div>
                 </div>
                 <div class="forecast-item">
-                    <label class="forecast-checkbox">
-                        <input type="checkbox" name="crowd-forecast" aria-label="Select heat wave alert">
-                        <span class="checkmark"></span>
-                    </label>
-                    <div class="forecast-content-wrapper">
+                    <div class="forecast-checkbox">
+                        <input type="checkbox" id="forecast-cr-2" aria-label="Select heat wave alert">
+                    </div>
+                    <div class="forecast-content">
                         <div class="forecast-header">
-                            <h3>Heat Wave Alert</h3>
+                            <span class="region-pill">Burdwan</span>
                             <span class="timestamp">1h ago</span>
                         </div>
-                        <p class="forecast-content">Local health workers report increasing cases of heat-related illnesses in Burdwan city. Temperatures expected to reach 45°C. Elderly population at high risk.</p>
+                        <p class="forecast-text">Local health workers report increasing cases of heat-related illnesses in Burdwan city. Temperatures expected to reach 45°C. Elderly population at high risk.</p>
                         <div class="forecast-meta">
-                            <span class="source">Source: Health Workers Network (12 confirmations)</span>
-                            <span class="region-pill">Burdwan</span>
                             <span class="trust-score-pill">Trust: 79%</span>
+                            <span class="risk-pill risk-medium">Medium Risk</span>
+                            <span class="source">Source: Health Workers Network (12 confirmations)</span>
                         </div>
                     </div>
                 </div>

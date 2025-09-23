@@ -404,8 +404,9 @@
 
 .forecast-meta {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-md);
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.7);
 }
@@ -435,17 +436,48 @@
   transform: translateY(-1px);
 }
 
-.trust-score-pill {
-  background: rgba(76, 175, 80, 0.15);
-  color: #81c784;
-  border: 1px solid rgba(76, 175, 80, 0.3);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* Common pill styles */
+.trust-score-pill,
+.risk-pill {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.5rem;
 }
 
+.trust-score-pill {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e0e0e0;
+}
+
+/* Risk pill variations */
+.risk-pill {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.risk-high {
+  background: rgba(220, 38, 38, 0.2);
+  color: #ef4444;
+}
+
+.risk-medium {
+  background: rgba(234, 179, 8, 0.2);
+  color: #eab308;
+}
+
+.risk-low {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+/* Hover effects */
+.risk-pill:hover,
 .trust-score-pill:hover {
-  background: rgba(76, 175, 80, 0.2);
-  border-color: rgba(76, 175, 80, 0.4);
-  transform: translateY(-1px);
+  filter: brightness(1.1);
 }
 
 /* Checkbox positioning */
