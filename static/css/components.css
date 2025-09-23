@@ -1199,6 +1199,30 @@
     padding: 10px 0;
     border-bottom: 1px solid var(--border);
 }
+/* Hide Utility Buttons on Admin/Rescue Dashboard */
+body.admin-dashboard .translation-toggle,
+body.admin-dashboard .accessibility-toggle,
+body.admin-dashboard .fixed-actions,
+body.admin-dashboard .translation-panel,
+body.admin-dashboard .accessibility-panel,
+body.rescue-dashboard .translation-toggle,
+body.rescue-dashboard .accessibility-toggle,
+body.rescue-dashboard .fixed-actions,
+body.rescue-dashboard .translation-panel,
+body.rescue-dashboard .accessibility-panel,
+body.authority-login .translation-toggle,
+body.authority-login .accessibility-toggle,
+body.authority-login .fixed-actions,
+body.authority-login .translation-panel,
+body.authority-login .accessibility-panel,
+body.authority-register .translation-toggle,
+body.authority-register .accessibility-toggle,
+body.authority-register .fixed-actions,
+body.authority-register .translation-panel,
+body.authority-register .accessibility-panel {
+    display: none !important;
+}
+
 /* Rescue Page */
 .rescue-grid {
     display: grid;

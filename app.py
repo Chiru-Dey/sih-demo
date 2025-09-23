@@ -196,9 +196,71 @@ def alerts():
     context['alerts_data'] = alerts_data
     return render_template('alerts.html', **context)
 
-@app.route('/rescue')
+@app.route('/rescue', methods=['GET', 'POST'])
 def rescue():
-    """Serve the rescue services page with real rescue operations data"""
+    """Serve the rescue services page and handle rescue request submissions"""
+    if request.method == 'POST':
+        try:
+            data = request.get_json()
+            # Extract form data
+            emergency_type = data.get('emergency_type')
+            victim_count = data.get('victim_count')
+            street_address = data.get('street_address')
+            area_locality = data.get('area_locality')
+            city = data.get('city')
+            state = data.get('state')
+            pincode = data.get('pincode')
+            contact = data.get('contact')
+
+            # Validate required fields
+            if not emergency_type or not contact:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'Emergency type and contact number are required'
+                }), 400
+
+            # Validate PIN code format if provided
+            if pincode and not re.match(r'^[0-9]{6}$', pincode):
+                return jsonify({
+                    'status': 'error',
+                    'message': 'Invalid PIN code format'
+                }), 400
+
+            # Format complete address
+            address_parts = []
+            if street_address:
+                address_parts.append(street_address)
+            if area_locality:
+                address_parts.append(area_locality)
+            if city:
+                address_parts.append(city)
+            if state:
+                address_parts.append(state)
+            if pincode:
+                address_parts.append(pincode)
+            
+            complete_address = ', '.join(filter(None, address_parts))
+
+            # TODO: In a real application, save this data to the database
+            # For now, just return success
+            return jsonify({
+                'status': 'success',
+                'message': 'Emergency request submitted successfully',
+                'data': {
+                    'emergency_type': emergency_type,
+                    'victim_count': victim_count,
+                    'address': complete_address,
+                    'contact': contact
+                }
+            }), 200
+
+        except Exception as e:
+            print(f"Error processing rescue request: {str(e)}")
+            return jsonify({
+                'status': 'error',
+                'message': 'Failed to process rescue request'
+            }), 500
+
     rescue_data = {
         'active_operations': [
             {

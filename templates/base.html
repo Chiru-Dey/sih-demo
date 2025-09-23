@@ -31,7 +31,7 @@
 </head>
 
 <body
-    class="{% if user_preferences.dark_mode %}dark-mode{% endif %} {% if user_preferences.high_contrast %}high-contrast{% endif %}"
+    class="{% if user_preferences.dark_mode %}dark-mode{% endif %} {% if user_preferences.high_contrast %}high-contrast{% endif %} {% block body_class %}{% endblock %}"
     style="font-size: {{ user_preferences.font_size }}px;" data-language="{{ user_preferences.language }}"
     data-font-size="{{ user_preferences.font_size }}"
     data-high-contrast="{{ 'true' if user_preferences.high_contrast else 'false' }}"
@@ -71,7 +71,8 @@
                 <i class="fas fa-bars"></i>
             </button>
             <div class="logo-section">
-                <img src="{{ url_for('static', filename='disastrous_logo.jpg') }}" alt="Disastrous Logo" class="logo" data-no-translate>
+                <img src="{{ url_for('static', filename='disastrous_logo.jpg') }}" alt="Disastrous Logo" class="logo"
+                    data-no-translate>
                 <h1 class="app-name">Disastrous</h1>
             </div>
         </div>
