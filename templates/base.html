@@ -102,8 +102,14 @@
     <!-- Chat Modals Component -->
     {% include 'components/chat_modals.html' %}
 
-    <!-- Navigation Menu Component -->
-    {% include 'components/navigation_menu.html' %}
+    <!-- Role-specific Navigation Menu -->
+    {% if session.get('user_role') == 'admin' %}
+        {% include 'components/admin_menu.html' %}
+    {% elif session.get('user_role') == 'rescue' %}
+        {% include 'components/rescue_menu.html' %}
+    {% else %}
+        {% include 'components/navigation_menu.html' %}
+    {% endif %}
 
     <!-- Google Maps -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ maps_key }}&callback=initMap"></script>

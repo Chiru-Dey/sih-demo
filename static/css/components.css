@@ -1199,12 +1199,14 @@
     padding: 10px 0;
     border-bottom: 1px solid var(--border);
 }
-/* Hide Utility Buttons on Admin/Rescue Dashboard */
+/* Hide Emergency Alert and Utility Buttons on Admin/Rescue Dashboard */
+body.admin-dashboard .emergency-alert,
 body.admin-dashboard .translation-toggle,
 body.admin-dashboard .accessibility-toggle,
 body.admin-dashboard .fixed-actions,
 body.admin-dashboard .translation-panel,
 body.admin-dashboard .accessibility-panel,
+body.rescue-dashboard .emergency-alert,
 body.rescue-dashboard .translation-toggle,
 body.rescue-dashboard .accessibility-toggle,
 body.rescue-dashboard .fixed-actions,

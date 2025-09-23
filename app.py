@@ -31,6 +31,11 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     role = db.Column(db.String(80), nullable=False)
+    street_address = db.Column(db.String(200))
+    area_locality = db.Column(db.String(200))
+    city = db.Column(db.String(100))
+    state = db.Column(db.String(100))
+    pincode = db.Column(db.String(6))
 
     def __repr__(self):
         return f'<User {self.email}>'
@@ -367,10 +372,32 @@ def authority_register():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+        street_address = request.form.get('street_address')
+        area_locality = request.form.get('area_locality')
+        city = request.form.get('city')
+        state = request.form.get('state')
+        pincode = request.form.get('pincode')
+
+        # Validate PIN code format if provided
+        if pincode and not re.match(r'^[0-9]{6}$', pincode):
+            return render_template('authority_register.html',
+                                error='Invalid PIN code format. Must be 6 digits.',
+                                **get_template_context())
+
         user = User.query.filter_by(email=email).first()
         if user:
             return render_template('authority_register.html', error='User already exists', **get_template_context())
-        new_user = User(email=email, password=password, role='rescue')
+            
+        new_user = User(
+            email=email,
+            password=password,
+            role='rescue',
+            street_address=street_address,
+            area_locality=area_locality,
+            city=city,
+            state=state,
+            pincode=pincode
+        )
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('authority_login'))
@@ -405,6 +432,13 @@ def profile():
     """Serve the user profile page"""
     context = get_template_context()
     return render_template('profile.html', **context)
+
+@app.route('/logout')
+def logout():
+    """Handle user logout and redirect to login page"""
+    session.pop('user_id', None)
+    session.pop('user_role', None)
+    return redirect(url_for('authority_login'))
 
 @app.route('/admin-dashboard')
 @login_required(role='admin')

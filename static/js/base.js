@@ -218,6 +218,11 @@ function initMap() {
 }
 
 // Navigation Functions
+function handleLogout() {
+    showNotification('Logging out...', 'info');
+    window.location.href = '/logout';
+}
+
 function toggleMenu() {
     const menu = document.querySelector('.hamburger-menu');
     const overlay = document.querySelector('.menu-overlay');
