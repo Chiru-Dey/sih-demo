@@ -35,16 +35,9 @@
             </div>
             
             <div class="sos-actions">
-                {% if request.status == 'pending' %}
-                <button class="btn primary" onclick="handleSOS('{{ request.id }}', 'handled')">
+                <button class="btn remove-btn" onclick="sosRequests.removeRequest('{{ request.id }}', this.closest('.sos-card'))">
                     Mark as Handled
                 </button>
-                {% endif %}
-                {% if request.status == 'handled' %}
-                <button class="btn secondary" onclick="handleSOS('{{ request.id }}', 'closed')">
-                    Close Request
-                </button>
-                {% endif %}
             </div>
         </div>
         {% else %}

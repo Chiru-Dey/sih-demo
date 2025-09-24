@@ -312,17 +312,23 @@ function closeChatbot(chatbotId) {
 }
 
 function makeEmergencyCall() {
-    // Check if it's a mobile device
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
-    if (confirm('Do you want to call emergency services?')) {
-        // On mobile, make phone call
-        if (isMobile) {
-            window.location.href = 'tel:112';
-        }
+    try {
+        console.log('makeEmergencyCall function triggered');
+        // Check if it's a mobile device
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         
-        // Send SOS message with location
-        sendSOSMessage('Emergency assistance required - Triggered via SOS button');
+        if (confirm('Do you want to call emergency services?')) {
+            // On mobile, make phone call
+            if (isMobile) {
+                window.location.href = 'tel:112';
+            }
+            
+            // Send SOS message with location
+            sendSOSMessage('Emergency assistance required - Triggered via SOS button');
+        }
+    } catch (error) {
+        console.error('Error in makeEmergencyCall:', error);
+        showNotification('Error processing emergency call. Please dial emergency services directly.', 'error');
     }
 }
 
@@ -531,6 +537,7 @@ function checkLocationServices() {
 
 // Initialize everything
 document.addEventListener('DOMContentLoaded', function () {
+    console.log('✅ base.js loaded - makeEmergencyCall function available');
     checkNotificationPermissions();
     checkLocationServices();
     // Apply font size on settings page
