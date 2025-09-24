@@ -1,5 +1,15 @@
 // Chatbot Component JavaScript
 
+// Voice Assistant Settings
+let isVoiceInputActive = false;
+let isVoiceOutputEnabled = false;
+const voiceCommands = {
+    'stop speaking': () => stopSpeaking(),
+    'pause speaking': () => pauseSpeaking(),
+    'resume speaking': () => resumeSpeaking(),
+    'clear chat': (type) => clearChat(type)
+};
+
 // Save chat history to localStorage
 function saveChatHistory(type) {
     const messagesContainer = document.getElementById(`${type}-messages`);
@@ -40,6 +50,101 @@ function loadChatHistory(type) {
 }
 
 // Backend AI Chat Function
+// Add voice input handling
+window.startVoiceInput = function(type) {
+    if (!speechRecognition) {
+        showNotification('Voice input not supported in this browser', 'warning');
+        return;
+    }
+
+    const button = event.target.closest('.voice-btn');
+    button.classList.add('active');
+
+    speechRecognition.lang = 'en-US';
+    speechRecognition.onresult = function (event) {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById(`${type}-input`).value = transcript;
+        button.classList.remove('active');
+        showNotification('🎤 Voice input captured', 'success');
+    };
+
+    speechRecognition.onerror = function () {
+        button.classList.remove('active');
+        showNotification('Voice input error. Please try again.', 'error');
+    };
+
+    speechRecognition.onend = function () {
+        button.classList.remove('active');
+    };
+
+    speechRecognition.start();
+    showNotification('🎤 Listening... Speak now', 'info');
+};
+
+function setupVoiceInput(type) {
+    if (!speechRecognition) {
+        showNotification('Voice input is not supported in your browser', 'warning');
+        return;
+    }
+
+    const input = document.getElementById(`${type}-input`);
+    const voiceButton = document.querySelector(`#${type}-chatbot .voice-input-btn`);
+
+    if (!voiceButton) return;
+
+    voiceButton.addEventListener('click', () => {
+        if (!isVoiceInputActive) {
+            startVoiceInput(type);
+        } else {
+            stopVoiceInput();
+        }
+    });
+
+    // Configure speech recognition
+    speechRecognition.onstart = () => {
+        isVoiceInputActive = true;
+        voiceButton.classList.add('active');
+        showNotification('🎤 Listening... Speak now', 'info');
+    };
+
+    speechRecognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        input.value = transcript;
+        
+        // Check for voice commands
+        const lowerTranscript = transcript.toLowerCase();
+        for (const [command, action] of Object.entries(voiceCommands)) {
+            if (lowerTranscript.includes(command)) {
+                action(type);
+                return;
+            }
+        }
+
+        // Auto-send message if it's not a command
+        sendMessage(type);
+    };
+
+    speechRecognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        showNotification(`Voice input error: ${event.error}`, 'error');
+        stopVoiceInput();
+    };
+
+    speechRecognition.onend = () => {
+        stopVoiceInput();
+    };
+}
+
+function stopVoiceInput() {
+    if (speechRecognition) {
+        speechRecognition.stop();
+        isVoiceInputActive = false;
+        document.querySelectorAll('.voice-input-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+    }
+}
+
 async function sendMessage(type) {
     const input = document.getElementById(`${type}-input`);
     const messagesContainer = document.getElementById(`${type}-messages`);
@@ -87,6 +192,15 @@ async function sendMessage(type) {
 
             const data = await apiResponse.json();
             response = data.response;
+            
+            // Speak the response if voice output is enabled
+            if (isVoiceOutputEnabled && window.speechSynthesis) {
+                speakText(response, {
+                    rate: 1.0,
+                    pitch: 1.0,
+                    volume: 1.0
+                });
+            }
 
         } else {
             response = getLocalResponse(message, type);
@@ -153,9 +267,84 @@ function getLocalResponse(message, type) {
 }
 
 // Enhanced chatbot initialization
+function clearChat(type) {
+    const messagesContainer = document.getElementById(`${type}-messages`);
+    if (messagesContainer) {
+        messagesContainer.innerHTML = '';
+        saveChatHistory(type);
+        showNotification('Chat cleared', 'success');
+    }
+}
+
+function toggleVoiceOutput() {
+    isVoiceOutputEnabled = !isVoiceOutputEnabled;
+    const voiceOutputBtn = document.querySelector('.voice-output-btn');
+    if (voiceOutputBtn) {
+        voiceOutputBtn.classList.toggle('active', isVoiceOutputEnabled);
+    }
+    showNotification(`Voice output ${isVoiceOutputEnabled ? 'enabled' : 'disabled'}`, 'success');
+}
+
 function initChatbots() {
     loadChatHistory('ai');
     loadChatHistory('quick');
+
+    // Initialize voice capabilities for both chatbots
+    setupVoiceInput('ai');
+    setupVoiceInput('quick');
+
+    // Add voice control buttons to chatbot interface
+    document.querySelectorAll('.chatbot-popup').forEach(popup => {
+        const inputArea = popup.querySelector('.chatbot-input-area');
+        if (!inputArea) return;
+
+        const voiceControls = document.createElement('div');
+        voiceControls.className = 'voice-controls';
+        voiceControls.innerHTML = `
+            <button class="voice-input-btn" title="Voice Input">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <button class="voice-output-btn" title="Voice Output" onclick="toggleVoiceOutput()">
+                <i class="fas fa-volume-up"></i>
+            </button>
+        `;
+        inputArea.appendChild(voiceControls);
+    });
+
+    // Add voice control styles
+    const voiceControlStyles = document.createElement('style');
+    voiceControlStyles.textContent = `
+        .voice-controls {
+            display: flex;
+            gap: 8px;
+            margin-left: 8px;
+        }
+        .voice-input-btn, .voice-output-btn {
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        .voice-input-btn:hover, .voice-output-btn:hover {
+            background: rgba(89, 120, 243, 0.1);
+        }
+        .voice-input-btn.active {
+            color: #ff4444;
+            animation: pulse 1.5s infinite;
+        }
+        .voice-output-btn.active {
+            color: #00C851;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    `;
+    document.head.appendChild(voiceControlStyles);
 
     // Add message timestamps
     function addTimestamp(messageElement) {
@@ -306,6 +495,20 @@ function exportChatHistory(type) {
 
     showNotification('Chat history exported successfully', 'success');
 }
+
+// Make readLastMessage globally accessible
+window.readLastMessage = function(type) {
+    if (!isTextToSpeechEnabled) {
+        showNotification('Please enable Text to Speech first', 'info');
+        return;
+    }
+
+    const messages = document.querySelectorAll(`#${type}-messages .message`);
+    if (messages.length > 0) {
+        const lastMessage = messages[messages.length - 1];
+        speakText(lastMessage.textContent);
+    }
+};
 
 // Add context menu for chat messages
 function addChatContextMenu() {

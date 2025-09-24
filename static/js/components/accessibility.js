@@ -1,5 +1,35 @@
 // Accessibility Component JavaScript
 
+// Initialize Web Speech API and Panel State
+let speechSynthesis = window.speechSynthesis;
+let speechRecognition = null;
+let isTextToSpeechEnabled = false;
+let isSpeaking = false;
+let currentUtterance = null;
+let isAccessibilityPanelOpen = false;
+
+// Initialize Speech Recognition if supported
+try {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+        speechRecognition = new SpeechRecognition();
+        speechRecognition.continuous = false;
+        speechRecognition.interimResults = false;
+    }
+} catch (e) {
+    console.warn('Speech Recognition not supported in this browser');
+}
+
+// Initialize Speech Synthesis voices
+let voices = [];
+function loadVoices() {
+    voices = speechSynthesis.getVoices();
+}
+
+if (speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = loadVoices;
+}
+
 // Load accessibility preferences from localStorage
 function loadAccessibilityPreferences() {
     // Apply font size
@@ -12,6 +42,16 @@ function loadAccessibilityPreferences() {
         const contrastBtn = document.querySelector('#accessibilityPanel .accessibility-btn[onclick*="toggleHighContrast"]');
         if (contrastBtn) contrastBtn.classList.add('active');
     }
+
+    // Apply text-to-speech preference
+    isTextToSpeechEnabled = getSetting('app.textToSpeech', false);
+    const ttsBtn = document.querySelector('#accessibilityPanel .accessibility-btn[onclick*="toggleTextToSpeech"]');
+    if (ttsBtn && isTextToSpeechEnabled) {
+        ttsBtn.classList.add('active');
+    }
+
+    // Load voices for speech synthesis
+    loadVoices();
 }
 
 // Save accessibility preferences to localStorage
@@ -62,12 +102,41 @@ function toggleHighContrast() {
     showNotification(`High contrast ${isEnabled ? 'enabled' : 'disabled'}`, 'success');
 }
 
-function toggleTextToSpeech() {
+window.toggleTextToSpeech = function(event) {
     isTextToSpeechEnabled = !isTextToSpeechEnabled;
-    event.target.classList.toggle('active', isTextToSpeechEnabled);
+    if (event && event.target) {
+        event.target.classList.toggle('active', isTextToSpeechEnabled);
+    }
     
+    if (!isTextToSpeechEnabled && isSpeaking) {
+        stopSpeaking();
+    }
+    
+    saveAccessibilityPreference('textToSpeech', isTextToSpeechEnabled);
     showNotification(`Text to speech ${isTextToSpeechEnabled ? 'enabled' : 'disabled'}`, 'success');
+    announceToScreenReader(`Text to speech ${isTextToSpeechEnabled ? 'enabled' : 'disabled'}`);
 }
+
+function stopSpeaking() {
+    if (speechSynthesis && isSpeaking) {
+        speechSynthesis.cancel();
+        isSpeaking = false;
+        currentUtterance = null;
+    }
+}
+
+function pauseSpeaking() {
+    if (speechSynthesis && isSpeaking) {
+        speechSynthesis.pause();
+    }
+}
+
+function resumeSpeaking() {
+    if (speechSynthesis && currentUtterance) {
+        speechSynthesis.resume();
+    }
+}
+
 
 // Voice Functions
 function startVoiceInput(type) {
@@ -113,19 +182,63 @@ function readLastMessage(type) {
     }
 }
 
-function speakText(text) {
-    if (speechSynthesis && isTextToSpeechEnabled) {
-        speechSynthesis.cancel();
+function speakText(text, options = {}) {
+    if (!speechSynthesis || !isTextToSpeechEnabled) {
+        showNotification('Text-to-speech is not enabled or supported', 'warning');
+        return;
+    }
 
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'en-US';
-        utterance.rate = 0.8;
-        utterance.pitch = 1.0;
+    // Stop any current speech
+    stopSpeaking();
 
-        speechSynthesis.speak(utterance);
-        showNotification('🔊 Reading message aloud', 'info');
+    // Create and configure utterance
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    // Set default voice (prefer English voices)
+    const englishVoices = voices.filter(voice => voice.lang.startsWith('en-'));
+    if (englishVoices.length > 0) {
+        utterance.voice = englishVoices[0];
+    }
+
+    // Configure speech parameters
+    utterance.lang = options.lang || 'en-US';
+    utterance.rate = options.rate || 1.0;
+    utterance.pitch = options.pitch || 1.0;
+    utterance.volume = options.volume || 1.0;
+
+    // Add event handlers
+    utterance.onstart = () => {
+        isSpeaking = true;
+        currentUtterance = utterance;
+        showNotification('🔊 Reading text aloud', 'info');
+    };
+
+    utterance.onend = () => {
+        isSpeaking = false;
+        currentUtterance = null;
+    };
+
+    utterance.onerror = (event) => {
+        console.error('Speech synthesis error:', event);
+        showNotification('Error occurred while speaking', 'error');
+        isSpeaking = false;
+        currentUtterance = null;
+    };
+
+    // Start speaking
+    speechSynthesis.speak(utterance);
+}
+
+// Function to speak selected text
+function speakSelectedText() {
+    const selectedText = window.getSelection().toString().trim();
+    if (selectedText) {
+        speakText(selectedText);
+    } else {
+        showNotification('No text selected', 'info');
     }
 }
+
 
 // Keyboard navigation helpers
 function enhanceKeyboardNavigation() {
