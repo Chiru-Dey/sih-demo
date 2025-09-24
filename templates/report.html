@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Report Disaster - Disastrous{% endblock %}
+
+{% block body_class %}disaster-report{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <div class="page-header">
+        <h1><i class="fas fa-exclamation-triangle"></i> Report Disaster</h1>
+        <p>Submit detailed information about an ongoing disaster situation</p>
+    </div>
+
+    <div class="form-container">
+        <form id="disaster-report-form" method="POST" enctype="multipart/form-data">
+            <!-- Disaster Title -->
+            <div class="form-group">
+                <label for="title">Disaster Title</label>
+                <div class="input-group">
+                    <i class="fas fa-heading"></i>
+                    <input type="text" id="title" name="title" class="form-control"
+                        placeholder="Brief, clear title describing the disaster" required minlength="5" maxlength="100">
+                </div>
+            </div>
+
+            <!-- Disaster Type -->
+            <div class="form-group">
+                <label for="type">Disaster Type</label>
+                <div class="input-group">
+                    <i class="fas fa-list"></i>
+                    <select id="type" name="type" class="form-control" required>
+                        <option value="" disabled selected>Select type</option>
+                        <option value="flood">Flood</option>
+                        <option value="earthquake">Earthquake</option>
+                        <option value="hurricane">Hurricane/Cyclone</option>
+                        <option value="fire">Fire</option>
+                        <option value="landslide">Landslide</option>
+                        <option value="tornado">Tornado</option>
+                        <option value="tsunami">Tsunami</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Severity Level -->
+            <div class="form-group">
+                <label for="severity">Severity Level</label>
+                <div class="input-group">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <select id="severity" name="severity" class="form-control" required>
+                        <option value="" disabled selected>Select severity</option>
+                        <option value="low">Low - Minor Impact</option>
+                        <option value="medium">Medium - Significant Impact</option>
+                        <option value="high">High - Major Impact</option>
+                        <option value="critical">Critical - Catastrophic Impact</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="5" required minlength="50"
+                    maxlength="1000"></textarea>
+            </div>
+
+            <!-- Media Upload -->
+            <div class="form-group">
+                <label for="media">Media</label>
+                <div class="media-container">
+                    <input type="file" id="media" name="media" accept="image/*,video/*,audio/*" multiple hidden>
+                    <button type="button" class="media-btn" title="Add media">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    <div class="media-preview" id="mediaPreview"></div>
+                </div>
+            </div>
+
+            <!-- Location -->
+            <div class="form-group">
+                <label for="location">Location</label>
+                <div class="input-group">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <input type="text" id="location" name="location" class="form-control" placeholder="Enter location"
+                        required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary">
+                <i class="fas fa-paper-plane"></i> Submit Report
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    window.maxFileSize = 50 * 1024 * 1024; // 50MB in bytes
+</script>
+<script src="{{ url_for('static', filename='js/components/report.js') }}" defer></script>
+{% endblock %}

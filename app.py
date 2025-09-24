@@ -117,12 +117,32 @@ def get_template_context():
     if 'user_preferences' not in session:
         initialize_session()
 
-    # Combine app config and user preferences for the template
+    # Get default user preferences
+    preferences = session['user_preferences']
+    
+    # Add any dynamic preference calculations
+    preferences.update({
+        'layout': 'comfortable' if preferences.get('font_size', 16) > 14 else 'compact',
+        'theme': 'dark' if preferences.get('dark_mode', False) else 'light',
+        'media_upload_enabled': True,  # Feature flag for media uploads
+        'max_file_sizes': {
+            'photo': '5MB',
+            'video': '50MB',
+            'audio': '10MB'
+        }
+    })
+
+    # Combine app config and enhanced user preferences for the template
     context = {
         'ai_available': 'true' if openai_client else 'false',
         'maps_key': app.config['MAPS_API_KEY'],
-        'user_preferences': session['user_preferences'],
-        'now': datetime.datetime.now(datetime.UTC).timestamp()
+        'user_preferences': preferences,
+        'now': datetime.datetime.now(datetime.UTC).timestamp(),
+        'features': {
+            'media_upload': True,
+            'location_services': True,
+            'notifications': preferences.get('notifications', True)
+        }
     }
     return context
 
@@ -306,6 +326,28 @@ def rescue():
     context = get_template_context()
     context['rescue_data'] = rescue_data
     return render_template('rescue.html', **context)
+
+@app.route('/report', methods=['GET', 'POST'])
+def report():
+    """Serve the disaster report page and handle report submissions"""
+    if request.method == 'POST':
+        try:
+            # Process form submission
+            # In a real app, save the report to database
+            
+            # Redirect with success message
+            return redirect(url_for('report', success=True))
+        except Exception as e:
+            print(f"Error processing report: {str(e)}")
+            # Redirect with error message
+            return redirect(url_for('report', error=True, message='Failed to submit report'))
+    
+    return render_template('report.html', **get_template_context())
+
+@app.route('/favicon.ico')
+def favicon():
+    """Serve favicon.ico with a 204 No Content response"""
+    return '', 204
 
 @app.route('/guidelines')
 def guidelines():

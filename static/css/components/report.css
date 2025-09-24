@@ -1,0 +1,105 @@
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.media-container {
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+.media-container.dragover {
+    border-color: #5978f3;
+    background-color: rgba(89, 120, 243, 0.1);
+}
+
+.media-btn {
+    background: none;
+    border: none;
+    color: #0066cc;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: color 0.3s, transform 0.2s;
+}
+
+.media-btn:hover {
+    color: #5978f3;
+    transform: scale(1.05);
+}
+
+.media-preview {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.preview-item {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: #e8f0fe;
+    border-radius: 20px;
+    font-size: 14px;
+    gap: 8px;
+    margin: 4px;
+    border: 1px solid #cce0fd;
+    transition: background-color 0.2s;
+}
+
+.preview-item:hover {
+    background: #d8e6fd;
+}
+
+.preview-item .filename {
+    font-size: 14px;
+    color: #333;
+}
+
+.preview-item .remove-btn {
+    margin-left: auto;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.preview-item .remove-btn:hover {
+    opacity: 1;
+}
+
+/* Notification Styling */
+.notification {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    background: var(--background);
+    color: var(--text);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+}
+
+.notification.error {
+    background: var(--danger);
+    color: white;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
