@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
+{# Add Chart.js CDN #}
+{% block styles %}
+{{ super() }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
 {% block title %}Disastrous Admin - Disaster Management App{% endblock %}
 
 {% block body_class %}admin-interface{% endblock %}

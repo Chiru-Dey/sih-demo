@@ -1,14 +1,20 @@
 {% extends "base.html" %}
 
+{# Add Chart.js CDN #}
+{% block styles %}
+{{ super() }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
 {# Override body_class block to add rescue-specific styling #}
 {% block body_class %}rescue-interface {{ super() }}{% endblock %}
 
 {# Override main content to exclude emergency alert #}
 {% block content %}
-    {# Skip the emergency alert include #}
-    <div class="main-content" id="main-content">
-        {{ super() }}
-    </div>
+{# Skip the emergency alert include #}
+<div class="main-content" id="main-content">
+    {{ super() }}
+</div>
 {% endblock %}
 
 {# Empty block to remove fixed action buttons #}
@@ -23,12 +29,12 @@
 
 {# Override core scripts block to exclude panel initialization #}
 {% block scripts %}
-    {# Core functionality preserved:
-        - Navigation (rescue_menu.html)
-        - PWA functionality
-        - Dark mode
-        - Font size controls
-        - High contrast mode
-        - Skip to content
-    #}
+{# Core functionality preserved:
+- Navigation (rescue_menu.html)
+- PWA functionality
+- Dark mode
+- Font size controls
+- High contrast mode
+- Skip to content
+#}
 {% endblock %}

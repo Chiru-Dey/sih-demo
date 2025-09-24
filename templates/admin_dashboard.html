@@ -2,6 +2,11 @@
 
 {% block title %}Admin Dashboard - Disastrous{% endblock %}
 
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/components/admin_charts.js') }}"></script>
+{% endblock %}
+
 {% block body_class %}admin-dashboard{% endblock %}
 
 {% block content %}
@@ -13,16 +18,34 @@
 
     <div class="dashboard-grid">
         <div class="dashboard-card">
-            <h3><i class="fas fa-users"></i> User Management</h3>
-            <p>View and manage all users</p>
+            <h3><i class="fas fa-users"></i> User Activity</h3>
+            <p>User registration trends over last 7 days</p>
+            <div class="chart-container">
+                <canvas id="userActivityChart" class="dashboard-chart"></canvas>
+                <div class="chart-loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
         </div>
         <div class="dashboard-card">
-            <h3><i class="fas fa-exclamation-triangle"></i> Alert Management</h3>
-            <p>Create and manage alerts</p>
+            <h3><i class="fas fa-exclamation-triangle"></i> Alert Distribution</h3>
+            <p>Distribution of different alert types</p>
+            <div class="chart-container">
+                <canvas id="alertDistributionChart" class="dashboard-chart"></canvas>
+                <div class="chart-loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
         </div>
         <div class="dashboard-card">
-            <h3><i class="fas fa-cogs"></i> System Settings</h3>
-            <p>Configure system-wide settings</p>
+            <h3><i class="fas fa-boxes"></i> Resource Allocation</h3>
+            <p>Distribution of resources across operations</p>
+            <div class="chart-container">
+                <canvas id="resourceAllocationChart" class="dashboard-chart"></canvas>
+                <div class="chart-loading">
+                    <div class="spinner"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
