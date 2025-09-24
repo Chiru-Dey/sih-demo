@@ -515,6 +515,309 @@ def rescue_dashboard():
     context = get_template_context()
     return render_template('rescue_dashboard.html', **context)
 
+@app.route('/resources')
+@login_required(role='rescue')
+def resources():
+    """Serve the emergency resources page with critical facilities data"""
+    try:
+        # In a real app, this would fetch from database
+        resources_data = {
+            'hospitals': [
+                {
+                    'name': 'Teresa Memorial Hospital',
+                    'location': 'Bamchandaipur 12, Near Anamoy, National Highway 2, Alisha-713103',
+                    'features': [
+                        {'icon': 'bed', 'text': 'Beds Available'},
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'truck-medical', 'text': 'ICU Available'}
+                    ],
+                    'contact': '07487947073',
+                    'type': 'hospital'
+                },
+                {
+                    'name': 'Apollo Nursing Home',
+                    'location': 'Khoshbagan, Burdwan, Burdwan HO-713101',
+                    'features': [
+                        {'icon': 'bed', 'text': '~750 Beds'},
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'truck-medical', 'text': 'ICU Available'}
+                    ],
+                    'contact': '+919933939344, 09051032383',
+                    'type': 'hospital'
+                },
+                {
+                    'name': 'Bengal Faith Hospital',
+                    'location': 'Beside Rice & Spice Grocery Shop, Near Nababhat More, Health City, Godda, Lakurdi-713102',
+                    'features': [
+                        {'icon': 'bed', 'text': '150 Beds'},
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'truck-medical', 'text': 'ICU Available'}
+                    ],
+                    'contact': '8016484040',
+                    'emergency': '18003131141',
+                    'helpline': '8420382000',
+                    'type': 'hospital'
+                },
+                {
+                    'name': 'Burdwan Medical College',
+                    'location': 'Baburbag, Burdwan-713104',
+                    'features': [
+                        {'icon': 'bed', 'text': '1200+ Beds'},
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'truck-medical', 'text': 'ICU Available'}
+                    ],
+                    'contact': '(0342) 7962201',
+                    'email': ['burdwanmedicalcollege76@gmail.com', 'principalbmc2015@gmail.com'],
+                    'type': 'hospital'
+                },
+                {
+                    'name': 'BIMS Hospital',
+                    'location': 'Shrachi Renaissance Township, newabhat Bus stand, Purba Bardhaman',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'truck-medical', 'text': 'ICU Available'},
+                        {'icon': 'ambulance', 'text': '24×7 Ambulance'}
+                    ],
+                    'contact': '+91 9232146170',
+                    'email': ['bimshospital30@gmail.com', 'hospitalbims@gmail.com'],
+                    'website': 'bimshospital.in',
+                    'type': 'hospital'
+                }
+            ],
+            'ambulances': [
+                {
+                    'name': 'Alampur Ambulance Services',
+                    'location': 'Alampur, Bardhaman - 713141 (Dewandighi, Talit)',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'truck-medical', 'text': 'Emergency Service'}
+                    ],
+                    'type': 'ambulance'
+                },
+                {
+                    'name': 'Maa Ambulance Services',
+                    'location': 'Ground Floor, Burdwan City-713101',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'truck-medical', 'text': 'Emergency Service'}
+                    ],
+                    'contact': '08460465556',
+                    'type': 'ambulance'
+                },
+                {
+                    'name': 'Rajbati Ambulance Services',
+                    'location': 'Rajbati, Burdwan Sadar, Keshabganj Chatti-713104',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'truck-medical', 'text': 'Emergency Service'}
+                    ],
+                    'type': 'ambulance'
+                },
+                {
+                    'name': 'T ICU Ambulance Service',
+                    'location': 'Khosbagan, Kolkata, Khosbagan-713101',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'truck-medical', 'text': 'ICU Equipped'}
+                    ],
+                    'type': 'ambulance'
+                },
+                {
+                    'name': 'New Life Hospital Ambulance Service',
+                    'location': 'Saraitikar More (Near Police Fare, GT Road, Golapbag-713104)',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'truck-medical', 'text': 'Emergency Service'}
+                    ],
+                    'type': 'ambulance'
+                }
+            ],
+            'fire_stations': [
+                {
+                    'name': 'Main Fire Station, Bardhaman',
+                    'location': 'Burdwan Medical College, Bardhaman HO, Bardhaman - 713101',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'truck-monster', 'text': 'Headquarters Fire Station'}
+                    ],
+                    'contact': '(0342) 2556901',
+                    'type': 'fire'
+                },
+                {
+                    'name': 'Burdwan Fire Station, Bajepratappur',
+                    'location': 'Bajepratappur, Bardhaman - 713101',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'truck-monster', 'text': 'Fire Service'}
+                    ],
+                    'contact': '(0342) 2556901',
+                    'type': 'fire'
+                },
+                {
+                    'name': 'Burdwan Fire Station, Khagragorh',
+                    'location': 'Khagragorh, Bardhaman - 713104',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'truck-monster', 'text': 'Fire Service'}
+                    ],
+                    'contact': '(0342) 2657901',
+                    'type': 'fire'
+                }
+            ],
+            'police_stations': [
+                {
+                    'name': 'Burdwan PS (Burdwan Sadar)',
+                    'location': 'Burdwan',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'shield', 'text': 'Police Station'}
+                    ],
+                    'contact': ['0342-2664466', '0342-2664467'],
+                    'type': 'police'
+                },
+                {
+                    'name': 'Kalna PS',
+                    'location': 'Kalna',
+                    'contact': '03454-255040',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'shield', 'text': 'Police Station'}
+                    ],
+                    'type': 'police'
+                },
+                {
+                    'name': 'Katwa PS',
+                    'location': 'Katwa',
+                    'contact': '03453-255023',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'shield', 'text': 'Police Station'}
+                    ],
+                    'type': 'police'
+                },
+                {
+                    'name': 'Ausgram PS',
+                    'location': 'Ausgram',
+                    'contact': '03452-254213',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'shield', 'text': 'Police Station'}
+                    ],
+                    'type': 'police'
+                },
+                {
+                    'name': 'Purbasthali PS',
+                    'location': 'Purbasthali',
+                    'contact': '+91-8509920662',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'shield', 'text': 'Police Station'}
+                    ],
+                    'type': 'police'
+                },
+                {
+                    'name': 'Memari PS',
+                    'location': 'Memari',
+                    'contact': '0342-2250232',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'shield', 'text': 'Police Station'}
+                    ],
+                    'type': 'police'
+                },
+                {
+                    'name': 'Madhabdihi PS',
+                    'location': 'Madhabdihi',
+                    'contact': '03451-251230',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'shield', 'text': 'Police Station'}
+                    ],
+                    'type': 'police'
+                },
+                {
+                    'name': 'Raina PS',
+                    'location': 'Raina',
+                    'contact': '03451-260230',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'shield', 'text': 'Police Station'}
+                    ],
+                    'type': 'police'
+                },
+                {
+                    'name': 'Galsi PS',
+                    'location': 'Galsi',
+                    'contact': '0342-2450238',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'shield', 'text': 'Police Station'}
+                    ],
+                    'type': 'police'
+                },
+                {
+                    'name': 'Bhatar PS',
+                    'location': 'Bhatar',
+                    'contact': '0342-2322223',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'shield', 'text': 'Police Station'}
+                    ],
+                    'type': 'police'
+                },
+                {
+                    'name': 'Jamalpur PS',
+                    'location': 'Jamalpur',
+                    'contact': '03451-288225',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'shield', 'text': 'Police Station'}
+                    ],
+                    'type': 'police'
+                },
+                {
+                    'name': 'Monteswar PS',
+                    'location': 'Monteswar',
+                    'contact': '0342-2750523',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'shield', 'text': 'Police Station'}
+                    ],
+                    'type': 'police'
+                },
+                {
+                    'name': 'Nadanghat PS',
+                    'location': 'Nadanghat',
+                    'contact': '+91-8016256018',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'shield', 'text': 'Police Station'}
+                    ],
+                    'type': 'police'
+                },
+                {
+                    'name': 'Khandaghosh PS',
+                    'location': 'Khandaghosh',
+                    'contact': '03451-262260',
+                    'features': [
+                        {'icon': 'clock', 'text': '24/7'},
+                        {'icon': 'shield', 'text': 'Police Station'}
+                    ],
+                    'type': 'police'
+                }
+            ]
+        }
+        
+        context = get_template_context()
+        context['resources_data'] = resources_data
+        return render_template('resources.html', **context)
+        
+    except Exception as e:
+        print(f"Error loading resources: {str(e)}")
+        return render_template('resources.html',
+                             error='Failed to load emergency resources',
+                             **get_template_context())
+
 # PWA specific routes
 @app.route('/manifest.json')
 def manifest():

@@ -1,0 +1,874 @@
+{% extends "base.html" %}
+
+{% block title %}Emergency Resources - Disastrous{% endblock %}
+
+{% block styles %}
+<style>
+.resource-search {
+    margin: 1rem auto 2rem;
+    max-width: 600px;
+    position: relative;
+}
+
+.resource-search input {
+    width: 100%;
+    padding: 1rem 3rem 1rem 1rem;
+    border-radius: 8px;
+    border: 2px solid var(--accent);
+    background: var(--background);
+    color: var(--text);
+    font-size: 1rem;
+}
+
+.resource-search .search-icon {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+}
+
+.resource-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    border: 2px solid var(--accent);
+    background: var(--background);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--accent);
+    color: var(--white);
+}
+
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.facility-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px var(--shadow);
+    transition: transform 0.3s ease;
+}
+
+.facility-card:hover {
+    transform: translateY(-5px);
+}
+
+.facility-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.facility-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1.5rem;
+}
+
+.hospital .facility-icon {
+    background: rgba(89, 120, 243, 0.2);
+    color: var(--accent);
+}
+
+.ambulance .facility-icon {
+    background: rgba(226, 85, 85, 0.2);
+    color: var(--danger);
+}
+
+.fire .facility-icon {
+    background: rgba(255, 159, 67, 0.2);
+    color: var(--warning);
+}
+
+.police .facility-icon {
+    background: rgba(46, 204, 113, 0.2);
+    color: var(--success);
+}
+
+.facility-info {
+    flex: 1;
+}
+
+.facility-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 0.25rem;
+}
+
+.facility-location {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.facility-features {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+}
+
+.feature-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.875rem;
+    background: var(--background);
+}
+
+.feature-tag i {
+    font-size: 1rem;
+}
+
+.facility-contact {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.contact-btn {
+    flex: 1;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.contact-btn.primary {
+    background: var(--accent);
+    color: var(--white);
+}
+
+.contact-btn.secondary {
+    background: var(--background);
+    color: var(--text);
+}
+
+.contact-btn:hover {
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .resource-filters {
+        padding: 0 1rem;
+    }
+    
+    .resources-grid {
+        gap: 1rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <header class="page-header">
+        <h1>Emergency Resources</h1>
+        <p>Find nearby emergency services and critical facilities</p>
+    </header>
+
+    <div class="resource-search">
+        <input type="text" id="searchResources" placeholder="Search for facilities, services, or locations...">
+        <i class="fas fa-search search-icon"></i>
+    </div>
+
+    <div class="resource-filters">
+        <button class="filter-btn active" data-filter="all">All Services</button>
+        <button class="filter-btn" data-filter="hospital">Hospitals</button>
+        <button class="filter-btn" data-filter="ambulance">Ambulance</button>
+        <button class="filter-btn" data-filter="fire">Fire Stations</button>
+        <button class="filter-btn" data-filter="police">Police Stations</button>
+    </div>
+
+    <div class="resources-grid">
+        <!-- Hospitals Section -->
+        <div class="facility-card hospital" data-type="hospital">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-hospital"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Teresa Memorial Hospital</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Bamchandaipur</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-procedures"></i> ICU Available
+                </span>
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <a href="tel:07487947073" class="contact-btn primary">
+                    <i class="fas fa-phone"></i> 07487947073
+                </a>
+                <button class="contact-btn secondary">
+                    <i class="fas fa-map-marker-alt"></i> Directions
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card hospital" data-type="hospital">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-hospital"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Apollo Nursing Home</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Khoshbagan</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-bed"></i> 750 Beds
+                </span>
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <a href="tel:+919933939344" class="contact-btn primary">
+                    <i class="fas fa-phone"></i> +919933939344
+                </a>
+                <a href="tel:09051032383" class="contact-btn primary">
+                    <i class="fas fa-phone"></i> 09051032383
+                </a>
+            </div>
+        </div>
+
+        <div class="facility-card hospital" data-type="hospital">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-hospital"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Bengal Faith Hospital</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Burdwan</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-bed"></i> 150 Beds
+                </span>
+                <span class="feature-tag">
+                    <i class="fas fa-truck-medical"></i> Emergency Service
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Emergency Numbers
+                </button>
+                <button class="contact-btn secondary">
+                    <i class="fas fa-map-marker-alt"></i> Directions
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card hospital" data-type="hospital">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-hospital"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Burdwan Medical College</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Burdwan</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-bed"></i> 1200+ Beds
+                </span>
+                <span class="feature-tag">
+                    <i class="fas fa-graduation-cap"></i> Teaching Hospital
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Contact
+                </button>
+                <button class="contact-btn secondary">
+                    <i class="fas fa-map-marker-alt"></i> Directions
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card hospital" data-type="hospital">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-hospital"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">BIMS Hospital</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Burdwan</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-ambulance"></i> 24×7 Ambulance
+                </span>
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7 Emergency
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Contact
+                </button>
+                <button class="contact-btn secondary">
+                    <i class="fas fa-map-marker-alt"></i> Directions
+                </button>
+            </div>
+        </div>
+
+        <!-- Ambulance Services Section -->
+        <div class="facility-card ambulance" data-type="ambulance">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-ambulance"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Alampur Ambulance Service</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Dewandighi, Talit, Bardhaman</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Request Ambulance
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card ambulance" data-type="ambulance">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-ambulance"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Maa Ambulance Services</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Burdwan</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <a href="tel:08460465556" class="contact-btn primary">
+                    <i class="fas fa-phone"></i> 08460465556
+                </a>
+            </div>
+        </div>
+
+        <div class="facility-card ambulance" data-type="ambulance">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-ambulance"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Rajbati Ambulance Service</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Burdwan Sadar</p>
+                </div>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Request Ambulance
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card ambulance" data-type="ambulance">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-ambulance"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">T ICU Ambulance Service</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Burdwan</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-procedures"></i> ICU Equipped
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Request Ambulance
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card ambulance" data-type="ambulance">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-ambulance"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">New Life Hospital Ambulance</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Burdwan</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Request Ambulance
+                </button>
+            </div>
+        </div>
+
+        <!-- Fire Stations Section -->
+        <div class="facility-card fire" data-type="fire">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-fire-extinguisher"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Main Fire Station</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Burdwan</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24 Hour Service
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Report Fire
+                </button>
+                <button class="contact-btn secondary">
+                    <i class="fas fa-map-marker-alt"></i> Directions
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card fire" data-type="fire">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-fire-extinguisher"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Burdwan Fire Station</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Bajepratappur</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Report Emergency
+                </button>
+                <button class="contact-btn secondary">
+                    <i class="fas fa-map-marker-alt"></i> Directions
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card fire" data-type="fire">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-fire-extinguisher"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Burdwan Fire Station</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Khagragorh</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Report Emergency
+                </button>
+                <button class="contact-btn secondary">
+                    <i class="fas fa-map-marker-alt"></i> Directions
+                </button>
+            </div>
+        </div>
+
+        <!-- Police Stations Section -->
+        <!-- Burdwan Sadar Police District -->
+        <div class="facility-card police" data-type="police">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Burdwan Sadar Police Station</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Burdwan City</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+                <span class="feature-tag">
+                    <i class="fas fa-map"></i> Central Block
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Emergency
+                </button>
+                <button class="contact-btn secondary">
+                    <i class="fas fa-map-marker-alt"></i> Directions
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card police" data-type="police">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Galsi Police Station</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Galsi Block</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Emergency
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card police" data-type="police">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Memari Police Station</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Memari Block</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Emergency
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card police" data-type="police">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Jamalpur Police Station</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Jamalpur Block</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Emergency
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card police" data-type="police">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Raina Police Station</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Raina Block</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Emergency
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card police" data-type="police">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Ausgram Police Station</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Ausgram Block</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Emergency
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card police" data-type="police">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Bhatar Police Station</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Bhatar Block</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Emergency
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card police" data-type="police">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Manteswar Police Station</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Manteswar Block</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Emergency
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card police" data-type="police">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Kalna Police Station</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Kalna Block</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Emergency
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card police" data-type="police">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Purbasthali Police Station</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Purbasthali Block</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Emergency
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card police" data-type="police">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Katwa Police Station</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Katwa Block</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Emergency
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card police" data-type="police">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Mongalkote Police Station</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Mongalkote Block</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Emergency
+                </button>
+            </div>
+        </div>
+
+        <div class="facility-card police" data-type="police">
+            <div class="facility-header">
+                <div class="facility-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="facility-info">
+                    <h3 class="facility-name">Ketugram Police Station</h3>
+                    <p class="facility-location"><i class="fas fa-location-dot"></i> Ketugram Block</p>
+                </div>
+            </div>
+            <div class="facility-features">
+                <span class="feature-tag">
+                    <i class="fas fa-clock"></i> 24/7
+                </span>
+            </div>
+            <div class="facility-contact">
+                <button class="contact-btn primary">
+                    <i class="fas fa-phone"></i> Emergency
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Search functionality
+    const searchInput = document.getElementById('searchResources');
+    const cards = document.querySelectorAll('.facility-card');
+
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        
+        cards.forEach(card => {
+            const content = card.textContent.toLowerCase();
+            card.style.display = content.includes(searchTerm) ? 'block' : 'none';
+        });
+    });
+
+    // Filter functionality
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Remove active class from all buttons
+            filterBtns.forEach(b => b.classList.remove('active'));
+            
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            const filter = this.dataset.filter;
+            
+            cards.forEach(card => {
+                if (filter === 'all' || card.dataset.type === filter) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

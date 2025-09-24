@@ -1,0 +1,346 @@
+/* Resources Page Styles */
+:root {
+  /* Animation variables */
+  --transition-speed: 0.3s;
+  --hover-transform: translateY(-5px);
+  
+  /* Shadow variables */
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  --card-shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.15);
+  
+  /* Border radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+}
+
+/* Page Header */
+.page-header {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  color: var(--primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.page-header p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+/* Search Bar */
+.resource-search {
+  margin: var(--spacing-md) auto var(--spacing-xl);
+  max-width: 600px;
+  position: relative;
+}
+
+.resource-search input {
+  width: 100%;
+  padding: var(--spacing-lg) var(--spacing-xl) var(--spacing-lg) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--accent);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 1rem;
+  transition: all var(--transition-speed) ease;
+}
+
+.resource-search input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(89, 120, 243, 0.2);
+}
+
+.resource-search .search-icon {
+  position: absolute;
+  right: var(--spacing-lg);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent);
+  transition: color var(--transition-speed) ease;
+}
+
+.resource-search input:focus + .search-icon {
+  color: var(--primary);
+}
+
+/* Filter Buttons */
+.resource-filters {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0 var(--spacing-md);
+}
+
+.filter-btn {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--accent);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
+  font-weight: 500;
+}
+
+.filter-btn:hover {
+  background: var(--accent);
+  color: var(--white);
+  transform: translateY(-2px);
+}
+
+.filter-btn.active {
+  background: var(--accent);
+  color: var(--white);
+  box-shadow: 0 4px 12px rgba(89, 120, 243, 0.2);
+}
+
+/* Resources Grid */
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: var(--spacing-xl);
+  padding: var(--spacing-md);
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Facility Cards */
+.facility-card {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-lg);
+  box-shadow: var(--card-shadow);
+  transition: all var(--transition-speed) ease;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.facility-card:hover {
+  transform: var(--hover-transform);
+  box-shadow: var(--card-shadow-hover);
+}
+
+/* Facility Header */
+.facility-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.facility-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  transition: transform var(--transition-speed) ease;
+}
+
+.facility-card:hover .facility-icon {
+  transform: scale(1.1);
+}
+
+/* Facility Types */
+.hospital .facility-icon {
+  background: rgba(89, 120, 243, 0.15);
+  color: var(--accent);
+}
+
+.ambulance .facility-icon {
+  background: rgba(226, 85, 85, 0.15);
+  color: var(--danger);
+}
+
+.fire .facility-icon {
+  background: rgba(255, 159, 67, 0.15);
+  color: var(--warning);
+}
+
+.police .facility-icon {
+  background: rgba(46, 204, 113, 0.15);
+  color: var(--success);
+}
+
+/* Facility Info */
+.facility-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.facility-location {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Features */
+.facility-features {
+  display: flex;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+  margin: var(--spacing-md) 0;
+}
+
+.feature-tag {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  font-size: 0.875rem;
+  background: var(--background);
+  color: var(--text);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: all var(--transition-speed) ease;
+}
+
+.feature-tag:hover {
+  transform: translateY(-2px);
+  background: var(--surface);
+}
+
+.feature-tag i {
+  font-size: 1rem;
+  color: var(--accent);
+}
+
+/* Status Indicators */
+.status-available {
+  color: var(--success);
+}
+
+.status-busy {
+  color: var(--warning);
+}
+
+.status-full {
+  color: var(--danger);
+}
+
+/* Contact Buttons */
+.facility-contact {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+}
+
+.contact-btn {
+  flex: 1;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  transition: all var(--transition-speed) ease;
+  font-weight: 500;
+}
+
+.contact-btn.primary {
+  background: var(--accent);
+  color: var(--white);
+}
+
+.contact-btn.primary:hover {
+  background: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(89, 120, 243, 0.2);
+}
+
+.contact-btn.secondary {
+  background: var(--background);
+  color: var(--text);
+}
+
+.contact-btn.secondary:hover {
+  background: var(--surface);
+  transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .facility-card {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .feature-tag {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .page-header h1 {
+    font-size: 2rem;
+  }
+  
+  .resource-filters {
+    gap: var(--spacing-sm);
+  }
+  
+  .filter-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: 0.9rem;
+  }
+  
+  .resources-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+  
+  .facility-card {
+    padding: var(--spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .facility-contact {
+    flex-direction: column;
+  }
+  
+  .contact-btn {
+    width: 100%;
+  }
+  
+  .facility-features {
+    gap: var(--spacing-xs);
+  }
+  
+  .feature-tag {
+    font-size: 0.8rem;
+  }
+}
