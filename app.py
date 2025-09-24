@@ -421,12 +421,6 @@ def authority_login():
             return render_template('authority_login.html', error='Invalid credentials', **get_template_context())
     return render_template('authority_login.html', **get_template_context())
 
-@app.route('/contacts')
-def contacts():
-    """Serve the emergency contacts page"""
-    context = get_template_context()
-    return render_template('contacts.html', **context)
-
 @app.route('/profile')
 def profile():
     """Serve the user profile page"""
