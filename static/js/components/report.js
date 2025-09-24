@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const severity = document.getElementById('severity');
     const description = document.getElementById('description');
     const location = document.getElementById('location');
+    location.value = "Bardhaman";
 
     // Media handling configuration
     const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
