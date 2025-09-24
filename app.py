@@ -1,20 +1,24 @@
-from flask import Flask, render_template, send_from_directory, jsonify, request, session, redirect, url_for
+from flask import Flask, render_template, send_from_directory, jsonify, request, session, redirect, url_for, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
+import time
 from dotenv import load_dotenv
 import traceback
 import re
+import datetime
+import json
 
 # Load environment variables
 load_dotenv()
 
-app = Flask(__name__, 
-           template_folder='templates',
-           static_folder='static')
+app = Flask(__name__,
+            template_folder='templates',
+            static_folder='static')
 
 # Enable CORS for API endpoints
 CORS(app)
+
 
 # Configuration
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'your-secret-key-here')
@@ -26,6 +30,18 @@ app.config['MAPS_API_KEY'] = os.getenv('MAPS_API_KEY', 'your-maps-api-key')
 db = SQLAlchemy(app)
 
 # Database Models
+class SOSRequest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow)
+    sender_name = db.Column(db.String(200))
+    contact = db.Column(db.String(20), nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    location = db.Column(db.String(500))
+    status = db.Column(db.String(20), default='pending')  # pending, handled, closed
+    
+    def __repr__(self):
+        return f'<SOSRequest {self.id}>'
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -78,8 +94,6 @@ def sanitize_unicode_text(text):
         print(f"[ERROR] Text sanitization error: {e}")
         # Fallback: return ASCII-only version
         return text.encode('ascii', 'ignore').decode('ascii')
-
-import datetime
 
 # ✅ FINAL FIX: Initialize and manage user preferences in the session reliably
 @app.before_request
@@ -507,6 +521,38 @@ def admin_forecasts():
         }
     }
     return render_template('admin/forecasts.html', **context)
+
+@app.route('/rescue/sos-requests')
+@login_required(role='rescue')
+def sos_requests():
+    """Display all SOS requests for rescue personnel"""
+    try:
+        # Fetch SOS requests from database, ordered by timestamp descending
+        sos_requests = SOSRequest.query.order_by(SOSRequest.timestamp.desc()).all()
+        return render_template('sos_requests.html', sos_requests=sos_requests, **get_template_context())
+    except Exception as e:
+        print(f"Error fetching SOS requests: {str(e)}")
+        return render_template('sos_requests.html', error='Failed to load SOS requests', **get_template_context())
+
+@app.route('/rescue/sos-requests/<int:id>/status', methods=['POST'])
+@login_required(role='rescue')
+def update_sos_status(id):
+    """Update the status of an SOS request"""
+    try:
+        data = request.get_json()
+        new_status = data.get('status')
+        
+        if not new_status or new_status not in ['pending', 'handled', 'closed']:
+            return jsonify({'error': 'Invalid status'}), 400
+            
+        if broadcast_sos_update(id, new_status):
+            return jsonify({'message': 'Status updated successfully'}), 200
+        else:
+            return jsonify({'error': 'Failed to update status'}), 500
+            
+    except Exception as e:
+        print(f"Error updating SOS request status: {str(e)}")
+        return jsonify({'error': 'Failed to update status'}), 500
 
 @app.route('/rescue-dashboard')
 @login_required(role='rescue')
@@ -1203,6 +1249,48 @@ def get_emergency_alerts():
     ]
     return jsonify(alerts)
 
+@app.route('/api/sos', methods=['POST'])
+def handle_sos():
+    """Handle SOS requests and broadcast to rescue personnel"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'No data provided'}), 400
+
+        message = data.get('message', 'Emergency assistance required')
+        contact = data.get('contact', 'Emergency SOS')
+        location = data.get('location', '')
+
+        # Create simple SOS request
+        sos_request = SOSRequest(
+            sender_name=contact,
+            contact=contact,
+            message=message,
+            location=location,
+            status='pending'
+        )
+
+        db.session.add(sos_request)
+        db.session.commit()
+
+        # Broadcast to rescue personnel
+        sos_data = {
+            'id': sos_request.id,
+            'timestamp': sos_request.timestamp.isoformat(),
+            'message': message,
+            'location': location
+        }
+        broadcast_sos_update(sos_data, is_emergency=True)
+
+        return jsonify({
+            'status': 'success',
+            'message': 'SOS alert sent to rescue personnel'
+        }), 200
+
+    except Exception as e:
+        print(f"Error processing SOS request: {str(e)}")
+        return jsonify({'error': 'Failed to send SOS alert'}), 500
+
 @app.route('/api/disaster-locations')
 def get_disaster_locations():
     """API endpoint for disaster locations"""
@@ -1320,18 +1408,137 @@ def reject_forecasts():
     ]
     return jsonify(locations)
 
+# SSE endpoint for SOS updates
+@app.route('/sse/sos-updates')
+def sos_updates():
+    """Server-Sent Events endpoint for real-time SOS request updates"""
+    def event_stream():
+        app_ctx = None
+        try:
+            # Create application context
+            app_ctx = app.app_context()
+            app_ctx.push()
+            
+            print("[SSE] New client connected")
+            
+            # Send any stored emergency updates first
+            if hasattr(app, 'sos_updates'):
+                for update in app.sos_updates:
+                    if update.get('is_emergency'):
+                        yield f"data: {json.dumps(update)}\n\n"
+            
+            # Initial connection - send last few SOS requests within app context
+            with app.app_context():
+                recent_requests = SOSRequest.query.order_by(
+                    SOSRequest.timestamp.desc()
+                ).limit(5).all()
+                
+                for request in recent_requests:
+                    # Check if this is a high-priority emergency alert
+                    is_emergency = request.sender_name == "Emergency SOS" and request.contact == "112"
+                    
+                    data = {
+                        'type': 'sos_update',
+                        'data': {
+                            'id': request.id,
+                            'timestamp': request.timestamp.isoformat(),
+                            'sender_name': request.sender_name,
+                            'contact': request.contact,
+                            'message': request.message,
+                            'location': request.location,
+                            'status': request.status,
+                            'priority': 'high' if is_emergency else 'normal'
+                        },
+                        'is_emergency': is_emergency
+                    }
+                    yield f"data: {json.dumps(data)}\n\n"
+
+            # Keep connection alive
+            while True:
+                # Send heartbeat every 15 seconds (reduced from 30 for better connection reliability)
+                try:
+                    yield f"data: {json.dumps({'type': 'heartbeat'})}\n\n"
+                    time.sleep(15)  # Reduced interval for more reliable connection maintenance
+                except (GeneratorExit, KeyboardInterrupt):
+                    print("[SSE] Heartbeat interrupted - cleaning up connection")
+                    raise  # Re-raise to trigger cleanup in outer exception handler
+                except Exception as e:
+                    print(f"[SSE] Heartbeat error: {str(e)}")
+                    yield f"data: {json.dumps({'type': 'error', 'message': 'Heartbeat failure'})}\n\n"
+                    break  # Exit the loop on error
+
+        except GeneratorExit:
+            # Client disconnected - clean up
+            print("[SSE] Client disconnected - cleaning up")
+            if app_ctx:
+                app_ctx.pop()
+        except Exception as e:
+            error_msg = str(e)
+            print(f"[SSE] Error: {error_msg}")
+            print(f"[SSE] Traceback: {traceback.format_exc()}")
+            yield f"data: {json.dumps({'type': 'error', 'message': error_msg})}\n\n"
+            if app_ctx:
+                app_ctx.pop()
+        finally:
+            # Ensure context is always cleaned up
+            if app_ctx:
+                try:
+                    app_ctx.pop()
+                except Exception as cleanup_error:
+                    print(f"[SSE] Cleanup error: {cleanup_error}")
+
+    return Response(
+        event_stream(),
+        mimetype='text/event-stream',
+        headers={
+            'Cache-Control': 'no-cache',
+            'Connection': 'keep-alive',
+            'X-Accel-Buffering': 'no'
+        }
+    )
+
+# Helper function to broadcast SSE update
+def broadcast_sos_update(data, is_emergency=False):
+    """Broadcast SOS update to connected SSE clients"""
+    try:
+        # Add emergency flag for high-priority alerts
+        broadcast_data = {
+            'type': 'sos_update',
+            'data': data,
+            'is_emergency': is_emergency,
+            'timestamp': datetime.datetime.now(datetime.UTC).isoformat()
+        }
+
+        # In a production environment, use a proper pub/sub system
+        # For now, store in app context for SSE endpoint
+        if not hasattr(app, 'sos_updates'):
+            app.sos_updates = []
+        app.sos_updates.append(broadcast_data)
+
+        # Keep only last 100 updates
+        if len(app.sos_updates) > 100:
+            app.sos_updates = app.sos_updates[-100:]
+
+        return True
+    except Exception as e:
+        print(f"Error broadcasting SOS update: {str(e)}")
+        return False
+
+
 # Error handlers
 @app.errorhandler(404)
 def not_found(error):
-    return render_template('home.html',
-                         ai_available='true' if openai_client else 'false',
-                         maps_key=app.config['MAPS_API_KEY']), 404
+    # Ensure user preferences are initialized
+    if 'user_preferences' not in session:
+        initialize_session()
+    return render_template('home.html', **get_template_context()), 404
 
 @app.errorhandler(500)
 def internal_error(error):
-    return render_template('home.html',
-                         ai_available='true' if openai_client else 'false',
-                         maps_key=app.config['MAPS_API_KEY']), 500
+    # Ensure user preferences are initialized
+    if 'user_preferences' not in session:
+        initialize_session()
+    return render_template('home.html', **get_template_context()), 500
 
 @app.route('/health')
 def health():

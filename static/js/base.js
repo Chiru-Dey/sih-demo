@@ -312,8 +312,54 @@ function closeChatbot(chatbotId) {
 }
 
 function makeEmergencyCall() {
-    if (confirm('Do you want to call the emergency number 112?')) {
-        window.location.href = 'tel:112';
+    // Check if it's a mobile device
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (confirm('Do you want to call emergency services?')) {
+        // On mobile, make phone call
+        if (isMobile) {
+            window.location.href = 'tel:112';
+        }
+        
+        // Send SOS message with location
+        sendSOSMessage('Emergency assistance required - Triggered via SOS button');
+    }
+}
+
+async function sendSOSMessage(message) {
+    try {
+        const formData = {
+            message: message,
+            contact: 'Emergency SOS',
+            location: ''
+        };
+
+        // Add location if available
+        try {
+            const position = await getCurrentPosition();
+            formData.location = `${position.coords.latitude},${position.coords.longitude}`;
+        } catch (error) {
+            console.warn('Failed to get location:', error);
+        }
+
+        const response = await fetch('/api/sos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+            showNotification('Emergency services have been notified', 'success');
+        } else {
+            throw new Error(data.error || 'Failed to send SOS');
+        }
+    } catch (error) {
+        console.error('Error sending SOS:', error);
+        showNotification('Failed to send emergency alert. Please try calling directly.', 'error');
     }
 }
 
@@ -562,9 +608,9 @@ document.addEventListener('DOMContentLoaded', function () {
         ];
 
         const randomAlert = alerts[Math.floor(Math.random() * alerts.length)];
-        const alertElement = document.querySelector('.emergency-alert');
+        const alertElement = document.querySelector('.emergency-alert .alert-content');
         if (alertElement) {
-            alertElement.innerHTML = `<strong>LIVE UPDATE:</strong> ${randomAlert}`;
+            alertElement.innerHTML = `<strong>LIVE UPDATE:</strong> <span>${randomAlert}</span>`;
         }
     }, 30000);
 

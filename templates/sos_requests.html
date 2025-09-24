@@ -1,0 +1,61 @@
+{% extends "rescue_base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/sos_requests.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="sos-requests-container">
+    <h1 class="page-title">SOS Requests</h1>
+
+    <div class="sos-requests-grid">
+        {% for request in sos_requests %}
+        <div class="sos-card {% if request.status == 'pending' %}pending{% elif request.status == 'handled' %}handled{% else %}closed{% endif %}" data-id="{{ request.id }}">
+            <div class="sos-header">
+                <span class="timestamp">{{ request.timestamp.strftime('%Y-%m-%d %H:%M') }}</span>
+                <span class="status-badge">{{ request.status|title }}</span>
+            </div>
+            
+            <div class="sos-body">
+                <div class="sender-info">
+                    <strong>{{ request.sender_name or 'Anonymous' }}</strong>
+                    <span class="contact">{{ request.contact }}</span>
+                </div>
+                
+                <div class="message">
+                    {{ request.message }}
+                </div>
+                
+                {% if request.location %}
+                <div class="location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    {{ request.location }}
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="sos-actions">
+                {% if request.status == 'pending' %}
+                <button class="btn primary" onclick="handleSOS('{{ request.id }}', 'handled')">
+                    Mark as Handled
+                </button>
+                {% endif %}
+                {% if request.status == 'handled' %}
+                <button class="btn secondary" onclick="handleSOS('{{ request.id }}', 'closed')">
+                    Close Request
+                </button>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <div class="no-requests">
+            <p>No SOS requests found</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/components/sos_requests.js') }}"></script>
+{% endblock %}

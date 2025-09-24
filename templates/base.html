@@ -1,3 +1,14 @@
+{# Ensure user_preferences is always available with defaults #}
+{% if not user_preferences %}
+{% set user_preferences = {
+'dark_mode': False,
+'high_contrast': False,
+'font_size': 16,
+'language': 'en',
+'notifications': True,
+'location_services': True
+} %}
+{% endif %}
 <!DOCTYPE html>
 <html lang="{{ current_language or 'en' }}">
 
@@ -31,11 +42,12 @@
 </head>
 
 <body
-    class="{% if user_preferences.dark_mode %}dark-mode{% endif %} {% if user_preferences.high_contrast %}high-contrast{% endif %} {% block body_class %}{% endblock %}"
-    style="font-size: {{ user_preferences.font_size }}px;" data-language="{{ user_preferences.language }}"
-    data-font-size="{{ user_preferences.font_size }}"
-    data-high-contrast="{{ 'true' if user_preferences.high_contrast else 'false' }}"
-    data-dark-mode="{{ 'true' if user_preferences.dark_mode else 'false' }}">
+    class="{% if user_preferences.get('dark_mode', False) %}dark-mode{% endif %} {% if user_preferences.get('high_contrast', False) %}high-contrast{% endif %} {% block body_class %}{% endblock %}"
+    style="font-size: {{ user_preferences.get('font_size', 16) }}px;"
+    data-language="{{ user_preferences.get('language', 'en') }}"
+    data-font-size="{{ user_preferences.get('font_size', 16) }}"
+    data-high-contrast="{{ 'true' if user_preferences.get('high_contrast', False) else 'false' }}"
+    data-dark-mode="{{ 'true' if user_preferences.get('dark_mode', False) else 'false' }}">
 
     <!-- Skip to Content Link -->
     <a href="#main-content" class="skip-to-content">Skip to main content</a>
@@ -60,12 +72,12 @@
 
     <!-- Translation Panel Component -->
     {% block translation_panel %}
-        {% include 'components/translation_panel.html' %}
+    {% include 'components/translation_panel.html' %}
     {% endblock %}
 
     <!-- Accessibility Panel Component -->
     {% block accessibility_panel %}
-        {% include 'components/accessibility_panel.html' %}
+    {% include 'components/accessibility_panel.html' %}
     {% endblock %}
 
     <!-- Header -->
@@ -84,7 +96,7 @@
 
     <!-- Emergency Alert Component -->
     {% block emergency_alert %}
-        {% include 'components/emergency_alert.html' %}
+    {% include 'components/emergency_alert.html' %}
     {% endblock %}
 
     <!-- Main Content Block -->
@@ -95,11 +107,12 @@
     <!-- Fixed Action Buttons -->
     {% block fixed_actions %}
     <div class="fixed-actions">
+        <button class="action-btn emergency-call" id="sosButton" onclick="makeEmergencyCall()"
+            aria-label="Emergency SOS Button">
+            <strong>SOS</strong>
+        </button>
         <button class="action-btn ai-assistant" onclick="openAIAssistant()">
             <i class="fas fa-robot"></i>
-        </button>
-        <button class="action-btn emergency-call" data-no-translate onclick="makeEmergencyCall()">
-            <i class="fas fa-phone"></i>
         </button>
         <button class="action-btn quick-chat" onclick="startQuickChat()">
             <i class="fas fa-comments"></i>
@@ -110,13 +123,45 @@
     <!-- Chat Modals Component -->
     {% include 'components/chat_modals.html' %}
 
+    <!-- SOS Modal -->
+    <dialog class="sos-modal" id="sosModal">
+        <div class="modal-content">
+            <h2>Send SOS Message</h2>
+            <form id="sosForm">
+                <div class="form-group">
+                    <label for="sosName">Your Name (Optional)</label>
+                    <input type="text" id="sosName" name="name" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label for="sosContact">Contact Number*</label>
+                    <input type="tel" id="sosContact" name="contact" placeholder="Enter contact number" required>
+                </div>
+                <div class="form-group">
+                    <label for="sosMessage">Emergency Message*</label>
+                    <textarea id="sosMessage" name="message" placeholder="Describe your emergency situation"
+                        required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="shareLocation" name="shareLocation" checked>
+                        Share my location to help emergency services find me
+                    </label>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeSosModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Send SOS</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
     <!-- Role-specific Navigation Menu -->
     {% if session.get('user_role') == 'admin' %}
-        {% include 'components/admin_menu.html' %}
+    {% include 'components/admin_menu.html' %}
     {% elif session.get('user_role') == 'rescue' %}
-        {% include 'components/rescue_menu.html' %}
+    {% include 'components/rescue_menu.html' %}
     {% else %}
-        {% include 'components/navigation_menu.html' %}
+    {% include 'components/navigation_menu.html' %}
     {% endif %}
 
     <!-- Google Maps -->

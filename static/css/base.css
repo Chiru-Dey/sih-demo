@@ -344,7 +344,19 @@ body {
 }
 
 .emergency-call {
-    background: linear-gradient(135deg, var(--danger), var(--accent));
+    background: var(--danger) !important;
+    color: var(--white);
+    animation: pulse 2s infinite;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.emergency-call:hover,
+.emergency-call:focus {
+    background: #ff3b3b !important;
+    transform: scale(1.1);
+    outline: 3px solid var(--white);
 }
 
 .quick-chat {

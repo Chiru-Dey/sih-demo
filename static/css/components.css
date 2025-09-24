@@ -338,6 +338,40 @@
     font-size: calc(var(--font-size) + 0.125rem);
 }
 
+.alert-content {
+    margin-bottom: 15px;
+}
+
+
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+    }
+    
+    70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
+    }
+    
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+    }
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
 /* Emergency Contacts */
 .emergency-contact {
     display: flex;
@@ -358,22 +392,20 @@
 }
 
 .quick-chat-btn {
-    background: var(--success);
-    color: var(--background);
+    background: var(--primary);
+    color: var(--white);
     border: none;
-    padding: 10px 15px;
-    border-radius: 25px;
+    padding: 8px 16px;
+    border-radius: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: var(--font-size);
+    font-size: 0.875rem;
 }
 
 .quick-chat-btn:hover,
 .quick-chat-btn:focus {
     background: var(--accent);
-    color: var(--white);
-    transform: scale(1.05);
-    outline: 2px solid var(--white);
+    transform: translateY(-2px);
 }
 
 /* Guidelines Grid */
