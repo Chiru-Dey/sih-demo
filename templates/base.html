@@ -59,10 +59,14 @@
     </div>
 
     <!-- Translation Panel Component -->
-    {% include 'components/translation_panel.html' %}
+    {% block translation_panel %}
+        {% include 'components/translation_panel.html' %}
+    {% endblock %}
 
     <!-- Accessibility Panel Component -->
-    {% include 'components/accessibility_panel.html' %}
+    {% block accessibility_panel %}
+        {% include 'components/accessibility_panel.html' %}
+    {% endblock %}
 
     <!-- Header -->
     <header class="header">
@@ -79,7 +83,9 @@
     </header>
 
     <!-- Emergency Alert Component -->
-    {% include 'components/emergency_alert.html' %}
+    {% block emergency_alert %}
+        {% include 'components/emergency_alert.html' %}
+    {% endblock %}
 
     <!-- Main Content Block -->
     <main class="main-content" id="main-content">
@@ -87,6 +93,7 @@
     </main>
 
     <!-- Fixed Action Buttons -->
+    {% block fixed_actions %}
     <div class="fixed-actions">
         <button class="action-btn ai-assistant" onclick="openAIAssistant()">
             <i class="fas fa-robot"></i>
@@ -98,6 +105,7 @@
             <i class="fas fa-comments"></i>
         </button>
     </div>
+    {% endblock %}
 
     <!-- Chat Modals Component -->
     {% include 'components/chat_modals.html' %}

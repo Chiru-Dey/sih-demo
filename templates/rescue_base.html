@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{# Override body_class block to add rescue-specific styling #}
+{% block body_class %}rescue-interface {{ super() }}{% endblock %}
+
+{# Override main content to exclude emergency alert #}
+{% block content %}
+    {# Skip the emergency alert include #}
+    <div class="main-content" id="main-content">
+        {{ super() }}
+    </div>
+{% endblock %}
+
+{# Empty block to remove fixed action buttons #}
+{% block fixed_actions %}{% endblock %}
+
+{# Empty block to remove emergency alert #}
+{% block emergency_alert %}{% endblock %}
+
+{# Empty blocks to remove panels #}
+{% block translation_panel %}{% endblock %}
+{% block accessibility_panel %}{% endblock %}
+
+{# Override core scripts block to exclude panel initialization #}
+{% block scripts %}
+    {# Core functionality preserved:
+        - Navigation (rescue_menu.html)
+        - PWA functionality
+        - Dark mode
+        - Font size controls
+        - High contrast mode
+        - Skip to content
+    #}
+{% endblock %}
