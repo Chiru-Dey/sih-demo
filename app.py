@@ -206,9 +206,9 @@ def alerts():
                 'type': 'CYCLONE WARNING',
                 'severity': 'critical',
                 'title': 'Severe Cyclonic Storm Approaching',
-                'location': 'Odisha and West Bengal coastal areas',
+                'location': 'Bardhaman, West Bengal',
                 'impact': 'Heavy rainfall, strong winds up to 120 km/h',
-                'action': 'Immediate evacuation from coastal areas',
+                'action': 'Immediate evacuation from affected areas',
                 'time': '2 hours ago',
                 'radius': '150 km'
             },
@@ -1234,8 +1234,8 @@ def get_emergency_alerts():
             'id': 1,
             'type': 'CYCLONE',
             'severity': 'critical',
-            'location': 'Odisha and West Bengal',
-            'message': 'Heavy rainfall expected in coastal areas',
+            'location': 'Bardhaman, West Bengal',
+            'message': 'Heavy rainfall, strong winds up to 120 km/h. Immediate evacuation required.',
             'timestamp': '2025-09-14T21:53:00Z'
         },
         {

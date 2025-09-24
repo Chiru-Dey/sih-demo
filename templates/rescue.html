@@ -90,6 +90,23 @@
                     </button>
                 </div>
 
+                <div class="contact-card urgent">
+                    <div class="contact-icon">
+                        <i class="fas fa-building-shield"></i>
+                    </div>
+                    <div class="contact-info">
+                        <h3>Local Emergency Center</h3>
+                        <p class="contact-number">033 2214 3526</p>
+                        <p class="contact-desc">24/7 Emergency Services</p>
+                    </div>
+                    <button class="btn-primary" onclick="callEmergency('03322143526')">
+                        <i class="fas fa-phone"></i> Call Now
+                    </button>
+                    <button class="btn-secondary" onclick="openEmergencyChat()">
+                        <i class="fas fa-comments"></i> Quick Chat
+                    </button>
+                </div>
+
                 <div class="contact-card">
                     <div class="contact-icon">
                         <i class="fas fa-child"></i>
@@ -204,10 +221,60 @@
     </div>
 </div>
 
+<style>
+    .contact-card.urgent {
+        border: 2px solid #ff4444;
+        box-shadow: 0 0 10px rgba(255, 68, 68, 0.2);
+    }
+    
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 8px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+    
+    @media (max-width: 768px) {
+        .contact-card.urgent {
+            order: -1;
+            margin-bottom: 20px;
+        }
+    }
+</style>
+
 <script>
     function callEmergency(number) {
         if (confirm(`Calling emergency number ${number}. Are you sure?`)) {
             window.location.href = `tel:${number}`;
+        }
+    }
+
+    function openEmergencyChat() {
+        // Open chat modal with emergency priority
+        const chatModal = document.querySelector('#chat-modal');
+        if (chatModal) {
+            chatModal.classList.add('emergency');
+            chatModal.style.display = 'block';
+            // Pre-fill emergency context if chat input exists
+            const chatInput = chatModal.querySelector('.chat-input');
+            if (chatInput) {
+                chatInput.value = "EMERGENCY: Requesting immediate assistance";
+            }
+        } else {
+            // Fallback if chat modal doesn't exist
+            alert("Emergency chat service is currently unavailable. Please call the emergency number.");
         }
     }
 

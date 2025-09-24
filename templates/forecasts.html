@@ -11,7 +11,50 @@
 
     <button type="button" class="collapsible active">Local</button>
     <div class="content">
-        <p>No local forecasts available.</p>
+        <div class="forecast-grid">
+            <div class="forecast-card current-weather">
+                <h2><i class="fas fa-map-marker-alt"></i> Bardhaman, West Bengal</h2>
+                <div class="weather-display">
+                    <div class="temperature">32°C</div>
+                    <div class="weather-info">
+                        <p><i class="fas fa-wind"></i> Wind Speed: 45 km/h</p>
+                        <p><i class="fas fa-compass"></i> Wind Direction: SE</p>
+                        <p><i class="fas fa-tint"></i> Humidity: 85%</p>
+                        <p><i class="fas fa-cloud-rain"></i> Heavy Rain</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="forecast-card disaster-predictions">
+                <h2><i class="fas fa-exclamation-triangle"></i> Cyclone Parameters</h2>
+                <div class="prediction-list">
+                    <div class="prediction-item high-risk">
+                        <div class="prediction-header">
+                            <i class="fas fa-wind"></i>
+                            <span class="prediction-type">Wind Intensity</span>
+                            <span class="risk-level high">Critical</span>
+                        </div>
+                        <p>Sustained winds of 45 km/h with gusts up to 60 km/h.</p>
+                    </div>
+                    <div class="prediction-item high-risk">
+                        <div class="prediction-header">
+                            <i class="fas fa-cloud-showers-heavy"></i>
+                            <span class="prediction-type">Rainfall</span>
+                            <span class="risk-level high">Severe</span>
+                        </div>
+                        <p>Expected rainfall: 150-200mm in next 24 hours.</p>
+                    </div>
+                    <div class="prediction-item medium-risk">
+                        <div class="prediction-header">
+                            <i class="fas fa-water"></i>
+                            <span class="prediction-type">Storm Surge</span>
+                            <span class="risk-level medium">Moderate</span>
+                        </div>
+                        <p>Potential surge of 2-3 meters in coastal areas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <button type="button" class="collapsible">General</button>

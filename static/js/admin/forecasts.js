@@ -5,7 +5,60 @@ document.addEventListener('DOMContentLoaded', () => {
     initRegionFilter();
     initApprovalSystem();
     initScoreUpdates();
+    initCycloneParameters();
+    setDefaultRegion();
 });
+
+// Initialize cyclone-specific weather parameters
+function initCycloneParameters() {
+    const updateInterval = 5 * 60 * 1000; // Update every 5 minutes
+    updateCycloneParameters();
+    setInterval(updateCycloneParameters, updateInterval);
+}
+
+async function updateCycloneParameters() {
+    try {
+        const response = await fetch('/api/weather/cyclone-data?region=bardhaman');
+        const data = await response.json();
+        
+        // Update displayed parameters
+        document.getElementById('windSpeed').textContent = `${data.windSpeed} km/h`;
+        document.getElementById('precipitation').textContent = `${data.precipitation} mm`;
+        document.getElementById('cycloneDistance').textContent = `${data.distance} km ${data.direction}`;
+        
+        // Update risk levels based on parameters
+        updateRiskLevels(data);
+    } catch (error) {
+        console.error('Error fetching cyclone parameters:', error);
+        showToast('Failed to update weather parameters', 'error');
+    }
+}
+
+function updateRiskLevels(data) {
+    const riskPills = document.querySelectorAll('.risk-pill');
+    
+    // Determine risk level based on wind speed and precipitation
+    let riskLevel = 'medium';
+    if (data.windSpeed > 150 || data.precipitation > 300) {
+        riskLevel = 'high';
+    } else if (data.windSpeed < 80 && data.precipitation < 100) {
+        riskLevel = 'low';
+    }
+    
+    riskPills.forEach(pill => {
+        pill.className = `risk-pill risk-${riskLevel}`;
+        pill.textContent = `${riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1)} Risk`;
+    });
+}
+
+// Set Bardhaman as default region
+function setDefaultRegion() {
+    const searchInput = document.getElementById('regionSearch');
+    if (searchInput) {
+        addFilterTag('Bardhaman');
+        searchInput.value = '';
+    }
+}
 
 // Region Filter functionality
 function initRegionFilter() {
@@ -157,6 +210,89 @@ function initRegionFilter() {
         clearFiltersBtn.innerHTML = `
             <i class="fas fa-times"></i> Clear All (${count})
         `;
+    }
+    
+    // Calculate cyclone risk level based on weather parameters
+    function calculateCycloneRisk(windSpeed, precipitation, distance) {
+        let riskScore = 0;
+        
+        // Wind speed assessment (0-100)
+        if (windSpeed >= 180) riskScore += 100;
+        else if (windSpeed >= 150) riskScore += 80;
+        else if (windSpeed >= 120) riskScore += 60;
+        else if (windSpeed >= 90) riskScore += 40;
+        else riskScore += 20;
+        
+        // Precipitation assessment (0-100)
+        if (precipitation >= 300) riskScore += 100;
+        else if (precipitation >= 200) riskScore += 75;
+        else if (precipitation >= 150) riskScore += 50;
+        else if (precipitation >= 100) riskScore += 25;
+        
+        // Distance assessment (0-100)
+        if (distance <= 100) riskScore += 100;
+        else if (distance <= 200) riskScore += 75;
+        else if (distance <= 300) riskScore += 50;
+        else if (distance <= 400) riskScore += 25;
+        
+        // Calculate average risk score
+        const avgRiskScore = riskScore / 3;
+        
+        // Determine risk level
+        if (avgRiskScore >= 75) return 'high';
+        if (avgRiskScore >= 45) return 'medium';
+        return 'low';
+    }
+    
+    // Update weather parameter displays
+    function updateWeatherParameters(data) {
+        // Update display values
+        document.getElementById('windSpeed').textContent = `${data.windSpeed} km/h`;
+        document.getElementById('precipitation').textContent = `${data.precipitation} mm`;
+        document.getElementById('cycloneDistance').textContent = `${data.distance} km ${data.direction}`;
+        
+        // Calculate and update risk level
+        const riskLevel = calculateCycloneRisk(data.windSpeed, data.precipitation, data.distance);
+        updateRiskIndicators(riskLevel);
+        
+        // Update cyclone alerts if necessary
+        if (riskLevel === 'high') {
+            showCycloneAlert(data);
+        }
+    }
+    
+    // Update risk indicators across the interface
+    function updateRiskIndicators(riskLevel) {
+        const riskPills = document.querySelectorAll('.risk-pill');
+        riskPills.forEach(pill => {
+            pill.className = `risk-pill risk-${riskLevel}`;
+            pill.textContent = `${riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1)} Risk`;
+        });
+    }
+    
+    // Show cyclone alert for high-risk situations
+    function showCycloneAlert(data) {
+        const alertContent = `
+            <div class="cyclone-alert-popup">
+                <h3>⚠️ Severe Cyclone Warning - Bardhaman</h3>
+                <p>Wind Speed: ${data.windSpeed} km/h</p>
+                <p>Expected Rainfall: ${data.precipitation} mm</p>
+                <p>Distance: ${data.distance} km ${data.direction}</p>
+                <div class="alert-actions">
+                    <button onclick="acknowledgeCycloneAlert()">Acknowledge</button>
+                </div>
+            </div>
+        `;
+        
+        showToast(alertContent, 'danger', false);
+    }
+    
+    // Handle cyclone alert acknowledgment
+    function acknowledgeCycloneAlert() {
+        const alertPopup = document.querySelector('.cyclone-alert-popup');
+        if (alertPopup) {
+            alertPopup.closest('.toast').remove();
+        }
     }
 }
 
@@ -354,24 +490,98 @@ function animateScore(circle, start, end, circumference) {
 }
 
 // Utility function for showing toast notifications
-function showToast(message, type = 'info', autoHide = true) {
+function showToast(message, type = 'info', autoHide = true, isHTML = false) {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
-    toast.textContent = message;
+    
+    if (isHTML) {
+        toast.innerHTML = message;
+    } else {
+        toast.textContent = message;
+    }
+    
+    // Add specific styling for cyclone alerts
+    if (type === 'danger' && message.includes('cyclone-alert-popup')) {
+        toast.classList.add('cyclone-alert');
+        toast.style.width = '400px';
+        toast.style.maxWidth = '90vw';
+        toast.style.padding = '1.5rem';
+    }
     
     document.body.appendChild(toast);
     
-    // Trigger animation
+    // Trigger animation with enhanced effect for cyclone alerts
     requestAnimationFrame(() => {
         toast.classList.add('show');
+        if (type === 'danger') {
+            toast.animate([
+                { transform: 'scale(0.9)', opacity: 0 },
+                { transform: 'scale(1.05)', opacity: 0.9 },
+                { transform: 'scale(1)', opacity: 1 }
+            ], {
+                duration: 400,
+                easing: 'ease-out'
+            });
+        }
     });
     
     if (autoHide) {
         setTimeout(() => {
             toast.classList.remove('show');
             setTimeout(() => toast.remove(), 300);
-        }, 3000);
+        }, type === 'danger' ? 0 : 3000); // Don't auto-hide danger alerts
     }
     
     return toast;
 }
+
+// Add styles for cyclone alert popup
+const style = document.createElement('style');
+style.textContent = `
+    .cyclone-alert-popup {
+        color: #fff;
+        font-size: 0.95rem;
+    }
+    
+    .cyclone-alert-popup h3 {
+        color: #ff4444;
+        margin: 0 0 1rem;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .cyclone-alert-popup p {
+        margin: 0.5rem 0;
+        color: #e0e0e0;
+    }
+    
+    .alert-actions {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: flex-end;
+    }
+    
+    .alert-actions button {
+        background: #ff4444;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+    
+    .alert-actions button:hover {
+        background: #cc0000;
+        transform: translateY(-1px);
+    }
+    
+    .toast.cyclone-alert {
+        background: rgba(20, 20, 20, 0.95);
+        border: 1px solid #ff4444;
+    }
+`;
+document.head.appendChild(style);

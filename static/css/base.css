@@ -14,6 +14,21 @@
     --border: #ddd;
     --font-size: 1rem;
 
+    /* Alert & Emergency Colors */
+    --alert-critical: #dc3545;
+    --alert-critical-bg: rgba(220, 53, 69, 0.1);
+    --alert-high: #ff9800;
+    --alert-high-bg: rgba(255, 152, 0, 0.1);
+    --alert-medium: #2196f3;
+    --alert-medium-bg: rgba(33, 150, 243, 0.1);
+    --alert-low: #4caf50;
+    --alert-low-bg: rgba(76, 175, 80, 0.1);
+
+    /* Emergency Contact Colors */
+    --emergency-text: #dc3545;
+    --emergency-bg: rgba(220, 53, 69, 0.1);
+    --emergency-border: #dc3545;
+    
     /* Notification Colors */
     --notification-info-bg: #5978f3;
     --notification-success-bg: #28a745;
@@ -421,6 +436,21 @@ body {
     body {
         padding-top: 140px;
     }
+}
+
+/* Emergency Alert */
+.emergency-alert {
+    background: var(--alert-critical-bg);
+    color: var(--alert-critical);
+    text-align: center;
+    padding: 8px;
+    width: 100%;
+    font-size: 0.95rem;
+    border-bottom: 1px solid var(--alert-critical);
+}
+
+.emergency-alert strong {
+    margin-right: 8px;
 }
 
 /* Print Styles */
