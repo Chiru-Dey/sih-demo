@@ -1557,7 +1557,14 @@ with app.app_context():
         admin_user = User(email='admin@disastrous.com', password='admin', role='admin')
         db.session.add(admin_user)
     if not User.query.filter_by(email='rescue@disastrous.com').first():
-        rescue_user = User(email='rescue@disastrous.com', password='rescue', role='rescue')
+        rescue_user = User(
+            email='rescue@disastrous.com',
+            password='rescue',
+            role='rescue',
+            city='Bardhaman',
+            state='West Bengal',
+            pincode='713104'
+        )
         db.session.add(rescue_user)
     db.session.commit()
 
