@@ -1413,9 +1413,11 @@
             <a href="#" class="menu-item"><i class="fas fa-user-shield"></i> Authority Login</a>
         </div>
     </nav>
+<!-- Leaflet Map -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="{{ url_for('static', filename='js/components/map.js') }}"></script>
 
-    <!-- Google Maps -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ maps_key }}&callback=initMap"></script>
 
     <!-- Backend Integration Script -->
     <!-- Updated Backend Integration Script for A4F -->

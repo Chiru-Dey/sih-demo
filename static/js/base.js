@@ -95,7 +95,6 @@ let isOnline = navigator.onLine;
 let mapIsReady = false;
  
  window.geminiAvailable = false;
- window.mapsAvailable = false;
 
 // Language mapping
 const languageNames = {
@@ -131,91 +130,7 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
     speechRecognition.interimResults = false;
 }
 
-// Google Maps initialization
-function initMap() {
-    if (!window.mapsAvailable) {
-        document.getElementById('map').innerHTML = `
-            <div style="display: flex; align-items: center; justify-content: center; height: 100%; 
-                       background: var(--background); color: var(--danger); flex-direction: column; gap: 15px;">
-                <i class="fas fa-map-marked-alt" style="font-size: 48px;"></i>
-                <h3>Maps API Key Required</h3>
-                <p style="text-align: center; opacity: 0.8;">Configure Google Maps API key to view disaster locations</p>
-            </div>
-        `;
-        return;
-    }
-
-    try {
-        const map = new google.maps.Map(document.getElementById('map'), {
-            center: { lat: 20.5937, lng: 78.9629 },
-            zoom: 5,
-            styles: [{ featureType: 'poi', stylers: [{ visibility: 'off' }] }]
-        });
-
-        const disasterLocations = [
-            { position: { lat: 28.6139, lng: 77.209 }, title: 'Delhi NCR', type: 'Earthquake Alert', icon: '🏔️', severity: 'high' },
-            { position: { lat: 22.5726, lng: 88.3639 }, title: 'Kolkata, West Bengal', type: 'Cyclone Alert', icon: '🌀', severity: 'critical' },
-            { position: { lat: 26.9124, lng: 75.7873 }, title: 'Jaipur, Rajasthan', type: 'Heatwave Alert', icon: '🔥', severity: 'moderate' },
-            { position: { lat: 9.9312, lng: 76.2673 }, title: 'Kochi, Kerala', type: 'Flood Alert', icon: '🌊', severity: 'high' },
-            { position: { lat: 13.0827, lng: 80.2707 }, title: 'Chennai, Tamil Nadu', type: 'Cyclone Alert', icon: '🌀', severity: 'high' }
-        ];
-
-        disasterLocations.forEach(location => {
-            const pinColor = location.severity === 'critical' ? '#e53e3e' :
-                location.severity === 'high' ? '#ff6b35' :
-                    location.severity === 'moderate' ? '#f7931e' : '#43d9ad';
-
-            const marker = new google.maps.Marker({
-                position: location.position,
-                map: map,
-                title: `${location.type} - ${location.title}`,
-                animation: google.maps.Animation.DROP,
-                icon: {
-                    path: google.maps.SymbolPath.CIRCLE,
-                    scale: 12,
-                    fillColor: pinColor,
-                    fillOpacity: 0.9,
-                    strokeColor: '#ffffff',
-                    strokeWeight: 3
-                }
-            });
-
-            const infoWindow = new google.maps.InfoWindow({
-                content: `
-                    <div style="padding: 10px; font-family: Arial; color: #333;">
-                        <h3 style="margin: 0 0 8px 0; color: ${pinColor};">${location.icon} ${location.type}</h3>
-                        <p style="margin: 0 0 8px 0; font-weight: bold;">${location.title}</p>
-                        <p style="margin: 0; font-size: 12px; color: #666;">
-                            Severity: <span style="color: ${pinColor}; font-weight: bold; text-transform: uppercase;">${location.severity}</span>
-                        </p>
-                    </div>
-                `
-            });
-
-            marker.addListener('click', () => {
-                infoWindow.open({ anchor: marker, map });
-            });
-        });
-
-        // Signal that the map is ready
-        mapIsReady = true;
-        window.dispatchEvent(new CustomEvent('mapReady'));
- 
-     } catch (error) {
-        console.error('Maps initialization error:', error);
-        document.getElementById('map').innerHTML = `
-            <div style="display: flex; align-items: center; justify-content: center; height: 100%;
-                       background: var(--background); color: var(--danger); flex-direction: column; gap: 15px;">
-                <i class="fas fa-exclamation-triangle" style="font-size: 48px;"></i>
-                <h3>Maps Load Error</h3>
-                <p style="text-align: center; opacity: 0.8;">Unable to load Google Maps. Check your API key.</p>
-            </div>
-        `;
-        // Also signal readiness on failure, so the page doesn't hang
-        mapIsReady = true;
-        window.dispatchEvent(new CustomEvent('mapReady'));
-    }
-}
+// Map initialization is handled in map.js component
 
 // Navigation Functions
 function handleLogout() {
