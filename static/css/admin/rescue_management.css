@@ -1,0 +1,118 @@
+.page-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.page-header h1 {
+    color: var(--primary);
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.page-header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.personnel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.personnel-card {
+    background: var(--foreground);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.personnel-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+.card-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.card-header h3 {
+    color: var(--primary);
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.card-header p {
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.resource-counts {
+    display: grid;
+    gap: 1rem;
+}
+
+.resource-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    background: var(--background);
+    transition: background-color 0.2s;
+}
+
+.resource-item:hover {
+    background: var(--background-hover);
+}
+
+.resource-item i {
+    font-size: 1.2rem;
+    width: 1.5rem;
+    text-align: center;
+}
+
+.resource-item .label {
+    flex: 1;
+    color: var(--text);
+    font-weight: 500;
+}
+
+.resource-item .count {
+    font-weight: bold;
+    color: var(--primary);
+    min-width: 2rem;
+    text-align: right;
+    font-size: 1.1rem;
+}
+
+/* Icon Colors */
+.resource-item:nth-child(1) i { color: var(--accent); }    /* Hospital */
+.resource-item:nth-child(2) i { color: var(--danger); }    /* Ambulance */
+.resource-item:nth-child(3) i { color: var(--warning); }   /* Fire */
+.resource-item:nth-child(4) i { color: var(--success); }   /* Police */
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .personnel-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .page-header p {
+        font-size: 1rem;
+    }
+}

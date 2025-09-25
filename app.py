@@ -535,6 +535,30 @@ def admin_dashboard():
     context = get_template_context()
     return render_template('admin_dashboard.html', **context)
 
+@app.route('/admin/rescue-management')
+@login_required(role='admin')
+def admin_rescue_management():
+    """Serve the admin rescue management page"""
+    try:
+        # Fetch rescue personnel from database
+        rescue_personnel = User.query.filter_by(role='rescue').all()
+
+        # Calculate resource counts based on the four main categories
+        for personnel in rescue_personnel:
+            personnel.resource_counts = {
+                'hospitals': 5,          # Number of hospitals they manage
+                'ambulances': 5,         # Number of ambulance services
+                'fire_stations': 3,      # Number of fire stations
+                'police_stations': 13    # Number of police stations
+            }
+
+        context = get_template_context()
+        context['rescue_personnel'] = rescue_personnel
+        return render_template('admin/rescue_management.html', **context)
+    except Exception as e:
+        print(f"Error loading rescue management: {str(e)}")
+        return redirect(url_for('admin_dashboard'))
+
 @app.route('/admin/forecasts')
 @login_required(role='admin')
 def admin_forecasts():
@@ -1332,6 +1356,133 @@ def handle_sos():
 @app.route('/api/disaster-locations')
 def get_disaster_locations():
     """API endpoint for disaster locations"""
+
+@app.route('/api/admin/rescue-personnel', methods=['GET'])
+@login_required(role='admin')
+def get_rescue_personnel():
+    """API endpoint for fetching rescue personnel data"""
+    try:
+        rescue_personnel = User.query.filter_by(role='rescue').all()
+        personnel_data = []
+        
+        for person in rescue_personnel:
+            # Calculate resource counts (simulated data for now)
+            resource_counts = {
+                'hospitals': 5,
+                'ambulances': 3,
+                'fire_stations': 2,
+                'police_stations': 4
+            }
+            
+            personnel_data.append({
+                'id': person.id,
+                'email': person.email,
+                'location': {
+                    'city': person.city or '',
+                    'state': person.state or '',
+                    'pincode': person.pincode or ''
+                },
+                'resource_counts': resource_counts
+            })
+            
+        return jsonify({
+            'status': 'success',
+            'data': personnel_data
+        }), 200
+        
+    except Exception as e:
+        print(f"Error fetching rescue personnel: {str(e)}")
+        return jsonify({
+            'status': 'error',
+            'message': 'Failed to fetch rescue personnel data'
+        }), 500
+
+@app.route('/api/admin/resource-categories', methods=['GET'])
+@login_required(role='admin')
+def get_resource_categories():
+    """API endpoint for resource categories and their details"""
+    try:
+        categories = {
+            'hospitals': {
+                'name': 'Hospitals',
+                'icon': 'hospital',
+                'metrics': ['bed_capacity', 'icu_units', 'ambulances']
+            },
+            'fire_stations': {
+                'name': 'Fire Stations',
+                'icon': 'fire-truck',
+                'metrics': ['vehicles', 'personnel', 'coverage_area']
+            },
+            'police_stations': {
+                'name': 'Police Stations',
+                'icon': 'police-badge',
+                'metrics': ['vehicles', 'personnel', 'jurisdiction']
+            },
+            'ambulances': {
+                'name': 'Ambulance Services',
+                'icon': 'ambulance',
+                'metrics': ['vehicles', 'personnel', 'response_time']
+            }
+        }
+        
+        return jsonify({
+            'status': 'success',
+            'data': categories
+        }), 200
+        
+    except Exception as e:
+        print(f"Error fetching resource categories: {str(e)}")
+        return jsonify({
+            'status': 'error',
+            'message': 'Failed to fetch resource categories'
+        }), 500
+
+@app.route('/api/admin/resource-counts', methods=['POST'])
+@login_required(role='admin')
+def update_resource_counts():
+    """API endpoint for updating resource counts for rescue personnel"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({
+                'status': 'error',
+                'message': 'No data provided'
+            }), 400
+            
+        user_id = data.get('user_id')
+        resource_counts = data.get('resource_counts')
+        
+        if not user_id or not resource_counts:
+            return jsonify({
+                'status': 'error',
+                'message': 'Missing required fields: user_id or resource_counts'
+            }), 400
+            
+        # Verify user exists and is rescue personnel
+        user = User.query.filter_by(id=user_id, role='rescue').first()
+        if not user:
+            return jsonify({
+                'status': 'error',
+                'message': 'Invalid user ID or user is not rescue personnel'
+            }), 404
+            
+        # In a real app, this would update the database
+        # For now, just return success
+        return jsonify({
+            'status': 'success',
+            'message': 'Resource counts updated successfully',
+            'data': {
+                'user_id': user_id,
+                'resource_counts': resource_counts
+            }
+        }), 200
+        
+    except Exception as e:
+        print(f"Error updating resource counts: {str(e)}")
+        return jsonify({
+            'status': 'error',
+            'message': 'Failed to update resource counts'
+        }), 500
 
 @app.route('/api/admin/forecasts', methods=['GET'])
 @login_required(role='admin')

@@ -1,0 +1,50 @@
+{% extends "admin_base.html" %}
+
+{% block title %}Rescue Management - Admin{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/rescue_management.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="page-header">
+        <h1><i class="fas fa-hands-helping"></i> Rescue Personnel Management</h1>
+        <p>Manage rescue personnel and their available resources</p>
+    </div>
+    
+    <div class="personnel-grid">
+        {% for person in rescue_personnel %}
+        <div class="personnel-card">
+            <div class="card-header">
+                <h3>{{ person.email }}</h3>
+                <p><i class="fas fa-location-dot"></i> {{ person.city }}</p>
+            </div>
+            <div class="resource-counts">
+                <div class="resource-item">
+                    <i class="fas fa-hospital"></i>
+                    <span class="label">Hospitals:</span>
+                    <span class="count">{{ person.resource_counts.hospitals }}</span>
+                </div>
+                <div class="resource-item">
+                    <i class="fas fa-ambulance"></i>
+                    <span class="label">Ambulance Services:</span>
+                    <span class="count">{{ person.resource_counts.ambulances }}</span>
+                </div>
+                <div class="resource-item">
+                    <i class="fas fa-fire-extinguisher"></i>
+                    <span class="label">Fire Stations:</span>
+                    <span class="count">{{ person.resource_counts.fire_stations }}</span>
+                </div>
+                <div class="resource-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span class="label">Police Stations:</span>
+                    <span class="count">{{ person.resource_counts.police_stations }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

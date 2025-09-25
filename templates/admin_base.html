@@ -4,22 +4,32 @@
 {% block styles %}
 {{ super() }}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    /* Hide emergency alert, fixed buttons, and panels in admin interface */
+    .admin-interface .emergency-alert,
+    .admin-interface .fixed-actions,
+    .admin-interface .accessibility-panel,
+    .admin-interface .translation-panel {
+        display: none !important;
+    }
+</style>
 {% endblock %}
 
 {% block title %}Disastrous Admin - Disaster Management App{% endblock %}
 
 {% block body_class %}admin-interface{% endblock %}
 
-{% block fixed_actions %}
-<div class="fixed-actions">
-    <button class="action-btn ai-assistant" onclick="openAIAssistant()">
-        <i class="fas fa-robot"></i>
-    </button>
-    <button class="action-btn quick-chat" onclick="startQuickChat()">
-        <i class="fas fa-comments"></i>
-    </button>
-</div>
-{% endblock %}
+{# Hide emergency alert #}
+{% block emergency_alert %}{% endblock %}
+
+{# Hide fixed action buttons #}
+{% block fixed_actions %}{% endblock %}
+
+{# Hide accessibility panel #}
+{% block accessibility_panel %}{% endblock %}
+
+{# Hide translation panel #}
+{% block translation_panel %}{% endblock %}
 
 {% block pwa_install_text %}
 <strong>Install Disastrous Admin</strong><br>
