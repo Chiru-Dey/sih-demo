@@ -1,198 +1,141 @@
 // Admin Forecasts & Alerts Page JavaScript
 
-document.addEventListener('DOMContentLoaded', () => {
-    initTrustScores();
-    initRegionFilter();
-    initApprovalSystem();
-    initScoreUpdates();
-    setDefaultRegion();
-});
+// Initialize trust scores functionality
+// Application state
+const APP_STATE = {
+    initialized: false,
+    errors: [],
+    announcer: null
+};
 
-// Set Bardhaman as default region
-function setDefaultRegion() {
-    const searchInput = document.getElementById('regionSearch');
-    if (searchInput) {
-        addFilterTag('Bardhaman');
-        searchInput.value = '';
-    }
+// Helper functions for trust score management
+function getTrustLevelDescription(score) {
+    if (score >= 90) return 'This is a highly trusted source.';
+    if (score >= 70) return 'This is a moderately trusted source.';
+    if (score >= 50) return 'This source has average trust level.';
+    return 'This source needs verification.';
 }
 
-// Region Filter functionality
-function initRegionFilter() {
-    const searchInput = document.getElementById('regionSearch');
-    const activeFilters = document.getElementById('activeFilters');
-    const clearFiltersBtn = document.getElementById('clearFilters');
-    
-    let selectedRegions = new Set();
-    let debounceTimeout = null;
-
-    // Fetch unique regions from all forecasts
-    function getAllRegions() {
-        const regionSpans = document.querySelectorAll('.forecast-meta .region');
-        const regions = new Set();
-        regionSpans.forEach(span => {
-            const region = span.textContent.replace('Region: ', '').trim();
-            regions.add(region);
-        });
-        return Array.from(regions);
-    }
-
-    // Debounced search handler
-    searchInput.addEventListener('input', (e) => {
-        clearTimeout(debounceTimeout);
-        debounceTimeout = setTimeout(() => {
-            const query = e.target.value.toLowerCase().trim();
-            if (query.length >= 2) {
-                const regions = getAllRegions();
-                const matches = regions.filter(region => 
-                    region.toLowerCase().includes(query)
-                );
-                showAutocompleteSuggestions(matches);
-            } else {
-                hideAutocompleteSuggestions();
-            }
-        }, 300); // 300ms debounce delay
-    });
-
-    // Autocomplete suggestions
-    function showAutocompleteSuggestions(matches) {
-        let suggestionsDiv = document.getElementById('regionSuggestions');
-        if (!suggestionsDiv) {
-            suggestionsDiv = document.createElement('div');
-            suggestionsDiv.id = 'regionSuggestions';
-            suggestionsDiv.className = 'region-suggestions';
-            searchInput.parentNode.appendChild(suggestionsDiv);
-        }
-
-        suggestionsDiv.innerHTML = '';
-        matches.forEach(region => {
-            if (!selectedRegions.has(region)) {
-                const suggestion = document.createElement('div');
-                suggestion.className = 'region-suggestion';
-                suggestion.textContent = region;
-                suggestion.addEventListener('click', () => {
-                    addFilterTag(region);
-                    hideAutocompleteSuggestions();
-                    searchInput.value = '';
-                });
-                suggestionsDiv.appendChild(suggestion);
-            }
-        });
-
-        suggestionsDiv.style.display = matches.length > 0 ? 'block' : 'none';
-    }
-
-    function hideAutocompleteSuggestions() {
-        const suggestionsDiv = document.getElementById('regionSuggestions');
-        if (suggestionsDiv) {
-            suggestionsDiv.style.display = 'none';
+function getAnnouncer() {
+    if (!APP_STATE.announcer) {
+        APP_STATE.announcer = document.getElementById('trust-score-announcer');
+        if (!APP_STATE.announcer) {
+            APP_STATE.announcer = document.createElement('div');
+            APP_STATE.announcer.setAttribute('aria-live', 'polite');
+            APP_STATE.announcer.setAttribute('role', 'status');
+            APP_STATE.announcer.className = 'visually-hidden';
+            APP_STATE.announcer.id = 'trust-score-announcer';
+            document.body.appendChild(APP_STATE.announcer);
         }
     }
-
-    // Click outside to close suggestions
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.search-container')) {
-            hideAutocompleteSuggestions();
-        }
-    });
-
-    // Add filter tag
-    function addFilterTag(region) {
-        if (selectedRegions.has(region)) return;
-
-        selectedRegions.add(region);
-        const tag = document.createElement('div');
-        tag.className = 'filter-tag';
-        tag.dataset.region = region;
-        tag.innerHTML = `
-            ${region}
-            <button aria-label="Remove ${region} filter">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-
-        tag.querySelector('button').addEventListener('click', () => removeFilter(region));
-        activeFilters.appendChild(tag);
-        
-        filterForecasts();
-        updateFilterCount();
-    }
-
-    // Remove filter tag
-    function removeFilter(region) {
-        selectedRegions.delete(region);
-        const tag = activeFilters.querySelector(`[data-region="${region}"]`);
-        if (tag) {
-            tag.remove();
-        }
-        filterForecasts();
-        updateFilterCount();
-    }
-
-    // Clear all filters
-    clearFiltersBtn.addEventListener('click', () => {
-        selectedRegions.clear();
-        activeFilters.innerHTML = '';
-        filterForecasts();
-        updateFilterCount();
-    });
-
-    // Filter forecasts
-    function filterForecasts() {
-        const forecasts = document.querySelectorAll('.forecast-item');
-        forecasts.forEach(forecast => {
-            const regionElement = forecast.querySelector('.region');
-            const forecastRegion = regionElement ? regionElement.textContent.replace('Region:', '').trim() : '';
-            const shouldShow = selectedRegions.size === 0 || selectedRegions.has(forecastRegion);
-            
-            if (shouldShow) {
-                forecast.style.display = 'block';
-                forecast.animate([
-                    { opacity: 0, transform: 'translateY(-10px)' },
-                    { opacity: 1, transform: 'translateY(0)' }
-                ], {
-                    duration: 300,
-                    easing: 'ease-out'
-                });
-            } else {
-                forecast.style.display = 'none';
-            }
-        });
-    }
-
-    // Update filter count
-    function updateFilterCount() {
-        const count = selectedRegions.size;
-        clearFiltersBtn.style.display = count > 0 ? 'block' : 'none';
-        clearFiltersBtn.innerHTML = `
-            <i class="fas fa-times"></i> Clear All (${count})
-        `;
-    }
-    
+    return APP_STATE.announcer;
 }
 
-// Approval System functionality
-function initApprovalSystem() {
-    const forecastCards = document.querySelectorAll('.forecast-card');
+function announceToScreenReader(message) {
+    const announcer = getAnnouncer();
+    announcer.textContent = message;
+}
+
+// Initialize trust score visualization
+function initializeTrustScoreElement(element, index) {
+    const scoreText = element.textContent.replace('Trust: ', '').replace('%', '');
+    const scoreValue = parseInt(scoreText);
     
-    forecastCards.forEach(card => {
-        // Skip approval system for Trusted Sources
-        if (card.classList.contains('third-party')) {
+    if (isNaN(scoreValue)) {
+        throw new Error(`Invalid score format for element ${index}`);
+    }
+
+    // Set up accessibility attributes
+    element.setAttribute('data-score', scoreValue);
+    element.setAttribute('role', 'progressbar');
+    element.setAttribute('tabindex', '0');
+    element.setAttribute('aria-valuemin', '0');
+    element.setAttribute('aria-valuemax', '100');
+    element.setAttribute('aria-valuenow', scoreValue);
+    element.setAttribute('aria-label', `Trust score: ${scoreValue}%. ${getTrustLevelDescription(scoreValue)}`);
+
+    // Add keyboard interaction
+    element.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            announceToScreenReader(`Trust score is ${scoreValue}%. ${getTrustLevelDescription(scoreValue)}`);
+        }
+    });
+
+    // Create SVG visualization
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'score-circle');
+    svg.setAttribute('width', '40');
+    svg.setAttribute('height', '40');
+    svg.setAttribute('viewBox', '0 0 40 40');
+    svg.setAttribute('role', 'img');
+    svg.setAttribute('aria-hidden', 'true'); // Hide from screen readers since we have text
+
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('class', 'score-circle-progress');
+    circle.setAttribute('cx', '20');
+    circle.setAttribute('cy', '20');
+    circle.setAttribute('r', '16');
+    circle.setAttribute('stroke-width', '4');
+
+    const radius = 16;
+    const circumference = 2 * Math.PI * radius;
+    circle.style.strokeDasharray = `${circumference} ${circumference}`;
+
+    svg.appendChild(circle);
+    element.appendChild(svg);
+
+    // Animate initial score
+    animateScore(circle, 0, scoreValue, circumference);
+}
+
+function initTrustScores() {
+    try {
+        const trustScoreElements = document.querySelectorAll('.trust-score-pill');
+        if (!trustScoreElements.length) {
+            console.warn('No trust score elements found');
             return;
         }
 
+        trustScoreElements.forEach((element, index) => {
+            try {
+                initializeTrustScoreElement(element, index);
+            } catch (error) {
+                console.error(`Failed to initialize trust score element ${index}:`, error);
+            }
+        });
+    } catch (error) {
+        console.error('Error initializing trust scores:', error);
+        showToast('Error initializing trust scores. Please refresh the page.', 'error');
+    }
+}
+
+function initApprovalSystem() {
+    document.querySelectorAll('.forecast-card').forEach(card => {
+        if (card.classList.contains('third-party')) return;
+
+        const isAISection = card.classList.contains('ai-based');
         const approveBtn = card.querySelector('.btn-approve');
         const rejectBtn = card.querySelector('.btn-reject');
         const checkboxes = card.querySelectorAll('.forecast-checkbox input');
         
         if (approveBtn && rejectBtn) {
-            approveBtn.addEventListener('click', () => handleApproval(card, true));
-            rejectBtn.addEventListener('click', () => handleApproval(card, false));
+            approveBtn.addEventListener('click', () => handleApproval(card, true, isAISection ? 'ai' : 'crowdsourced'));
+            rejectBtn.addEventListener('click', () => handleApproval(card, false, isAISection ? 'ai' : 'crowdsourced'));
         }
-        
-        // Toggle button states based on selection
+
         checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    // Uncheck boxes in other sections
+                    const currentSection = this.closest('.forecast-card');
+                    document.querySelectorAll('.forecast-checkbox input:checked').forEach(cb => {
+                        if (!cb.closest('.forecast-card').isEqualNode(currentSection)) {
+                            cb.checked = false;
+                        }
+                    });
+                }
+                
                 const hasSelection = Array.from(checkboxes).some(cb => cb.checked);
                 updateButtonStates(card, hasSelection);
             });
@@ -200,28 +143,78 @@ function initApprovalSystem() {
     });
 }
 
-async function handleApproval(card, isApproved) {
+// Utility function to get selected forecasts
+function getSelectedForecasts(card) {
     const selectedForecasts = Array.from(card.querySelectorAll('.forecast-checkbox input:checked'))
         .map(checkbox => checkbox.closest('.forecast-item'));
     
     if (selectedForecasts.length === 0) {
         showToast('Please select at least one forecast', 'warning');
-        return;
+        return null;
     }
     
-    const forecastIds = selectedForecasts.map(forecast => forecast.dataset.id);
-    const endpoint = isApproved ? '/api/admin/forecasts/approve' : '/api/admin/forecasts/reject';
+    return selectedForecasts;
+}
+
+// Utility function to animate and remove forecast items
+function removeForecastWithAnimation(forecast) {
+    const animation = forecast.animate([
+        { opacity: 1, transform: 'scale(1)' },
+        { opacity: 0, transform: 'scale(0.95)', marginTop: '0', marginBottom: '0', padding: '0' },
+        { opacity: 0, transform: 'scale(0.9)', height: '0' }
+    ], {
+        duration: 400,
+        easing: 'ease-in-out'
+    });
+
+    animation.onfinish = () => {
+        forecast.style.display = 'none';
+        forecast.remove(); // Actually remove from DOM
+    };
+}
+
+// Utility function to clear checkbox selections
+function clearCheckboxSelections(card) {
+    const checkboxes = card.querySelectorAll('.forecast-checkbox input');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+        checkbox.disabled = false;
+    });
+    updateButtonStates(card, false);
+}
+
+async function handleApproval(card, isApproved, forecastType, retryCount = 0) {
+    const MAX_RETRIES = 3;
+    const loadingClass = `processing-${forecastType}`;
+
+    // Validate no mixed selections
+    const allCheckboxes = document.querySelectorAll('.forecast-checkbox input:checked');
+    const hasOtherSectionSelected = Array.from(allCheckboxes).some(cb => {
+        const checkboxCard = cb.closest('.forecast-card');
+        return checkboxCard && !checkboxCard.isEqualNode(card);
+    });
+
+    if (hasOtherSectionSelected) {
+        showToast('Please only select items from one section at a time', 'warning');
+        return;
+    }
+
+    const selectedForecasts = getSelectedForecasts(card);
+    if (!selectedForecasts) return;
     
+    const forecastIds = selectedForecasts.map(forecast => {
+        const forecastItem = forecast.closest('.forecast-item');
+        return forecastItem.dataset.id || forecast.dataset.forecastId;
+    });
+
     try {
         // Show loading state
         const loadingToast = showToast('Processing...', 'info', false);
-        card.classList.add('processing');
+        card.classList.add('processing', loadingClass);
         
-        const response = await fetch(endpoint, {
+        const response = await fetch(`/api/admin/forecasts/${forecastType}/${isApproved ? 'approve' : 'reject'}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ forecast_ids: forecastIds })
         });
 
@@ -236,16 +229,8 @@ async function handleApproval(card, isApproved) {
             checkbox.disabled = true;
             checkbox.checked = false;
             
-            // Animate out
-            forecast.animate([
-                { opacity: 1, transform: 'scale(1)' },
-                { opacity: 0, transform: 'scale(0.9)' }
-            ], {
-                duration: 300,
-                easing: 'ease-out'
-            }).onfinish = () => {
-                forecast.style.display = 'none';
-            };
+            // Enhanced removal animation
+            removeForecastWithAnimation(forecast);
         });
 
         // Update trust scores
@@ -256,16 +241,42 @@ async function handleApproval(card, isApproved) {
         // Hide loading and show success
         loadingToast.remove();
         showToast(
-            `Successfully ${isApproved ? 'approved' : 'rejected'} ${selectedForecasts.length} forecasts`,
+            `Successfully ${isApproved ? 'approved' : 'rejected'} ${selectedForecasts.length} ${forecastType} forecasts`,
             'success'
         );
         
     } catch (error) {
-        console.error('Error processing forecasts:', error);
-        showToast(error.message, 'error');
+        console.error(`Error processing ${forecastType} forecasts:`, error);
+        
+        // Handle specific error types
+        let errorMessage = 'An unexpected error occurred';
+        if (error.name === 'TypeError' || !navigator.onLine) {
+            errorMessage = 'Network error: Please check your connection';
+        } else if (error instanceof SyntaxError) {
+            errorMessage = 'Invalid response from server';
+        }
+
+        const toastMessage = `${errorMessage}. <button class="retry-btn">Retry</button>`;
+        const toast = showToast(toastMessage, 'error', false, true);
+        
+        // Add retry functionality
+        const retryBtn = toast.querySelector('.retry-btn');
+        if (retryBtn) {
+            retryBtn.addEventListener('click', () => {
+                if (retryCount >= MAX_RETRIES) {
+                    showToast(`Maximum retry attempts (${MAX_RETRIES}) reached`, 'error');
+                    return;
+                }
+                toast.remove();
+                handleApproval(card, isApproved, forecastType, retryCount + 1);
+            });
+        }
     } finally {
-        card.classList.remove('processing');
+        card.classList.remove('processing', loadingClass);
         updateButtonStates(card, false);
+        
+        // Clear all checkbox selections and update button states
+        clearCheckboxSelections(card);
     }
 }
 
@@ -274,103 +285,96 @@ function updateButtonStates(card, hasSelection) {
     const rejectBtn = card.querySelector('.btn-reject');
     
     if (approveBtn && rejectBtn) {
-        approveBtn.disabled = !hasSelection;
-        rejectBtn.disabled = !hasSelection;
+        const isProcessing = card.classList.contains('processing');
+        approveBtn.disabled = !hasSelection || isProcessing;
+        rejectBtn.disabled = !hasSelection || isProcessing;
+        
+        // Update button text based on state
+        const buttonText = isProcessing ? 
+            '<i class="fas fa-spinner fa-spin"></i> Processing...' :
+            hasSelection ? 
+                approveBtn === document.activeElement ? 
+                    '<i class="fas fa-check"></i> Press Enter to Approve' :
+                    '<i class="fas fa-check"></i> Approve Selected' :
+                '<i class="fas fa-check"></i> Select Items to Approve';
+
+        approveBtn.innerHTML = buttonText;
+        rejectBtn.innerHTML = isProcessing ?
+            '<i class="fas fa-spinner fa-spin"></i> Processing...' :
+            '<i class="fas fa-times"></i> ' + (hasSelection ? 'Reject Selected' : 'Select Items to Reject');
     }
 }
 
-// Score Updates functionality
-function initScoreUpdates() {
-    document.querySelectorAll('.trust-score').forEach(scoreElement => {
-        const score = parseInt(scoreElement.dataset.score);
-        const circle = scoreElement.querySelector('.score-circle-progress');
-        const circumference = 2 * Math.PI * 20; // r=20
+// Search functionality
+function filterForecasts(searchTerm) {
+    const forecastItems = document.querySelectorAll('.forecast-item');
+    const normalizedSearch = searchTerm.toLowerCase().trim();
+    let visibleCount = 0;
+
+    forecastItems.forEach(item => {
+        const regionPill = item.querySelector('.region-pill');
+        const forecastText = item.querySelector('.forecast-text');
         
-        circle.style.strokeDasharray = `${circumference} ${circumference}`;
-        animateScore(circle, 0, score, circumference);
+        if (!regionPill || !forecastText) return;
+
+        const region = regionPill.textContent.toLowerCase();
+        const text = forecastText.textContent.toLowerCase();
+        const isVisible = region.includes(normalizedSearch) || text.includes(normalizedSearch);
+        
+        item.style.display = isVisible ? '' : 'none';
+        if (isVisible) visibleCount++;
     });
+
+    // Update screen reader
+    announceToScreenReader(`Showing ${visibleCount} forecasts matching "${searchTerm}"`);
+    return visibleCount;
 }
 
-function updateTrustScores(card, change) {
-    const trustScore = card.querySelector('.trust-score');
-    if (!trustScore) return;
+function initSearchFunctionality() {
+    const searchInput = document.getElementById('regionSearch');
+    const clearButton = document.getElementById('clearFilters');
 
-    const currentScore = parseInt(trustScore.dataset.score);
-    const newScore = Math.min(Math.max(currentScore + change, 0), 100);
-    
-    const circle = trustScore.querySelector('.score-circle-progress');
-    const scoreText = trustScore.querySelector('.score-text');
-    const circumference = 2 * Math.PI * 20;
+    if (searchInput && clearButton) {
+        searchInput.addEventListener('input', (e) => {
+            const count = filterForecasts(e.target.value);
+            // Show toast if no results
+            if (count === 0 && e.target.value.trim() !== '') {
+                showToast('No forecasts found matching your search', 'info');
+            }
+        });
 
-    // Animate score change
-    animateScore(circle, currentScore, newScore, circumference);
-    
-    // Update displayed score
-    trustScore.dataset.score = newScore;
-    scoreText.textContent = `${newScore}%`;
-    
-    // Update criticality badge if needed
-    updateCriticalityBadge(card, newScore);
-}
+        clearButton.addEventListener('click', () => {
+            searchInput.value = '';
+            filterForecasts('');
+            showToast('Search cleared', 'info');
+        });
 
-function updateCriticalityBadge(card, score) {
-    const badge = card.querySelector('.criticality-badge');
-    if (!badge) return;
-
-    let newLevel, newText;
-    if (score >= 90) {
-        newLevel = 'low';
-        newText = 'Low Risk';
-    } else if (score >= 70) {
-        newLevel = 'medium';
-        newText = 'Medium Risk';
-    } else {
-        newLevel = 'high';
-        newText = 'High Risk';
+        // Add keyboard support for clear button
+        clearButton.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                clearButton.click();
+            }
+        });
     }
+}
 
-    // Remove old classes
-    badge.classList.remove('low', 'medium', 'high');
-    badge.classList.add(newLevel);
-    badge.textContent = newText;
-
-    // Animate badge update
-    badge.animate([
-        { transform: 'scale(0.9)', opacity: 0.7 },
-        { transform: 'scale(1.1)', opacity: 1 },
-        { transform: 'scale(1)', opacity: 1 }
-    ], {
-        duration: 300,
-        easing: 'ease-out'
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        initTrustScores();
+        initSearchFunctionality();
+        initApprovalSystem();
     });
-}
-
-function animateScore(circle, start, end, circumference) {
-    const duration = 1500;
-    const startTime = performance.now();
-    
-    function update(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        
-        // Easing function for smooth animation
-        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-        const currentScore = start + (end - start) * easeOutQuart;
-        
-        // Update circle progress
-        const offset = circumference - (currentScore / 100) * circumference;
-        circle.style.strokeDashoffset = offset;
-        
-        if (progress < 1) {
-            requestAnimationFrame(update);
-        }
-    }
-    
-    requestAnimationFrame(update);
+} else {
+    initTrustScores();
+    initSearchFunctionality();
+    initApprovalSystem();
 }
 
 // Utility function for showing toast notifications
 function showToast(message, type = 'info', autoHide = true, isHTML = false) {
+    document.querySelectorAll(`.toast-${type}`).forEach(t => t.remove());
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     
@@ -382,7 +386,6 @@ function showToast(message, type = 'info', autoHide = true, isHTML = false) {
     
     document.body.appendChild(toast);
     
-    // Trigger animation
     requestAnimationFrame(() => {
         toast.classList.add('show');
     });
@@ -391,7 +394,7 @@ function showToast(message, type = 'info', autoHide = true, isHTML = false) {
         setTimeout(() => {
             toast.classList.remove('show');
             setTimeout(() => toast.remove(), 300);
-        }, type === 'danger' ? 0 : 3000); // Don't auto-hide danger alerts
+        }, type === 'danger' ? 0 : 3000);
     }
     
     return toast;

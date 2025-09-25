@@ -1544,11 +1544,16 @@ def get_forecasts():
         print(f"Error fetching forecasts: {str(e)}")
         return jsonify({'error': 'Failed to fetch forecasts'}), 500
 
-@app.route('/api/admin/forecasts/approve', methods=['POST'])
+@app.route('/api/admin/forecasts/<source_type>/<action>', methods=['POST'])
 @login_required(role='admin')
-def approve_forecasts():
-    """Approve selected forecasts"""
+def handle_forecasts(source_type, action):
+    """Handle forecast approval/rejection"""
     try:
+        if action not in ['approve', 'reject']:
+            return jsonify({'error': 'Invalid action'}), 400
+        if source_type not in ['ai', 'crowdsourced']:
+            return jsonify({'error': 'Invalid source type'}), 400
+            
         data = request.get_json()
         if not data or 'forecast_ids' not in data:
             return jsonify({'error': 'No forecast IDs provided'}), 400
@@ -1556,31 +1561,13 @@ def approve_forecasts():
         forecast_ids = data['forecast_ids']
         # In a real app, this would update database records
         return jsonify({
-            'message': f'Successfully approved {len(forecast_ids)} forecasts',
-            'approved_ids': forecast_ids
+            'message': f'Successfully {action}d {len(forecast_ids)} {source_type} forecasts',
+            f'{action}d_ids': forecast_ids
         }), 200
     except Exception as e:
         print(f"Error approving forecasts: {str(e)}")
         return jsonify({'error': 'Failed to approve forecasts'}), 500
 
-@app.route('/api/admin/forecasts/reject', methods=['POST'])
-@login_required(role='admin')
-def reject_forecasts():
-    """Reject selected forecasts"""
-    try:
-        data = request.get_json()
-        if not data or 'forecast_ids' not in data:
-            return jsonify({'error': 'No forecast IDs provided'}), 400
-            
-        forecast_ids = data['forecast_ids']
-        # In a real app, this would update database records
-        return jsonify({
-            'message': f'Successfully rejected {len(forecast_ids)} forecasts',
-            'rejected_ids': forecast_ids
-        }), 200
-    except Exception as e:
-        print(f"Error rejecting forecasts: {str(e)}")
-        return jsonify({'error': 'Failed to reject forecasts'}), 500
     locations = [
         {
             'lat': 28.6139, 'lng': 77.209,
