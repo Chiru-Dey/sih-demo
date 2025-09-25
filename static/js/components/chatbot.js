@@ -219,7 +219,6 @@ async function sendMessage(type) {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
         // Announce new message to screen readers
-        announceToScreenReader(`${type === 'ai' ? 'AI Assistant' : 'Emergency Support'} responded: ${response.substring(0, 100)}...`);
 
         saveChatHistory(type);
     } catch (error) {
