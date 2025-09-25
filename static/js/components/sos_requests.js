@@ -21,11 +21,27 @@ class SOSRequests {
         this.eventSource = eventSource;
     }
 
-    removeRequest(id, cardElement) {
-        cardElement.remove();
-        if (document.querySelectorAll('.sos-card').length === 0) {
-            const grid = document.querySelector('.sos-requests-grid');
-            grid.innerHTML = '<div class="no-requests"><p>No SOS requests found</p></div>';
+    async removeRequest(id, cardElement) {
+        try {
+            const response = await fetch(`/api/sos-requests/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete request');
+            }
+
+            cardElement.remove();
+            if (document.querySelectorAll('.sos-card').length === 0) {
+                const grid = document.querySelector('.sos-requests-grid');
+                grid.innerHTML = '<div class="no-requests"><p>No SOS requests found</p></div>';
+            }
+        } catch (error) {
+            console.error('Error deleting request:', error);
+            alert('Failed to delete request. Please try again.');
         }
     }
 

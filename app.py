@@ -584,6 +584,24 @@ def admin_forecasts():
     }
     return render_template('admin/forecasts.html', **context)
 
+@app.route('/api/sos-requests/<int:id>', methods=['DELETE'])
+@login_required(role='rescue')
+def delete_sos_request(id):
+    """Delete a specific SOS request"""
+    try:
+        sos_request = SOSRequest.query.get(id)
+        if not sos_request:
+            return jsonify({'error': 'SOS request not found'}), 404
+            
+        db.session.delete(sos_request)
+        db.session.commit()
+        
+        return jsonify({'message': 'SOS request deleted successfully'}), 200
+        
+    except Exception as e:
+        print(f"Error deleting SOS request: {str(e)}")
+        return jsonify({'error': 'Failed to delete SOS request'}), 500
+
 @app.route('/rescue/sos-requests')
 @login_required(role='rescue')
 def sos_requests():
