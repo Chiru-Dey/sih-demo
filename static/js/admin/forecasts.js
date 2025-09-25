@@ -8,106 +8,16 @@ const APP_STATE = {
     announcer: null
 };
 
-// Helper functions for trust score management
-function getTrustLevelDescription(score) {
-    if (score >= 90) return 'This is a highly trusted source.';
-    if (score >= 70) return 'This is a moderately trusted source.';
-    if (score >= 50) return 'This source has average trust level.';
-    return 'This source needs verification.';
-}
-
-function getAnnouncer() {
-    if (!APP_STATE.announcer) {
-        APP_STATE.announcer = document.getElementById('trust-score-announcer');
-        if (!APP_STATE.announcer) {
-            APP_STATE.announcer = document.createElement('div');
-            APP_STATE.announcer.setAttribute('aria-live', 'polite');
-            APP_STATE.announcer.setAttribute('role', 'status');
-            APP_STATE.announcer.className = 'visually-hidden';
-            APP_STATE.announcer.id = 'trust-score-announcer';
-            document.body.appendChild(APP_STATE.announcer);
-        }
-    }
-    return APP_STATE.announcer;
-}
-
-function announceToScreenReader(message) {
-    const announcer = getAnnouncer();
-    announcer.textContent = message;
-}
-
-// Initialize trust score visualization
-function initializeTrustScoreElement(element, index) {
-    const scoreText = element.textContent.replace('Trust: ', '').replace('%', '');
-    const scoreValue = parseInt(scoreText);
-    
-    if (isNaN(scoreValue)) {
-        throw new Error(`Invalid score format for element ${index}`);
-    }
-
-    // Set up accessibility attributes
-    element.setAttribute('data-score', scoreValue);
-    element.setAttribute('role', 'progressbar');
-    element.setAttribute('tabindex', '0');
-    element.setAttribute('aria-valuemin', '0');
-    element.setAttribute('aria-valuemax', '100');
-    element.setAttribute('aria-valuenow', scoreValue);
-    element.setAttribute('aria-label', `Trust score: ${scoreValue}%. ${getTrustLevelDescription(scoreValue)}`);
-
-    // Add keyboard interaction
-    element.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            announceToScreenReader(`Trust score is ${scoreValue}%. ${getTrustLevelDescription(scoreValue)}`);
-        }
-    });
-
-    // Create SVG visualization
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('class', 'score-circle');
-    svg.setAttribute('width', '40');
-    svg.setAttribute('height', '40');
-    svg.setAttribute('viewBox', '0 0 40 40');
-    svg.setAttribute('role', 'img');
-    svg.setAttribute('aria-hidden', 'true'); // Hide from screen readers since we have text
-
-    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('class', 'score-circle-progress');
-    circle.setAttribute('cx', '20');
-    circle.setAttribute('cy', '20');
-    circle.setAttribute('r', '16');
-    circle.setAttribute('stroke-width', '4');
-
-    const radius = 16;
-    const circumference = 2 * Math.PI * radius;
-    circle.style.strokeDasharray = `${circumference} ${circumference}`;
-
-    svg.appendChild(circle);
-    element.appendChild(svg);
-
-    // Animate initial score
-    animateScore(circle, 0, scoreValue, circumference);
+// Simple trust score display
+function initializeTrustScoreElement(element) {
+    const score = element.textContent.replace('Trust: ', '');
+    element.setAttribute('role', 'text');
+    element.setAttribute('aria-label', `Trust score: ${score}`);
 }
 
 function initTrustScores() {
-    try {
-        const trustScoreElements = document.querySelectorAll('.trust-score-pill');
-        if (!trustScoreElements.length) {
-            console.warn('No trust score elements found');
-            return;
-        }
-
-        trustScoreElements.forEach((element, index) => {
-            try {
-                initializeTrustScoreElement(element, index);
-            } catch (error) {
-                console.error(`Failed to initialize trust score element ${index}:`, error);
-            }
-        });
-    } catch (error) {
-        console.error('Error initializing trust scores:', error);
-        showToast('Error initializing trust scores. Please refresh the page.', 'error');
-    }
+    const trustScoreElements = document.querySelectorAll('.trust-score');
+    trustScoreElements.forEach(initializeTrustScoreElement);
 }
 
 function initApprovalSystem() {
@@ -149,7 +59,6 @@ function getSelectedForecasts(card) {
         .map(checkbox => checkbox.closest('.forecast-item'));
     
     if (selectedForecasts.length === 0) {
-        showToast('Please select at least one forecast', 'warning');
         return null;
     }
     
@@ -207,75 +116,48 @@ async function handleApproval(card, isApproved, forecastType, retryCount = 0) {
         return forecastItem.dataset.id || forecast.dataset.forecastId;
     });
 
-    try {
-        // Show loading state
-        const loadingToast = showToast('Processing...', 'info', false);
-        card.classList.add('processing', loadingClass);
+    // Start UI updates immediately
+    card.classList.add('processing', loadingClass);
+
+    // Update UI first
+    selectedForecasts.forEach(forecast => {
+        forecast.classList.add(isApproved ? 'approved' : 'rejected');
+        const checkbox = forecast.querySelector('.forecast-checkbox input');
+        checkbox.disabled = true;
+        checkbox.checked = false;
         
+        // Enhanced removal animation
+        removeForecastWithAnimation(forecast);
+    });
+
+    try {
         const response = await fetch(`/api/admin/forecasts/${forecastType}/${isApproved ? 'approve' : 'reject'}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ forecast_ids: forecastIds })
         });
 
-        if (!response.ok) throw new Error('Failed to process forecasts');
-        
-        const data = await response.json();
-        
-        // Update UI
-        selectedForecasts.forEach(forecast => {
-            forecast.classList.add(isApproved ? 'approved' : 'rejected');
-            const checkbox = forecast.querySelector('.forecast-checkbox input');
-            checkbox.disabled = true;
-            checkbox.checked = false;
-            
-            // Enhanced removal animation
-            removeForecastWithAnimation(forecast);
-        });
-
-        // Update trust scores
-        if (isApproved) {
-            updateTrustScores(card, 2); // Increase score by 2 points for approvals
+        if (!response.ok) {
+            console.error(`API error: ${response.status}`);
+            return;
         }
-
-        // Hide loading and show success
-        loadingToast.remove();
-        showToast(
-            `Successfully ${isApproved ? 'approved' : 'rejected'} ${selectedForecasts.length} ${forecastType} forecasts`,
-            'success'
-        );
         
-    } catch (error) {
-        console.error(`Error processing ${forecastType} forecasts:`, error);
-        
-        // Handle specific error types
-        let errorMessage = 'An unexpected error occurred';
-        if (error.name === 'TypeError' || !navigator.onLine) {
-            errorMessage = 'Network error: Please check your connection';
-        } else if (error instanceof SyntaxError) {
-            errorMessage = 'Invalid response from server';
-        }
-
-        const toastMessage = `${errorMessage}. <button class="retry-btn">Retry</button>`;
-        const toast = showToast(toastMessage, 'error', false, true);
-        
-        // Add retry functionality
-        const retryBtn = toast.querySelector('.retry-btn');
-        if (retryBtn) {
-            retryBtn.addEventListener('click', () => {
-                if (retryCount >= MAX_RETRIES) {
-                    showToast(`Maximum retry attempts (${MAX_RETRIES}) reached`, 'error');
-                    return;
-                }
-                toast.remove();
-                handleApproval(card, isApproved, forecastType, retryCount + 1);
+        // Update trust scores on successful approval
+        if (isApproved && response.ok) {
+            const trustScores = card.querySelectorAll('.trust-score');
+            trustScores.forEach(score => {
+                const currentScore = parseInt(score.textContent.replace('Trust: ', ''));
+                const newScore = Math.min(100, currentScore + 2);
+                score.textContent = `Trust: ${newScore}%`;
+                score.setAttribute('aria-label', `Trust score: ${newScore}%`);
             });
         }
+    } catch (error) {
+        // Silent error logging
+        console.error(`Error processing ${forecastType} forecasts:`, error);
     } finally {
         card.classList.remove('processing', loadingClass);
         updateButtonStates(card, false);
-        
-        // Clear all checkbox selections and update button states
         clearCheckboxSelections(card);
     }
 }
@@ -337,16 +219,16 @@ function initSearchFunctionality() {
     if (searchInput && clearButton) {
         searchInput.addEventListener('input', (e) => {
             const count = filterForecasts(e.target.value);
-            // Show toast if no results
+            // Just update screen reader - no toast needed
             if (count === 0 && e.target.value.trim() !== '') {
-                showToast('No forecasts found matching your search', 'info');
+                announceToScreenReader('No forecasts found matching your search');
             }
         });
 
         clearButton.addEventListener('click', () => {
             searchInput.value = '';
             filterForecasts('');
-            showToast('Search cleared', 'info');
+            announceToScreenReader('Search filters cleared');
         });
 
         // Add keyboard support for clear button

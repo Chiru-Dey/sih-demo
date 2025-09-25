@@ -297,67 +297,63 @@
   gap: var(--space-md);
 }
 
-/* Trust Score Circle */
-.trust-score {
-  position: relative;
-  width: 50px;
-  height: 50px;
+/* Trust Score Display */
+.trust-score-pill {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #ffffff;
+    padding: var(--space-xs) var(--space-md);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-full);
+    display: inline-flex;
+    align-items: center;
+    margin-right: var(--space-sm);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all var(--transition-normal);
 }
 
-.score-circle {
-    width: 40px;
-    height: 40px;
-    transform: rotate(-90deg);
-    overflow: visible;
+.trust-score-pill:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
 }
 
-.score-circle-bg {
-    fill: none;
-    stroke: var(--surface-dark);
-    stroke-width: 4;
-    opacity: 0.2;
+/* Trust score color variations based on percentage */
+.trust-score-pill[data-score^="0"],
+.trust-score-pill[data-score^="1"],
+.trust-score-pill[data-score^="2"],
+.trust-score-pill[data-score^="3"],
+.trust-score-pill[data-score^="4"] {
+    background: rgba(244, 67, 54, 0.25);
+    color: #ff6b6b;
+    border-color: rgba(244, 67, 54, 0.4);
 }
 
-.score-circle-progress {
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 4;
-    stroke-linecap: round;
-    transition: all var(--transition-slow);
-    filter: drop-shadow(0 0 2px currentColor);
+.trust-score-pill[data-score^="5"],
+.trust-score-pill[data-score^="6"] {
+    background: rgba(255, 152, 0, 0.25);
+    color: #ffb74d;
+    border-color: rgba(255, 152, 0, 0.4);
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .score-circle-progress {
-        transition: none;
-    }
+.trust-score-pill[data-score^="7"],
+.trust-score-pill[data-score^="8"] {
+    background: rgba(76, 175, 80, 0.25);
+    color: #9ccc65;
+    border-color: rgba(76, 175, 80, 0.4);
 }
 
-/* Focus styles for accessibility */
-.trust-score-pill:focus-within {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
+.trust-score-pill[data-score^="9"],
+.trust-score-pill[data-score="100"] {
+    background: rgba(33, 150, 243, 0.25);
+    color: #90caf9;
+    border-color: rgba(33, 150, 243, 0.4);
 }
 
-/* High contrast mode adjustments */
-@media (forced-colors: active) {
-    .score-circle-progress {
-        stroke: CanvasText;
-    }
-    
-    .trust-score-pill {
-        border: 1px solid currentColor;
-    }
-}
-
-.score-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #ffffff;
+/* Hover states for better interaction */
+.trust-score-pill:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
 }
 
 /* Forecast List */
@@ -429,12 +425,18 @@
 }
 
 .forecast-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
+   display: flex;
+   align-items: center;
+   flex-wrap: wrap;
+   gap: var(--space-md);
+   margin-top: var(--space-sm);
+   padding: var(--space-xs) 0;
+   font-size: 0.85rem;
+   color: rgba(255, 255, 255, 0.7);
+}
+
+.forecast-meta .source {
+    margin-left: auto;
 }
 
 /* Region and Trust Score Pills */
@@ -475,10 +477,14 @@
 }
 
 .trust-score-pill {
-    position: relative;
+    display: inline-flex;
+    align-items: center;
     background: rgba(255, 255, 255, 0.1);
     color: #e0e0e0;
     transition: all var(--transition-normal);
+    margin: 0 var(--space-xs);
+    padding: var(--space-xs) var(--space-md);
+    border-radius: var(--radius-full);
 }
 
 /* Trust score variations */
@@ -677,6 +683,17 @@
     padding: var(--space-xs) var(--space-sm);
     margin-top: var(--space-xs);
   }
+
+  .forecast-meta {
+    gap: var(--space-sm);
+    padding: var(--space-xs) 0;
+  }
+
+  .trust-score-pill {
+    font-size: 0.8rem;
+    padding: var(--space-xs) var(--space-sm);
+    margin: 0 var(--space-xs);
+  }
 }
 
 /* Small screen adjustments */
@@ -689,13 +706,20 @@
   .forecast-meta {
     flex-wrap: wrap;
     gap: var(--space-xs);
+    justify-content: flex-start;
   }
 
   .region-pill,
   .trust-score-pill,
   .risk-pill {
-    font-size: 0.8rem;
-    padding: var(--space-xs) var(--space-sm);
+    font-size: 0.75rem;
+    padding: calc(var(--space-xs) * 0.8) var(--space-sm);
+    margin: calc(var(--space-xs) * 0.5) var(--space-xs);
+  }
+
+  .trust-score-pill {
+    flex: 0 1 auto;
+    min-width: auto;
   }
 }
 
