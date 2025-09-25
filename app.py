@@ -483,6 +483,44 @@ def profile():
     context = get_template_context()
     return render_template('profile.html', **context)
 
+@app.route('/rescue/profile')
+@login_required(role='rescue')
+def rescue_profile():
+    """Serve the rescue profile page"""
+    try:
+        # Get current rescue user
+        user = User.query.get(session['user_id'])
+        if not user:
+            print("[DEBUG] User not found in session")
+            return redirect(url_for('authority_login'))
+
+        # Add debug logging for address fields
+        print(f"[DEBUG] Loading profile for user {user.email}")
+        print(f"[DEBUG] Address fields:")
+        print(f"  - street_address: {user.street_address or 'Not set'}")
+        print(f"  - area_locality: {user.area_locality or 'Not set'}")
+        print(f"  - city: {user.city or 'Not set'}")
+        print(f"  - state: {user.state or 'Not set'}")
+        print(f"  - pincode: {user.pincode or 'Not set'}")
+
+        # Pass individual address fields to template with proper null handling
+        user_data = {
+            'email': user.email,
+            'street_address': user.street_address or '',
+            'area_locality': user.area_locality or '',
+            'city': user.city or '',
+            'state': user.state or '',
+            'pincode': user.pincode or ''
+        }
+
+        context = get_template_context()
+        context['user'] = user_data
+        return render_template('rescue_profile.html', **context)
+
+    except Exception as e:
+        print(f"Error loading rescue profile: {str(e)}")
+        return redirect(url_for('authority_login'))
+
 @app.route('/logout')
 def logout():
     """Handle user logout and redirect to login page"""
