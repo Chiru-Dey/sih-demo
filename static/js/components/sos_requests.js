@@ -46,6 +46,12 @@ class SOSRequests {
     }
 
     addNewRequest(request) {
+        // Check if a card with this ID already exists
+        if (document.querySelector(`.sos-card[data-id="${request.id}"]`)) {
+            console.log(`Card with ID ${request.id} already exists, skipping duplicate`);
+            return;
+        }
+
         const grid = document.querySelector('.sos-requests-grid');
         const noRequests = document.querySelector('.no-requests');
         

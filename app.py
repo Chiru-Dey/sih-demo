@@ -612,7 +612,7 @@ def sos_requests():
         return render_template('sos_requests.html', sos_requests=sos_requests, **get_template_context())
     except Exception as e:
         print(f"Error fetching SOS requests: {str(e)}")
-        return render_template('sos_requests.html', error='Failed to load SOS requests', **get_template_context())
+        return render_template('sos_requests.html', sos_requests=[], error='Failed to load SOS requests', **get_template_context())
 
 @app.route('/rescue/sos-requests/<int:id>/status', methods=['POST'])
 @login_required(role='rescue')
@@ -1603,6 +1603,10 @@ def handle_forecasts(source_type, action):
     return jsonify(locations)
 
 # SSE endpoint for SOS updates
+# Global set to track sent request IDs across all connections
+if not hasattr(app, 'global_sent_requests'):
+    app.global_sent_requests = set()
+
 @app.route('/sse/sos-updates')
 def sos_updates():
     """Server-Sent Events endpoint for real-time SOS request updates"""
@@ -1613,39 +1617,56 @@ def sos_updates():
             app_ctx = app.app_context()
             app_ctx.push()
             
-            print("[SSE] New client connected")
+            print("[SSE DEBUG] New client connected")
             
-            # Send any stored emergency updates first
+            # Track sent request IDs for this connection
+            connection_sent_ids = set()
+            
+            # Send stored emergency updates first if not already sent
             if hasattr(app, 'sos_updates'):
+                print(f"[SSE DEBUG] Processing {len(app.sos_updates)} stored updates")
                 for update in app.sos_updates:
-                    if update.get('is_emergency'):
-                        yield f"data: {json.dumps(update)}\n\n"
+                    if (update.get('is_emergency') and 'data' in update and
+                        'id' in update['data']):
+                        request_id = update['data']['id']
+                        if request_id not in app.global_sent_requests:
+                            print(f"[SSE DEBUG] Sending emergency update for request ID: {request_id}")
+                            yield f"data: {json.dumps(update)}\n\n"
+                            app.global_sent_requests.add(request_id)
+                            connection_sent_ids.add(request_id)
             
-            # Initial connection - send last few SOS requests within app context
+            # Initial connection - send recent non-duplicate SOS requests
             with app.app_context():
                 recent_requests = SOSRequest.query.order_by(
                     SOSRequest.timestamp.desc()
                 ).limit(5).all()
                 
+                print(f"[SSE DEBUG] Processing {len(recent_requests)} recent requests")
                 for request in recent_requests:
-                    # Check if this is a high-priority emergency alert
-                    is_emergency = request.sender_name == "Emergency SOS" and request.contact == "112"
-                    
-                    data = {
-                        'type': 'sos_update',
-                        'data': {
-                            'id': request.id,
-                            'timestamp': request.timestamp.isoformat(),
-                            'sender_name': request.sender_name,
-                            'contact': request.contact,
-                            'message': request.message,
-                            'location': request.location,
-                            'status': request.status,
-                            'priority': 'high' if is_emergency else 'normal'
-                        },
-                        'is_emergency': is_emergency
-                    }
-                    yield f"data: {json.dumps(data)}\n\n"
+                    if (request.id not in connection_sent_ids and
+                        request.id not in app.global_sent_requests):
+                        print(f"[SSE DEBUG] Sending update for request ID: {request.id}")
+                        
+                        # Check if this is a high-priority emergency alert
+                        is_emergency = request.sender_name == "Emergency SOS" and request.contact == "112"
+                        
+                        data = {
+                            'type': 'sos_update',
+                            'data': {
+                                'id': request.id,
+                                'timestamp': request.timestamp.isoformat(),
+                                'sender_name': request.sender_name,
+                                'contact': request.contact,
+                                'message': request.message,
+                                'location': request.location,
+                                'status': request.status,
+                                'priority': 'high' if is_emergency else 'normal'
+                            },
+                            'is_emergency': is_emergency
+                        }
+                        yield f"data: {json.dumps(data)}\n\n"
+                        app.global_sent_requests.add(request.id)
+                        connection_sent_ids.add(request.id)
 
             # Keep connection alive
             while True:
@@ -1695,6 +1716,9 @@ def sos_updates():
 def broadcast_sos_update(data, is_emergency=False):
     """Broadcast SOS update to connected SSE clients"""
     try:
+        request_id = data.get('id')
+        print(f"[SSE DEBUG] Broadcasting SOS update for request ID: {request_id}")
+        
         # Add emergency flag for high-priority alerts
         broadcast_data = {
             'type': 'sos_update',
@@ -1702,6 +1726,12 @@ def broadcast_sos_update(data, is_emergency=False):
             'is_emergency': is_emergency,
             'timestamp': datetime.datetime.now(datetime.UTC).isoformat()
         }
+
+        # Check if update already exists in app.sos_updates
+        if hasattr(app, 'sos_updates'):
+            if any(update.get('data', {}).get('id') == request_id for update in app.sos_updates):
+                print(f"[SSE DEBUG] Update for request ID {request_id} already exists, skipping broadcast")
+                return True
 
         # In a production environment, use a proper pub/sub system
         # For now, store in app context for SSE endpoint
