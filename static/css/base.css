@@ -472,7 +472,7 @@ body {
 }
 
 /* Emergency Alert */
-.emergency-alert {
+/* .emergency-alert {
     background: var(--alert-critical-bg);
     color: var(--alert-critical);
     text-align: center;
@@ -484,7 +484,7 @@ body {
 
 .emergency-alert strong {
     margin-right: 8px;
-}
+} */
 
 /* Print Styles */
 @media print {

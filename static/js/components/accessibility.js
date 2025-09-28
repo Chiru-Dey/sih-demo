@@ -8,6 +8,66 @@ let isSpeaking = false;
 let currentUtterance = null;
 let isAccessibilityPanelOpen = false;
 
+window.toggleAccessibilityPanel = function() {
+    const panel = document.getElementById('accessibilityPanel');
+    isAccessibilityPanelOpen = !isAccessibilityPanelOpen;
+    panel.classList.toggle('active', isAccessibilityPanelOpen);
+}
+
+// Accessibility Functions
+
+window.changeFontSize = function(size) {
+    let fontSize = 16;
+    switch (size) {
+        case 'small':
+            fontSize = 14;
+            break;
+        case 'medium':
+            fontSize = 16;
+            break;
+        case 'large':
+            fontSize = 18;
+            break;
+        case 'xlarge':
+            fontSize = 22;
+            break;
+    }
+    document.documentElement.style.fontSize = fontSize + 'px';
+
+    document.querySelectorAll('#accessibilityPanel .accessibility-btn[onclick*="changeFontSize"]').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+
+    saveAccessibilityPreference('fontSize', fontSize);
+    showNotification(`Font size set to ${size}`, 'success');
+}
+
+window.toggleHighContrast = function() {
+    document.body.classList.toggle('high-contrast');
+    const isEnabled = document.body.classList.contains('high-contrast');
+    event.target.classList.toggle('active', isEnabled);
+
+    saveAccessibilityPreference('highContrast', isEnabled);
+    showNotification(`High contrast ${isEnabled ? 'enabled' : 'disabled'}`, 'success');
+}
+
+window.toggleTextToSpeech = function(event) {
+    isTextToSpeechEnabled = !isTextToSpeechEnabled;
+    if (event && event.target) {
+        event.target.classList.toggle('active', isTextToSpeechEnabled);
+    }
+    
+    if (!isTextToSpeechEnabled && isSpeaking) {
+        stopSpeaking();
+    }
+    
+    saveAccessibilityPreference('textToSpeech', isTextToSpeechEnabled);
+    showNotification(`Text to speech ${isTextToSpeechEnabled ? 'enabled' : 'disabled'}`, 'success');
+    announceToScreenReader(`Text to speech ${isTextToSpeechEnabled ? 'enabled' : 'disabled'}`);
+}
+
+
 // Initialize Speech Recognition if supported
 try {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -59,63 +119,6 @@ function saveAccessibilityPreference(key, value) {
     saveSetting(`app.${key}`, value);
 }
 
-// Accessibility Functions
-function toggleAccessibilityPanel() {
-    const panel = document.getElementById('accessibilityPanel');
-    isAccessibilityPanelOpen = !isAccessibilityPanelOpen;
-    panel.classList.toggle('active', isAccessibilityPanelOpen);
-}
-
-function changeFontSize(size) {
-    let fontSize = 16;
-    switch (size) {
-        case 'small':
-            fontSize = 14;
-            break;
-        case 'medium':
-            fontSize = 16;
-            break;
-        case 'large':
-            fontSize = 18;
-            break;
-        case 'xlarge':
-            fontSize = 22;
-            break;
-    }
-    document.documentElement.style.fontSize = fontSize + 'px';
-
-    document.querySelectorAll('#accessibilityPanel .accessibility-btn[onclick*="changeFontSize"]').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    event.target.classList.add('active');
-
-    saveAccessibilityPreference('fontSize', fontSize);
-    showNotification(`Font size set to ${size}`, 'success');
-}
-
-function toggleHighContrast() {
-    document.body.classList.toggle('high-contrast');
-    const isEnabled = document.body.classList.contains('high-contrast');
-    event.target.classList.toggle('active', isEnabled);
-
-    saveAccessibilityPreference('highContrast', isEnabled);
-    showNotification(`High contrast ${isEnabled ? 'enabled' : 'disabled'}`, 'success');
-}
-
-window.toggleTextToSpeech = function(event) {
-    isTextToSpeechEnabled = !isTextToSpeechEnabled;
-    if (event && event.target) {
-        event.target.classList.toggle('active', isTextToSpeechEnabled);
-    }
-    
-    if (!isTextToSpeechEnabled && isSpeaking) {
-        stopSpeaking();
-    }
-    
-    saveAccessibilityPreference('textToSpeech', isTextToSpeechEnabled);
-    showNotification(`Text to speech ${isTextToSpeechEnabled ? 'enabled' : 'disabled'}`, 'success');
-    announceToScreenReader(`Text to speech ${isTextToSpeechEnabled ? 'enabled' : 'disabled'}`);
-}
 
 function stopSpeaking() {
     if (speechSynthesis && isSpeaking) {
@@ -419,5 +422,3 @@ function initAccessibility() {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', initAccessibility);
-window.changeFontSize = changeFontSize;
-window.toggleHighContrast = toggleHighContrast;

@@ -320,8 +320,7 @@
 .emergency-alert {
     background: linear-gradient(90deg, var(--danger), var(--accent));
     color: var(--white);
-    padding: 12px 20px;
-    text-align: center;
+    padding: 5px 5px;
     position: fixed;
     top: 90px;
     left: 0;
@@ -330,19 +329,19 @@
     border-bottom: 2px solid var(--danger);
     z-index: 1001;
     font-size: var(--font-size);
+    
+    /* Simple marquee styles */
+    overflow: hidden;
+    white-space: nowrap;
+    
+    /* This makes the text scroll */
+    animation: scroll 15s linear infinite;
 }
 
-.emergency-alert::before {
-    content: '⚠️';
-    margin-right: 10px;
-    font-size: calc(var(--font-size) + 0.125rem);
+@keyframes scroll {
+    0% { text-indent: 100%; }
+    100% { text-indent: -100%; }
 }
-
-.alert-content {
-    margin-bottom: 15px;
-}
-
-
 
 @keyframes pulse {
     0% {

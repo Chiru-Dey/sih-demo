@@ -520,21 +520,18 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Emergency alert rotation
-    setInterval(function () {
-        const alerts = [
-            'CYCLONE ALERT: Heavy rainfall expected in coastal areas of Odisha and West Bengal. Take necessary precautions.',
-            'FLOOD WARNING: Water levels rising in Yamuna river. Stay away from riverbanks.',
-            'HEATWAVE ALERT: Temperature may reach 45°C in Delhi NCR. Stay hydrated and avoid direct sunlight.',
-            'EARTHQUAKE ADVISORY: Minor tremors detected in Himachal Pradesh region. Be prepared for aftershocks.',
-            'LANDSLIDE WARNING: Heavy rains in hill stations. Avoid traveling to mountainous areas.'
-        ];
+    // setInterval(function () {
+    //     const alerts = [
+    //         'CYCLONE ALERT: Heavy rainfall expected in coastal areas of Odisha and West Bengal. Take necessary precautions.',
+            
+    //     ];
 
-        const randomAlert = alerts[Math.floor(Math.random() * alerts.length)];
-        const alertElement = document.querySelector('.emergency-alert .alert-content');
-        if (alertElement) {
-            alertElement.innerHTML = `<strong>LIVE UPDATE:</strong> <span>${randomAlert}</span>`;
-        }
-    }, 30000);
+    //     const randomAlert = alerts[Math.floor(Math.random() * alerts.length)];
+    //     const alertElement = document.querySelector('.emergency-alert .alert-content');
+    //     if (alertElement) {
+    //         alertElement.innerHTML = `<strong>LIVE UPDATE:</strong> <span>${randomAlert}</span>`;
+    //     }
+    // }, 30000);
 
     console.log('🚀 Disaster Management PWA loaded successfully');
     showNotification('🚀 Disaster Management App Ready', 'success');
