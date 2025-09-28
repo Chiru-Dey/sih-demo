@@ -419,3 +419,5 @@ function initAccessibility() {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', initAccessibility);
+window.changeFontSize = changeFontSize;
+window.toggleHighContrast = toggleHighContrast;
