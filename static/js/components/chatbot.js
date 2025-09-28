@@ -65,7 +65,6 @@ window.startVoiceInput = function(type) {
         const transcript = event.results[0][0].transcript;
         document.getElementById(`${type}-input`).value = transcript;
         button.classList.remove('active');
-        showNotification('🎤 Voice input captured', 'success');
     };
 
     speechRecognition.onerror = function () {
@@ -271,7 +270,6 @@ function clearChat(type) {
     if (messagesContainer) {
         messagesContainer.innerHTML = '';
         saveChatHistory(type);
-        showNotification('Chat cleared', 'success');
     }
 }
 

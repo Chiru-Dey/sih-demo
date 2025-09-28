@@ -90,7 +90,6 @@ function changeFontSize(size) {
     event.target.classList.add('active');
 
     saveAccessibilityPreference('fontSize', fontSize);
-    showNotification(`Font size set to ${size}`, 'success');
 }
 
 function toggleHighContrast() {
@@ -113,7 +112,6 @@ window.toggleTextToSpeech = function(event) {
     }
     
     saveAccessibilityPreference('textToSpeech', isTextToSpeechEnabled);
-    showNotification(`Text to speech ${isTextToSpeechEnabled ? 'enabled' : 'disabled'}`, 'success');
     announceToScreenReader(`Text to speech ${isTextToSpeechEnabled ? 'enabled' : 'disabled'}`);
 }
 
@@ -153,7 +151,6 @@ function startVoiceInput(type) {
         const transcript = event.results[0][0].transcript;
         document.getElementById(`${type}-input`).value = transcript;
         button.classList.remove('active');
-        showNotification('🎤 Voice input captured', 'success');
     };
 
     speechRecognition.onerror = function () {
@@ -166,7 +163,6 @@ function startVoiceInput(type) {
     };
 
     speechRecognition.start();
-    showNotification('🎤 Listening... Speak now', 'info');
 }
 
 function readLastMessage(type) {
@@ -210,7 +206,6 @@ function speakText(text, options = {}) {
     utterance.onstart = () => {
         isSpeaking = true;
         currentUtterance = utterance;
-        showNotification('🔊 Reading text aloud', 'info');
     };
 
     utterance.onend = () => {

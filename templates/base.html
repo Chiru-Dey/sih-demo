@@ -111,7 +111,7 @@
     <!-- Fixed Action Buttons -->
     {% block fixed_actions %}
     <div class="fixed-actions">
-        <button class="action-btn emergency-call" id="sosButton" onclick="makeEmergencyCall()"
+        <button class="action-btn sos-button" id="sosButton" onclick="makeEmergencyCall()"
             aria-label="Emergency SOS Button">
             <strong>SOS</strong>
         </button>
@@ -181,17 +181,14 @@
         if (aiAvailable) {
             window.aiAvailable = true;
             console.log("✅ A4F AI (Backend) initialized successfully");
-            showNotification("🤖 AI Assistant Ready (A4F)", "success");
         } else {
             window.aiAvailable = false;
             console.log("⚠️ A4F API key not configured");
-            showNotification("🔑 AI requires A4F API key configuration", "info");
         }
 
         // Initialize Leaflet map on page load
         window.mapsAvailable = true;
         console.log("✅ Leaflet maps initialized");
-        showNotification("🗺️ Maps service active", "success");
     </script>
 
 

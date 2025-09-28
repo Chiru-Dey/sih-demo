@@ -6,7 +6,6 @@ function initPWA() {
         navigator.serviceWorker.register('/service-worker.js')
             .then(registration => {
                 console.log('✅ Service Worker registered');
-                showNotification('📱 App is ready for offline use', 'success');
             })
             .catch(error => {
                 console.log('❌ Service Worker registration failed:', error);
@@ -27,9 +26,7 @@ function initPWA() {
             console.log(`PWA install result: ${outcome}`);
             
             if (outcome === 'accepted') {
-                showNotification('✅ App installed successfully!', 'success');
             } else {
-                showNotification('ℹ️ App installation cancelled', 'info');
             }
             
             deferredPrompt = null;
@@ -56,7 +53,6 @@ function initPWA() {
     // App installed event
     window.addEventListener('appinstalled', () => {
         console.log('✅ PWA was installed');
-        showNotification('🎉 Disaster Management App installed!', 'success');
         hidePWABanner();
         
         // Track installation
@@ -243,7 +239,6 @@ function setupPushNotifications() {
         Notification.requestPermission().then(permission => {
             if (permission === 'granted') {
                 console.log('✅ Notifications enabled');
-                showNotification('🔔 Emergency alerts enabled', 'success');
                 
                 // Set up push subscription
                 return setupPushSubscription();
