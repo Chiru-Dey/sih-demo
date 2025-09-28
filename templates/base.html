@@ -28,7 +28,7 @@
     <link rel="manifest" href="{{ url_for('manifest') }}">
 
     <!-- PWA Icons -->
-    <link rel="icon" type="image/jpeg" sizes="192x192" href="{{ url_for('static', filename='disastrous_logo.jpg') }}">
+    <link rel="icon" type="image/jpeg" sizes="192x192" href="{{ url_for('static', filename='disastrous_logo_192X192.png') }}">
 
     <!-- External CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -96,7 +96,7 @@
                 <i class="fas fa-bars"></i>
             </button>
             <div class="logo-section">
-                <img src="{{ url_for('static', filename='disastrous_logo.jpg') }}" alt="Disastrous Logo" class="logo"
+                <img src="{{ url_for('static', filename='disastrous_logo_192X192.png') }}" alt="Disastrous Logo" class="logo"
                     data-no-translate>
                 <h1 class="app-name">Disastrous</h1>
             </div>
@@ -111,7 +111,7 @@
     <!-- Fixed Action Buttons -->
     {% block fixed_actions %}
     <div class="fixed-actions">
-        <button class="action-btn sos-button" id="sosButton" onclick="makeEmergencyCall()"
+        <button class="action-btn emergency-call" id="sosButton" onclick="makeEmergencyCall()"
             aria-label="Emergency SOS Button">
             <strong>SOS</strong>
         </button>
@@ -181,14 +181,17 @@
         if (aiAvailable) {
             window.aiAvailable = true;
             console.log("✅ A4F AI (Backend) initialized successfully");
+            showNotification("🤖 AI Assistant Ready (A4F)", "success");
         } else {
             window.aiAvailable = false;
             console.log("⚠️ A4F API key not configured");
+            showNotification("🔑 AI requires A4F API key configuration", "info");
         }
 
         // Initialize Leaflet map on page load
         window.mapsAvailable = true;
         console.log("✅ Leaflet maps initialized");
+        showNotification("🗺️ Maps service active", "success");
     </script>
 
 

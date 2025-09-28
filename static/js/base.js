@@ -176,6 +176,7 @@ function handleMenuNavigation(event) {
     console.log(`Navigating to: ${href}`);
 
     // Show loading state
+    showNotification('🧭 Navigating...', 'info');
 
     // Close the menu
     toggleMenu();
@@ -201,6 +202,7 @@ function toggleSection(header) {
 
 function openAIAssistant() {
     if (!window.aiAvailable) {
+        showNotification('AI Assistant requires A4F API key configuration', 'warning');
     }
     document.getElementById('ai-chatbot').classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -393,6 +395,7 @@ function setTheme(theme, showNotification = false) {
     }
 
     if (showNotification) {
+        showNotification(`Theme set to ${theme}`, 'success');
     }
 }
 
@@ -406,6 +409,7 @@ function getCurrentLocation() {
             const locationInput = document.getElementById('primary-location');
             if (locationInput) {
                 locationInput.value = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+                showNotification('📍 Location captured!', 'success');
             }
         }, function (error) {
             showNotification('Unable to get your location. Please enter manually.', 'error');
@@ -423,6 +427,7 @@ function checkNotificationPermissions() {
             if ('Notification' in window && Notification.permission === 'default') {
                 Notification.requestPermission().then(permission => {
                     if (permission === 'granted') {
+                        showNotification('Push notifications enabled!', 'success');
                     } else {
                         showNotification('Push notifications blocked.', 'warning');
                     }
@@ -532,4 +537,5 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 30000);
 
     console.log('🚀 Disaster Management PWA loaded successfully');
+    showNotification('🚀 Disaster Management App Ready', 'success');
 });
